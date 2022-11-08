@@ -15,7 +15,7 @@ type UsersRepository struct {
 }
 
 func NewUsersRepository(db *sql.DB) *UsersRepository {
-	return &UsersRepository{db: db}
+	return &UsersRepository{db}
 }
 
 func (ur *UsersRepository) FetchById(id int) (entity.User, error) {

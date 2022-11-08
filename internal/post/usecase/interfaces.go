@@ -4,14 +4,13 @@ import "forum/internal/entity"
 
 type PostsRepository interface {
 	FetchById(int) (entity.Post, error)
-	FetchByUserId(int) (entity.Post, error)
-	Store(entity.Post) (entity.Post, error)
+	Store(entity.Post) (int, error)
 	Update(entity.Post) error
 	Delete(int) error
 }
 
 type PostReactionsRepository interface {
-	FetchByPostId(int) (entity.PostReaction, error)
+	FetchByPostId(int, bool) ([]entity.Reaction, error)
 }
 
 type UsersRepository interface {
