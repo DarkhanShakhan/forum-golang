@@ -22,7 +22,6 @@ func (u *UsersUsecase) FetchById(id int) (entity.User, error) {
 	if err != nil {
 		return entity.User{}, err
 	}
-	// get user's posts
 	posts := make(chan []entity.Post)
 	comments := make(chan []entity.Comment)
 	postReactions := make(chan []entity.PostReaction)
@@ -35,22 +34,28 @@ func (u *UsersUsecase) FetchById(id int) (entity.User, error) {
 	go u.fetchComments(id, comments, errComments)
 	go u.fetchPostReactions(id, postReactions, errPostReactions)
 	go u.fetchCommentReactions(id, commentReactions, errCommentReactions)
-	if err = <-errPosts; err != nil {
-		log.Println(err)
+
+	for i := 0; i < 4; i++ {
+		select {
+		case user.Posts = <-posts:
+			if err = <-errPosts; err != nil {
+				log.Println(err)
+			}
+		case user.Comments = <-comments:
+
+			if err = <-errComments; err != nil {
+				log.Println(err)
+			}
+		case user.PostReactions = <-postReactions:
+			if err = <-errPostReactions; err != nil {
+				log.Println(err)
+			}
+		case user.CommentReactions = <-commentReactions:
+			if err = <-errCommentReactions; err != nil {
+				log.Println(err)
+			}
+		}
 	}
-	user.Posts = <-posts
-	if err = <-errComments; err != nil {
-		log.Println(err)
-	}
-	user.Comments = <-comments
-	if err = <-errPostReactions; err != nil {
-		log.Println(err)
-	}
-	user.PostReactions = <-postReactions
-	if err = <-errCommentReactions; err != nil {
-		log.Println(err)
-	}
-	user.CommentReactions = <-commentReactions
 	user.CountTotals()
 	return user, nil
 }
