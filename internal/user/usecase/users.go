@@ -24,18 +24,23 @@ func (u *UsersUsecase) FetchById(id int) (entity.User, error) {
 	}
 	posts := make(chan []entity.Post)
 	comments := make(chan []entity.Comment)
-	postReactions := make(chan []entity.PostReaction)
-	commentReactions := make(chan []entity.CommentReaction)
+	postLikes := make(chan []entity.PostReaction)
+	postDislikes := make(chan []entity.PostReaction)
+	commentLikes := make(chan []entity.CommentReaction)
+	commentDislikes := make(chan []entity.CommentReaction)
 	errPosts := make(chan error)
 	errComments := make(chan error)
-	errPostReactions := make(chan error)
-	errCommentReactions := make(chan error)
+	errPostLikes := make(chan error)
+	errPostDislikes := make(chan error)
+	errCommentLikes := make(chan error)
+	errCommentDislikes := make(chan error)
 	go u.fetchPosts(id, posts, errPosts)
 	go u.fetchComments(id, comments, errComments)
-	go u.fetchPostReactions(id, postReactions, errPostReactions)
-	go u.fetchCommentReactions(id, commentReactions, errCommentReactions)
-
-	for i := 0; i < 4; i++ {
+	go u.fetchPostReactions(id, true, postLikes, errPostLikes)
+	go u.fetchPostReactions(id, false, postDislikes, errPostDislikes)
+	go u.fetchCommentReactions(id, true, commentLikes, errCommentLikes)
+	go u.fetchCommentReactions(id, false, commentDislikes, errCommentDislikes)
+	for i := 0; i < 6; i++ {
 		select {
 		case user.Posts = <-posts:
 			if err = <-errPosts; err != nil {
@@ -46,12 +51,21 @@ func (u *UsersUsecase) FetchById(id int) (entity.User, error) {
 			if err = <-errComments; err != nil {
 				log.Println(err)
 			}
-		case user.PostReactions = <-postReactions:
-			if err = <-errPostReactions; err != nil {
+		case user.PostLikes = <-postLikes:
+			if err = <-errPostLikes; err != nil {
 				log.Println(err)
 			}
-		case user.CommentReactions = <-commentReactions:
-			if err = <-errCommentReactions; err != nil {
+		case user.PostDislikes = <-postDislikes:
+			if err = <-errPostDislikes; err != nil {
+				log.Println(err)
+			}
+		case user.CommentLikes = <-commentLikes:
+			if err = <-errCommentLikes; err != nil {
+				log.Println(err)
+			}
+
+		case user.CommentDislikes = <-commentDislikes:
+			if err = <-errCommentDislikes; err != nil {
 				log.Println(err)
 			}
 		}
@@ -88,14 +102,14 @@ func (u *UsersUsecase) fetchComments(id int, comments chan []entity.Comment, err
 	errComments <- err
 }
 
-func (u *UsersUsecase) fetchPostReactions(id int, postReactions chan []entity.PostReaction, errPostReactions chan error) {
-	tempPostReactions, err := u.postReactionsRepo.FetchByUserId(id)
+func (u *UsersUsecase) fetchPostReactions(id int, like bool, postReactions chan []entity.PostReaction, errPostReactions chan error) {
+	tempPostReactions, err := u.postReactionsRepo.FetchByUserId(id, like)
 	postReactions <- tempPostReactions
 	errPostReactions <- err
 }
 
-func (u *UsersUsecase) fetchCommentReactions(id int, commentReactions chan []entity.CommentReaction, errCommentReactions chan error) {
-	tempCommentReactions, err := u.commentReactionsRepo.FetchByUserId(id)
+func (u *UsersUsecase) fetchCommentReactions(id int, like bool, commentReactions chan []entity.CommentReaction, errCommentReactions chan error) {
+	tempCommentReactions, err := u.commentReactionsRepo.FetchByUserId(id, like)
 	commentReactions <- tempCommentReactions
 	errCommentReactions <- err
 }

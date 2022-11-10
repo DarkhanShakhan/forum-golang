@@ -76,3 +76,15 @@ func (u *PostsUsecase) fetchDislikes(id int, dislikes chan []entity.Reaction, er
 	dislikes <- tempDislikes
 	errDislikes <- err
 }
+
+func (u *PostsUsecase) FetchCategoryById(id int) (entity.Category, error) {
+	category, err := u.categoriesRepo.FetchById(id)
+	if err != nil {
+		return entity.Category{}, err
+	}
+	category.Posts, err = u.postsRepo.FetchByCategory(id)
+	if err != nil {
+		log.Println(err)
+	}
+	return category, nil
+}

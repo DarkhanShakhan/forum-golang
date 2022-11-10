@@ -22,6 +22,6 @@ func (rr *PostReactionsRepository) FetchByPostId(int, bool) ([]entity.Reaction, 
 	return nil, nil
 }
 
-func (rr *PostReactionsRepository) FetchByUserId(int) ([]entity.PostReaction, error) {
+func (rr *PostReactionsRepository) FetchByUserId(int, bool) ([]entity.PostReaction, error) {
 	return nil, nil
 }

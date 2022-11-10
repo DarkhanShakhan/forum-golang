@@ -14,11 +14,11 @@ type PostsRepository interface {
 }
 
 type PostReactionsRepository interface {
-	FetchByUserId(int) ([]entity.PostReaction, error)
+	FetchByUserId(int, bool) ([]entity.PostReaction, error)
 }
 
 type CommentReactionsRepository interface {
-	FetchByUserId(int) ([]entity.CommentReaction, error)
+	FetchByUserId(int, bool) ([]entity.CommentReaction, error)
 }
 
 type CommentRepository interface {
