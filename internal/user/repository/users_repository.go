@@ -30,6 +30,14 @@ func (ur *UsersRepository) FetchById(id int) (entity.User, error) {
 	return user, nil
 }
 
+func (ur *UsersRepository) FetchByPostId(id int) (entity.User, error) {
+	return entity.User{}, nil
+}
+
+func (ur *UsersRepository) FetchByCommentId(id int) (entity.User, error) {
+	return entity.User{}, nil
+}
+
 func (ur *UsersRepository) FetchAll() ([]entity.User, error) {
 	users := []entity.User{}
 	rows, err := ur.db.Query(SELECT_QUERY)

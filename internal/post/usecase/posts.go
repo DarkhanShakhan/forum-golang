@@ -10,10 +10,11 @@ type PostsUsecase struct {
 	postReactionsRepo PostReactionsRepository
 	commentsRepo      CommentsRepository
 	categoriesRepo    CategoriesRepository
+	usersRepo         UsersRepository
 }
 
-func NewPostsUsecase(postsRepo PostsRepository, postReactionsRepo PostReactionsRepository, commentsRepo CommentsRepository, categoriesRepo CategoriesRepository) *PostsUsecase {
-	return &PostsUsecase{postsRepo: postsRepo, postReactionsRepo: postReactionsRepo, commentsRepo: commentsRepo, categoriesRepo: categoriesRepo}
+func NewPostsUsecase(postsRepo PostsRepository, postReactionsRepo PostReactionsRepository, commentsRepo CommentsRepository, categoriesRepo CategoriesRepository, usersRepo UsersRepository) *PostsUsecase {
+	return &PostsUsecase{postsRepo: postsRepo, postReactionsRepo: postReactionsRepo, commentsRepo: commentsRepo, categoriesRepo: categoriesRepo, usersRepo: usersRepo}
 }
 
 func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
@@ -21,14 +22,17 @@ func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
 	if err != nil {
 		return entity.Post{}, err
 	}
+	user := make(chan entity.User)
 	comments := make(chan []entity.Comment)
 	categories := make(chan []entity.Category)
 	likes := make(chan []entity.Reaction)
 	dislikes := make(chan []entity.Reaction)
+	errUser := make(chan error)
 	errComments := make(chan error)
 	errCategories := make(chan error)
 	errLikes := make(chan error)
 	errDislikes := make(chan error)
+	go u.fetchUser(id, user, errUser)
 	go u.fetchCategories(id, categories, errCategories)
 	go u.fetchComments(id, comments, errComments)
 	go u.fetchLikes(id, likes, errLikes)
@@ -53,6 +57,11 @@ func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
 	return post, nil
 }
 
+func (u *PostsUsecase) fetchUser(id int, user chan entity.User, errUser chan error) {
+	tempUser, err := u.usersRepo.FetchByPostId(id)
+	user <- tempUser
+	errUser <- err
+}
 func (u *PostsUsecase) fetchComments(id int, comments chan []entity.Comment, errComments chan error) {
 	tempComments, err := u.commentsRepo.FetchByPostId(id)
 	comments <- tempComments
