@@ -25,7 +25,7 @@ func (ur *UsersRepository) FetchById(id int) (entity.User, error) {
 		return user, err
 	}
 	for rows.Next() {
-		rows.Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.RegDate, &user.DateOfBirth, &user.City, &user.Sex)
+		rows.Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.RegDate)
 	}
 	return user, nil
 }
@@ -38,7 +38,7 @@ func (ur *UsersRepository) FetchAll() ([]entity.User, error) {
 	}
 	tempUser := entity.User{}
 	for rows.Next() {
-		rows.Scan(&tempUser.Id, &tempUser.Name, &tempUser.Email, &tempUser.Password, &tempUser.RegDate, &tempUser.DateOfBirth, &tempUser.City, &tempUser.Sex)
+		rows.Scan(&tempUser.Id, &tempUser.Name, &tempUser.Email, &tempUser.Password, &tempUser.RegDate)
 	}
 	return users, nil
 }

@@ -86,6 +86,7 @@ func (u *PostsUsecase) FetchCategoryById(id int) (entity.Category, error) {
 	if err != nil {
 		log.Println(err)
 	}
+	category.CountTotals()
 	return category, nil
 }
 

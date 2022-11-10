@@ -18,15 +18,12 @@ func New() (*sql.DB, error) {
 		name TEXT NOT NULL UNIQUE,
 		email TEXT NOT NULL UNIQUE,
 		password TEXT,
-		date TEXT,
-		dob TEXT,
-		city TEXT,
-		sex TEXT
+		registration_date TEXT,
 		);
 	`
 	_, err = db.Exec(users)
 
-	query := `INSERT INTO users(name, email, password, date, dob, city, sex) VALUES("user1", "user1@mail.com", "password", "03-10-2022", "01-01-1990", "Astana", "male")`
+	query := `INSERT INTO users(name, email, password, registration_date) VALUES("user1", "user1@mail.com", "password", "03-10-2022")`
 	_, err = db.Exec(query)
 	return db, nil
 }

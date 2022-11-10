@@ -8,17 +8,17 @@ type Post struct {
 	Content       string     `json:"content,omitempty"`
 	Category      []Category `json:"categories,omitempty"`
 	Comments      []Comment  `json:"comments,omitempty"`
-	CountComments int        `json:"total_comments,omitempty"`
+	TotalComments int        `json:"total_comments,omitempty"`
 	Likes         []Reaction `json:"likes,omitempty"`
-	CountLikes    int        `json:"total_likes,omitempty"`
+	TotalLikes    int        `json:"total_likes,omitempty"`
 	Dislikes      []Reaction `json:"dislkes,omitempty"`
-	CountDislikes int        `json:"total_dislikes,omitempty"`
+	TotalDislikes int        `json:"total_dislikes,omitempty"`
 }
 
 func (p *Post) CountTotals() {
-	p.CountComments = len(p.Comments)
-	p.CountLikes = len(p.Likes)
-	p.CountDislikes = len(p.Dislikes)
+	p.TotalComments = len(p.Comments)
+	p.TotalLikes = len(p.Likes)
+	p.TotalDislikes = len(p.Dislikes)
 }
 
 type Comment struct {
@@ -60,11 +60,8 @@ type User struct {
 	Email                string            `json:"email,omitempty"`
 	Password             string            `json:"password,omitempty"`
 	RegDate              string            `json:"registration_date,omitempty"`
-	DateOfBirth          string            `json:"date_of_birth,omitempty"`
-	City                 string            `json:"city,omitempty"`
-	Sex                  string            `json:"sex,omitempty"`
 	Posts                []Post            `json:"posts,omitempty"`
-	CountPosts           int               `json:"total_posts,omitempty"`
+	TotalPosts           int               `json:"total_posts,omitempty"`
 	Comments             []Comment         `json:"comments,omitempty"`
 	TotalComments        int               `json:"total_comments,omitempty"`
 	PostLikes            []PostReaction    `json:"post_likes,omitempty"`
@@ -78,7 +75,7 @@ type User struct {
 }
 
 func (u *User) CountTotals() {
-	u.CountPosts = len(u.Posts)
+	u.TotalPosts = len(u.Posts)
 	u.TotalComments = len(u.Comments)
 	u.TotalPostLikes = len(u.PostLikes)
 	u.TotalPostDislikes = len(u.PostDislikes)
