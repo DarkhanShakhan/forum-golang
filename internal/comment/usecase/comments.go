@@ -76,3 +76,31 @@ func (cu *CommentsUsecase) fetchReaction(id int, like bool, reactions chan []ent
 	reactions <- tempReactions
 	errReactions <- err
 }
+
+func (cu *CommentsUsecase) Store(comment entity.Comment) (int, error) {
+	id, err := cu.commentsRepo.Store(comment)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (cu *CommentsUsecase) Update(comment entity.Comment) error {
+	return cu.commentsRepo.Update(comment)
+}
+
+func (cu *CommentsUsecase) DeleteById(id int) error {
+	return cu.commentsRepo.DeleteById(id)
+}
+
+func (cu *CommentsUsecase) StoreCommentReaction(commentReaction entity.CommentReaction) error {
+	return cu.commentReactionsRepo.StoreReaction(commentReaction)
+}
+
+func (u *CommentsUsecase) UpdatePostReaction(commentReaction entity.CommentReaction) error {
+	return u.commentReactionsRepo.UpdateReaction(commentReaction)
+}
+
+func (u *CommentsUsecase) DeletePostReaction(commentReaction entity.CommentReaction) error {
+	return u.commentReactionsRepo.DeleteReaction(commentReaction)
+}

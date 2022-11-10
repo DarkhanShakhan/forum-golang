@@ -6,7 +6,7 @@ type UsersRepository interface {
 	FetchById(int) (entity.User, error)
 	FetchAll() ([]entity.User, error)
 	Update(entity.User) error
-	Delete(int) error
+	DeleteById(int) error
 }
 
 type PostsRepository interface {

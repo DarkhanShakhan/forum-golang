@@ -88,3 +88,47 @@ func (u *PostsUsecase) FetchCategoryById(id int) (entity.Category, error) {
 	}
 	return category, nil
 }
+
+func (u *PostsUsecase) FetchAllSorted() ([]entity.Post, error) {
+	posts, err := u.postsRepo.FetchAllSorted()
+	if err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
+
+func (u *PostsUsecase) Store(post entity.Post) (int, error) {
+	id, err := u.postsRepo.Store(post)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (u *PostsUsecase) StorePostReaction(postReaction entity.PostReaction) error {
+	return u.postReactionsRepo.StoreReaction(postReaction)
+}
+
+func (u *PostsUsecase) UpdatePostReaction(postReaction entity.PostReaction) error {
+	return u.postReactionsRepo.UpdateReaction(postReaction)
+}
+
+func (u *PostsUsecase) DeletePostReaction(postReaction entity.PostReaction) error {
+	return u.postReactionsRepo.DeleteReaction(postReaction)
+}
+
+func (u *PostsUsecase) Update(post entity.Post) error {
+	err := u.postsRepo.Update(post)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *PostsUsecase) DeleteById(id int) error {
+	err := u.postsRepo.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
