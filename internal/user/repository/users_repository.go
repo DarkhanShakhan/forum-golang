@@ -3,16 +3,17 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"forum/internal/entity"
 )
 
 const (
-	SELECT_QUERY = "SELECT * FROM users"
-	UPDATE_QUERY = "UPDATE users SET"
-	DELETE_QUERY = "DELETE FROM users"
-	NAME         = " name = "
-	PASSWORD     = " password = "
-	BY_ID        = " WHERE id = ?"
+	SELECT_QUERY = `SELECT * FROM users`
+	UPDATE_QUERY = `UPDATE users SET`
+	DELETE_QUERY = `DELETE FROM users`
+	NAME         = ` name = `
+	PASSWORD     = ` password = `
+	BY_ID        = ` WHERE id = ?`
 )
 
 type UsersRepository struct {
@@ -29,7 +30,7 @@ func (ur *UsersRepository) FetchById(id int) (entity.User, error) {
 	if err != nil {
 		return user, err
 	}
-	for rows.Next() {
+	if rows.Next() {
 		rows.Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.RegDate)
 	}
 	return user, nil
@@ -41,9 +42,10 @@ func (ur *UsersRepository) FetchAll() ([]entity.User, error) {
 	if err != nil {
 		return users, err
 	}
-	tempUser := entity.User{}
 	for rows.Next() {
+		tempUser := entity.User{}
 		rows.Scan(&tempUser.Id, &tempUser.Name, &tempUser.Email, &tempUser.Password, &tempUser.RegDate)
+		users = append(users, tempUser)
 	}
 	return users, nil
 }
@@ -54,15 +56,19 @@ func (ur *UsersRepository) Update(user entity.User) error {
 		return errors.New("user id not provided")
 	}
 	if user.Name != "" {
-		query += NAME + user.Name
+		query += NAME + `"` + user.Name + `"`
 	}
 	if user.Password != "" {
-		query += PASSWORD + user.Password
+		if user.Name != "" {
+			query += `,`
+		}
+		query += PASSWORD + `"` + user.Password + `"`
 	}
 	if query == UPDATE_QUERY {
 		return errors.New("no attributes to update")
 	}
 	query += BY_ID
+	fmt.Println(query)
 	result, err := ur.db.Exec(query, user.Id)
 	if err != nil {
 		return err
@@ -78,9 +84,7 @@ func (ur *UsersRepository) Update(user entity.User) error {
 }
 
 func (ur *UsersRepository) Delete(id int) error {
-	query := DELETE_QUERY
-	query += BY_ID
-	result, err := ur.db.Exec(query, id)
+	result, err := ur.db.Exec(DELETE_QUERY+BY_ID, id)
 	if err != nil {
 		return err
 	}
