@@ -29,8 +29,8 @@ func (cu *CommentsUsecase) FetchById(id int) (entity.Comment, error) {
 	errUser := make(chan error)
 	errLikes := make(chan error)
 	errDislikes := make(chan error)
-	go cu.fetchPost(id, post, errPost)
-	go cu.fetchUser(id, user, errUser)
+	go cu.fetchPost(comment.Post.Id, post, errPost)
+	go cu.fetchUser(comment.User.Id, user, errUser)
 	go cu.fetchReaction(id, true, likes, errLikes)
 	go cu.fetchReaction(id, false, dislikes, errDislikes)
 
@@ -59,14 +59,14 @@ func (cu *CommentsUsecase) FetchById(id int) (entity.Comment, error) {
 	return comment, nil
 }
 
-func (cu *CommentsUsecase) fetchPost(id int, post chan entity.Post, errPost chan error) {
-	tempPost, err := cu.postsRepo.FetchByCommentId(id)
+func (cu *CommentsUsecase) fetchPost(postId int, post chan entity.Post, errPost chan error) {
+	tempPost, err := cu.postsRepo.FetchById(postId)
 	post <- tempPost
 	errPost <- err
 }
 
-func (cu *CommentsUsecase) fetchUser(id int, user chan entity.User, errUser chan error) {
-	tempUser, err := cu.usersRepo.FetchByCommentId(id)
+func (cu *CommentsUsecase) fetchUser(userId int, user chan entity.User, errUser chan error) {
+	tempUser, err := cu.usersRepo.FetchById(userId)
 	user <- tempUser
 	errUser <- err
 }

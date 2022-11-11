@@ -19,7 +19,7 @@ type PostReactionsRepository interface {
 }
 
 type UsersRepository interface {
-	FetchByPostId(int) (entity.User, error)
+	FetchById(int) (entity.User, error)
 }
 
 type CommentsRepository interface {

@@ -32,7 +32,7 @@ func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
 	errCategories := make(chan error)
 	errLikes := make(chan error)
 	errDislikes := make(chan error)
-	go u.fetchUser(id, user, errUser)
+	go u.fetchUser(post.User.Id, user, errUser)
 	go u.fetchCategories(id, categories, errCategories)
 	go u.fetchComments(id, comments, errComments)
 	go u.fetchLikes(id, likes, errLikes)
@@ -58,7 +58,7 @@ func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
 }
 
 func (u *PostsUsecase) fetchUser(id int, user chan entity.User, errUser chan error) {
-	tempUser, err := u.usersRepo.FetchByPostId(id)
+	tempUser, err := u.usersRepo.FetchById(id)
 	user <- tempUser
 	errUser <- err
 }
