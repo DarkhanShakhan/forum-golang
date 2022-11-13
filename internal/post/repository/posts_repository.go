@@ -10,8 +10,9 @@ const (
 	SELECT_QUERY = "SELECT * FROM"
 	DELETE_QUERY = "DELETE FROM"
 	POSTS        = " posts"
-	BY_ID        = " WHERE id = ?"
-	BY_USER_ID   = " WHERE user_id = ?"
+	BY           = " WHERE"
+	BY_ID        = BY + " id = ?"
+	BY_USER_ID   = BY + " user_id = ?"
 )
 
 type PostsRepository struct {
