@@ -86,28 +86,29 @@ func (u *PostsUsecase) fetchDislikes(id int, dislikes chan []entity.Reaction, er
 	errDislikes <- err
 }
 
-func (u *PostsUsecase) FetchCategoryById(id int) (entity.Category, error) {
-	category, err := u.categoriesRepo.FetchById(id)
+func (u *PostsUsecase) FetchCategoryPosts(category entity.Category) (entity.Category, error) {
+	var err error
+	category.Posts, err = u.postsRepo.FetchByCategoryId(category.Id)
 	if err != nil {
-		return entity.Category{}, err
+		return category, err
 	}
-	category.Posts, err = u.postsRepo.FetchByCategory(id)
-	if err != nil {
+	for ix, post := range category.Posts {
+		category.Posts[ix], err = u.postsRepo.FetchById(post.Id)
 		log.Println(err)
 	}
 	category.CountTotals()
 	return category, nil
 }
 
-func (u *PostsUsecase) FetchAllSorted() ([]entity.Post, error) {
-	posts, err := u.postsRepo.FetchAllSorted()
-	if err != nil {
-		return nil, err
-	}
-	return posts, nil
-}
+// func (u *PostsUsecase) FetchAllSorted() ([]entity.Post, error) {
+// 	posts, err := u.postsRepo.FetchAllSorted()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return posts, nil
+// }
 
-func (u *PostsUsecase) Store(post entity.Post) (int, error) {
+func (u *PostsUsecase) Store(post entity.Post) (int64, error) {
 	id, err := u.postsRepo.Store(post)
 	if err != nil {
 		return 0, err
@@ -127,18 +128,19 @@ func (u *PostsUsecase) DeletePostReaction(postReaction entity.PostReaction) erro
 	return u.postReactionsRepo.DeleteReaction(postReaction)
 }
 
-func (u *PostsUsecase) Update(post entity.Post) error {
-	err := u.postsRepo.Update(post)
-	if err != nil {
-		return err
-	}
-	return nil
-}
+//for future use
+// func (u *PostsUsecase) Update(post entity.Post) error {
+// 	err := u.postsRepo.Update(post)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
-func (u *PostsUsecase) DeleteById(id int) error {
-	err := u.postsRepo.Delete(id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// func (u *PostsUsecase) DeleteById(id int) error {
+// 	err := u.postsRepo.Delete(id)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }

@@ -82,13 +82,13 @@ func (u *UsersUsecase) FetchAll() ([]entity.User, error) {
 	return users, nil
 }
 
-func (u *UsersUsecase) Update(user entity.User) error {
-	return u.userRepo.Update(user)
-}
+// func (u *UsersUsecase) Update(user entity.User) error {
+// 	return u.userRepo.Update(user)
+// }
 
-func (u *UsersUsecase) DeleteById(id int) error {
-	return u.userRepo.DeleteById(id)
-}
+// func (u *UsersUsecase) DeleteById(id int) error {
+// 	return u.userRepo.DeleteById(id)
+// }
 
 func (u *UsersUsecase) fetchPosts(id int, posts chan []entity.Post, errPosts chan error) {
 	tempPosts, err := u.postRepo.FetchByUserId(id)

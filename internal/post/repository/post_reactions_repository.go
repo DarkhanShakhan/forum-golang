@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"forum/internal/entity"
 )
 
@@ -22,29 +21,64 @@ func NewPostReactionsRepository(db *sql.DB) *PostReactionsRepository {
 
 func (rr *PostReactionsRepository) FetchByPostId(id int, like bool) ([]entity.Reaction, error) {
 	reactions := []entity.Reaction{}
-	rows, err := rr.db.Query("SELECT user_id, date, like FROM"+POST_REACTIONS+BY_ID+AND_LIKE, id, like)
+	tx, err := rr.db.Begin()
 	if err != nil {
-		return reactions, err
+		return nil, err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare("SELECT user_id, date, like FROM" + POST_REACTIONS + " WHERE post_id = ?" + AND_LIKE)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(id, like)
+	if err != nil {
+		return nil, err
 	}
 	for rows.Next() {
 		reaction := entity.Reaction{}
 		rows.Scan(&reaction.User.Id, &reaction.Date, &reaction.Like)
 		reactions = append(reactions, reaction)
 	}
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
 	return reactions, nil
 }
 
 func (rr *PostReactionsRepository) StoreReaction(postReaction entity.PostReaction) error {
-	_, err := rr.db.Exec(`INSERT INTO post_reactions(post_id, user_id, date, like) VALUES(?,?,?,?)`, postReaction.Post.Id, postReaction.Reaction.User.Id, postReaction.Reaction.Date, 1)
-	fmt.Println(err)
+	tx, err := rr.db.Begin()
 	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(`INSERT INTO post_reactions(post_id, user_id, date, like) VALUES(?, ?, ?, ?)`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err = stmt.Exec(postReaction.Post.Id, postReaction.Reaction.User.Id, postReaction.Reaction.Date, postReaction.Reaction.Like); err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (rr *PostReactionsRepository) UpdateReaction(postReaction entity.PostReaction) error {
-	res, err := rr.db.Exec(`UPDATE post_reactions SET like = ? WHERE post_id = ? AND user_id = ?;`, postReaction.Like, postReaction.Post.Id, postReaction.Reaction.User.Id)
+	tx, err := rr.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(`UPDATE post_reactions SET like = ? WHERE post_id = ? AND user_id = ?;`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	res, err := stmt.Exec(postReaction.Like, postReaction.Post.Id, postReaction.Reaction.User.Id)
 	if err != nil {
 		return err
 	}
@@ -53,13 +87,26 @@ func (rr *PostReactionsRepository) UpdateReaction(postReaction entity.PostReacti
 		return errors.New("more than one row has been affected")
 	}
 	if err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (rr *PostReactionsRepository) DeleteReaction(postReaction entity.PostReaction) error {
-	res, err := rr.db.Exec(`DELETE FROM post_reactions WHERE post_id = ? AND user_id = ?`, postReaction.Post.Id, postReaction.Reaction.User.Id)
+	tx, err := rr.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(`DELETE FROM post_reactions WHERE post_id = ? AND user_id = ?;`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	res, err := stmt.Exec(postReaction.Post.Id, postReaction.Reaction.User.Id)
 	if err != nil {
 		return err
 	}
@@ -68,6 +115,9 @@ func (rr *PostReactionsRepository) DeleteReaction(postReaction entity.PostReacti
 		return errors.New("more than one row has been affected")
 	}
 	if err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
 		return err
 	}
 	return nil
@@ -75,15 +125,28 @@ func (rr *PostReactionsRepository) DeleteReaction(postReaction entity.PostReacti
 
 func (rr *PostReactionsRepository) FetchByUserId(userId int, like bool) ([]entity.PostReaction, error) {
 	postReactions := []entity.PostReaction{}
-	rows, err := rr.db.Query("SELECT post_id, date, like FROM", POST_REACTIONS, BY_USER_ID+AND_LIKE, userId, like)
+	tx, err := rr.db.Begin()
 	if err != nil {
-		return postReactions, err
+		return nil, err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare("SELECT post_id, date, like FROM" + POST_REACTIONS + BY_USER_ID + AND_LIKE)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(userId, like)
+	if err != nil {
+		return nil, err
 	}
 	for rows.Next() {
 		postReaction := entity.PostReaction{}
 		rows.Scan(&postReaction.Post.Id, &postReaction.Reaction.Date, &postReaction.Reaction.Like)
 		postReactions = append(postReactions, postReaction)
 	}
-
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
 	return postReactions, nil
 }

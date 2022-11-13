@@ -4,9 +4,9 @@ import "forum/internal/entity"
 
 type PostsRepository interface {
 	FetchById(int) (entity.Post, error)
-	FetchByCategory(int) ([]entity.Post, error)
-	FetchAllSorted() ([]entity.Post, error)
-	Store(entity.Post) (int, error)
+	FetchByCategoryId(int) ([]entity.Post, error)
+	// FetchAllSorted() ([]entity.Post, error)
+	Store(entity.Post) (int64, error)
 	Update(entity.Post) error
 	Delete(int) error
 }
@@ -28,5 +28,4 @@ type CommentsRepository interface {
 
 type CategoriesRepository interface {
 	FetchByPostId(int) ([]entity.Category, error)
-	FetchById(int) (entity.Category, error)
 }

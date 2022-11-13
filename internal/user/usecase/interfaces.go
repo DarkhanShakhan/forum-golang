@@ -5,8 +5,8 @@ import "forum/internal/entity"
 type UsersRepository interface {
 	FetchById(int) (entity.User, error)
 	FetchAll() ([]entity.User, error)
-	Update(entity.User) error
-	DeleteById(int) error
+	// Update(entity.User) error
+	// DeleteById(int) error
 }
 
 type PostsRepository interface {
