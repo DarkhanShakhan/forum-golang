@@ -5,10 +5,10 @@ import "forum/internal/entity"
 type PostsRepository interface {
 	FetchById(int) (entity.Post, error)
 	FetchByCategoryId(int) ([]entity.Post, error)
-	// FetchAllSorted() ([]entity.Post, error)
+	FetchAll() ([]entity.Post, error)
 	Store(entity.Post) (int64, error)
-	Update(entity.Post) error
-	Delete(int) error
+	// Update(entity.Post) error
+	// Delete(int) error
 }
 
 type PostReactionsRepository interface {

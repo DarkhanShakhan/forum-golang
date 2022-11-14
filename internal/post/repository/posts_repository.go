@@ -47,6 +47,33 @@ func (pr *PostsRepository) FetchById(id int) (entity.Post, error) {
 	return post, nil
 }
 
+func (pr *PostsRepository) FetchAll() ([]entity.Post, error) {
+	posts := []entity.Post{}
+	tx, err := pr.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(SELECT_QUERY + POSTS)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		post := entity.Post{}
+		rows.Scan(&post.Id, &post.User.Id, &post.Date, &post.Title, &post.Content)
+		posts = append(posts, post)
+	}
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
+
 func (pr *PostsRepository) FetchByUserId(id int) ([]entity.Post, error) {
 	posts := []entity.Post{}
 	tx, err := pr.db.Begin()

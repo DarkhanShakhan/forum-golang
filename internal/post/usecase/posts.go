@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"forum/internal/entity"
 	"log"
 )
@@ -37,24 +38,35 @@ func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
 	go u.fetchComments(id, comments, errComments)
 	go u.fetchLikes(id, likes, errLikes)
 	go u.fetchDislikes(id, dislikes, errDislikes)
-	if err = <-errCategories; err != nil {
-		log.Println(err)
+	for i := 0; i < 5; i++ {
+		select {
+		case post.User = <-user:
+			if err = <-errUser; err != nil {
+				fmt.Println(err)
+			}
+		case post.Category = <-categories:
+			if err = <-errCategories; err != nil {
+				fmt.Println(err)
+			}
+		case post.Comments = <-comments:
+			if err = <-errComments; err != nil {
+				fmt.Println(err)
+			}
+		case post.Likes = <-likes:
+			if err = <-errLikes; err != nil {
+				fmt.Println(err)
+			}
+		case post.Dislikes = <-dislikes:
+			if err = <-errDislikes; err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
-	post.Category = <-categories
-	if err = <-errComments; err != nil {
-		log.Println(err)
-	}
-	post.Comments = <-comments
-	if err = <-errLikes; err != nil {
-		log.Println(err)
-	}
-	post.Likes = <-likes
-	if err = <-errDislikes; err != nil {
-		log.Println(err)
-	}
-	post.Dislikes = <-dislikes
 	post.CountTotals()
 	return post, nil
+}
+func (u *PostsUsecase) FetchAll() ([]entity.Post, error) {
+	return u.postsRepo.FetchAll()
 }
 
 func (u *PostsUsecase) fetchUser(id int, user chan entity.User, errUser chan error) {

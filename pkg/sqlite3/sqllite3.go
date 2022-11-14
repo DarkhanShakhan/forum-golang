@@ -75,5 +75,15 @@ func New() (*sql.DB, error) {
 		content STRING
 	);`
 	db.Exec(comments)
+	commentReactions := `
+	CREATE TABLE IF NOT EXISTS comment_reactions (
+		comment_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
+		user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+		date TEXT,
+		like INTEGER,
+		UNIQUE(comment_id, user_id)
+		);
+	`
+	db.Exec(commentReactions)
 	return db, nil
 }

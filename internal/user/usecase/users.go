@@ -47,7 +47,6 @@ func (u *UsersUsecase) FetchById(id int) (entity.User, error) {
 				log.Println(err)
 			}
 		case user.Comments = <-comments:
-
 			if err = <-errComments; err != nil {
 				log.Println(err)
 			}
