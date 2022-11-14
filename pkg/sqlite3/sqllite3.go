@@ -2,7 +2,6 @@ package sqlite3
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -47,20 +46,19 @@ func New() (*sql.DB, error) {
 		);
 	`
 	_, err = db.Exec(postReactions)
-	fmt.Println(err)
 	categories := `
 	CREATE TABLE IF NOT EXISTS categories (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		title TEXT UNIQUE
 	);`
 	db.Exec(categories)
-	cat1 := `
-	Insert into categories(title) values("sql");`
-	cat2 := `insert into categories(title) values("python");`
-	cat3 := `insert into categories(title) values("golang");`
-	db.Exec(cat1)
-	db.Exec(cat2)
-	db.Exec(cat3)
+	// cat1 := `
+	// Insert into categories(title) values("sql");`
+	// cat2 := `insert into categories(title) values("python");`
+	// cat3 := `insert into categories(title) values("golang");`
+	// db.Exec(cat1)
+	// db.Exec(cat2)
+	// db.Exec(cat3)
 	postCategories := `
 	CREATE TABLE IF NOT EXISTS post_categories (
 		post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
@@ -68,5 +66,14 @@ func New() (*sql.DB, error) {
 		UNIQUE(post_id, category_id)
 	);`
 	db.Exec(postCategories)
+	comments := `
+	CREATE TABLE IF NOT EXISTS comments (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+		user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+		date STRING,
+		content STRING
+	);`
+	db.Exec(comments)
 	return db, nil
 }
