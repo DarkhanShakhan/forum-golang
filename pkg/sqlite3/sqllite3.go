@@ -85,5 +85,16 @@ func New() (*sql.DB, error) {
 		);
 	`
 	db.Exec(commentReactions)
+
+	sessions := `
+	CREATE TABLE IF NOT EXISTS sessions (
+		session TEXT UNIQUE,
+		user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+		expiry_date TEXT
+	);`
+	db.Exec(sessions)
+
+	s1 := `INSERT INTO sessions(session, user_id) VALUES("hello", 1);`
+	db.Exec(s1)
 	return db, nil
 }

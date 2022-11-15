@@ -19,6 +19,7 @@ func NewAPIGateway(ucase UserUsecase, pcase PostUsecase, ccase CommentUsecase) *
 func (a *APIGateway) MainHandler(w http.ResponseWriter, r *http.Request) {
 	posts, _ := a.pcase.FetchAll()
 	blob, _ := json.Marshal(posts)
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(blob)
 }
 
@@ -27,5 +28,6 @@ func (a *APIGateway) UserHandler(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(path[len(path)-1:])
 	user, _ := a.ucase.FetchById(id)
 	blob, _ := json.Marshal(user)
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(blob)
 }
