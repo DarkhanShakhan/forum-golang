@@ -1,16 +1,15 @@
 package app
 
 import (
-	cr "forum/internal/comment/repository"
-	"forum/internal/gateway"
+	cr "forum/internal/forum_app/comment/repository"
 	"log"
 	"net/http"
 
-	cUcse "forum/internal/comment/usecase"
-	pr "forum/internal/post/repository"
-	pUcse "forum/internal/post/usecase"
-	ur "forum/internal/user/repository"
-	uUcse "forum/internal/user/usecase"
+	cUcse "forum/internal/forum_app/comment/usecase"
+	pr "forum/internal/forum_app/post/repository"
+	pUcse "forum/internal/forum_app/post/usecase"
+	ur "forum/internal/forum_app/user/repository"
+	uUcse "forum/internal/forum_app/user/usecase"
 
 	"forum/pkg/sqlite3"
 )
@@ -27,9 +26,12 @@ func Run() {
 	pcase := pUcse.NewPostsUsecase(postsRepo, pReactionsRepo, commentsRepo, categoriesRepo, usersRepo)
 	ccase := cUcse.NewCommentsUsecase(commentsRepo, cReactionsRepo, postsRepo, usersRepo)
 
-	apiGateway := gateway.NewAPIGateway(ucase, pcase, ccase)
-	http.HandleFunc("/main", apiGateway.MainHandler)
-	http.HandleFunc("/user/", apiGateway.UserHandler)
+	server := NewServer(ucase, pcase, ccase)
+	http.HandleFunc("/users", server.UsersAllHandler)
+	http.HandleFunc("/user", server.UserByIdHandler)
+	http.HandleFunc("/post", server.PostByIdHandler)
+	http.HandleFunc("/posts", server.PostsAllHandler)
+	http.HandleFunc("/post/save", server.StorePostHandler)
 	log.Print("Listening...")
 	http.ListenAndServe(":8080", nil)
 }

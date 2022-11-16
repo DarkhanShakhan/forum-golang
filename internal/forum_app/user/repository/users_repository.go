@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"forum/internal/entity"
+	"forum/internal/forum_app/entity"
 )
 
 const (

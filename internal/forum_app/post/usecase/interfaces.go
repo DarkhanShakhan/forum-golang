@@ -1,6 +1,6 @@
 package usecase
 
-import "forum/internal/entity"
+import "forum/internal/forum_app/entity"
 
 type PostsRepository interface {
 	FetchById(int) (entity.Post, error)

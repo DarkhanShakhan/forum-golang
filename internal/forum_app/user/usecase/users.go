@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"forum/internal/entity"
+	"forum/internal/forum_app/entity"
 	"log"
 )
 

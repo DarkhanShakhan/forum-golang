@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"fmt"
-	"forum/internal/entity"
+	"forum/internal/forum_app/entity"
 	"log"
 )
 
@@ -66,7 +66,20 @@ func (u *PostsUsecase) FetchById(id int) (entity.Post, error) {
 	return post, nil
 }
 func (u *PostsUsecase) FetchAll() ([]entity.Post, error) {
-	return u.postsRepo.FetchAll()
+	posts, err := u.postsRepo.FetchAll()
+	if err != nil {
+		return nil, err
+	}
+	for ix, post := range posts {
+		posts[ix], err = u.FetchById(post.Id)
+		if err != nil {
+			log.Println(err)
+		}
+		posts[ix].Comments = nil
+		posts[ix].Likes = nil
+		posts[ix].Dislikes = nil
+	}
+	return posts, nil
 }
 
 func (u *PostsUsecase) fetchUser(id int, user chan entity.User, errUser chan error) {

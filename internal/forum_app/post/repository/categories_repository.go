@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"forum/internal/entity"
+	"forum/internal/forum_app/entity"
 )
 
 type CategoriesRepository struct {

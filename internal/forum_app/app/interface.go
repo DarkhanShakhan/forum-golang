@@ -1,4 +1,4 @@
-package gateway
+package app
 
 import "forum/internal/forum_app/entity"
 
