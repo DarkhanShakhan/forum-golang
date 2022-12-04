@@ -1,17 +1,9 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"forum_app/internal/entity"
-)
-
-const (
-	SELECT_QUERY = `SELECT * FROM users`
-	UPDATE_QUERY = `UPDATE users SET`
-	DELETE_QUERY = `DELETE FROM users`
-	NAME         = ` name = `
-	PASSWORD     = ` password = `
-	BY_ID        = ` WHERE id = ?`
 )
 
 type UsersRepository struct {
@@ -22,19 +14,19 @@ func NewUsersRepository(db *sql.DB) *UsersRepository {
 	return &UsersRepository{db}
 }
 
-func (ur *UsersRepository) FetchById(id int) (entity.User, error) {
+func (ur *UsersRepository) FetchById(ctx context.Context, id int) (entity.User, error) {
 	user := entity.User{}
-	tx, err := ur.db.Begin()
+	tx, err := ur.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return user, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(SELECT_QUERY + BY_ID)
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM users WHERE id = ?;")
 	if err != nil {
 		return user, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return user, err
 	}
@@ -47,19 +39,19 @@ func (ur *UsersRepository) FetchById(id int) (entity.User, error) {
 	return user, nil
 }
 
-func (ur *UsersRepository) FetchAll() ([]entity.User, error) {
+func (ur *UsersRepository) FetchAll(ctx context.Context) ([]entity.User, error) {
 	users := []entity.User{}
-	tx, err := ur.db.Begin()
+	tx, err := ur.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return users, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(SELECT_QUERY)
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM users;")
 	if err != nil {
 		return users, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query()
+	rows, err := stmt.QueryContext(ctx)
 	if err != nil {
 		return users, err
 	}
@@ -73,19 +65,19 @@ func (ur *UsersRepository) FetchAll() ([]entity.User, error) {
 	}
 	return users, nil
 }
-func (ur *UsersRepository) FetchByEmail(email string) (entity.User, error) {
+func (ur *UsersRepository) FetchByEmail(ctx context.Context, email string) (entity.User, error) {
 	user := entity.User{}
-	tx, err := ur.db.Begin()
+	tx, err := ur.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return user, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(SELECT_QUERY + " WHERE email = ?")
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM users WHERE email = ?")
 	if err != nil {
 		return user, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(email)
+	rows, err := stmt.QueryContext(ctx, email)
 	if err != nil {
 		return user, err
 	}

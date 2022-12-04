@@ -77,7 +77,9 @@ func (cu *CommentsUsecase) fetchReaction(id int, like bool, reactions chan []ent
 	errReactions <- err
 }
 
+//create comment
 func (cu *CommentsUsecase) Store(comment entity.Comment) (int64, error) {
+
 	id, err := cu.commentsRepo.Store(comment)
 	if err != nil {
 		return 0, err

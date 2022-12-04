@@ -1,17 +1,9 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"forum_app/internal/entity"
-)
-
-const (
-	SELECT_QUERY = "SELECT * FROM"
-	DELETE_QUERY = "DELETE FROM"
-	POSTS        = " posts"
-	BY           = " WHERE"
-	BY_ID        = BY + " id = ?"
-	BY_USER_ID   = BY + " user_id = ?"
 )
 
 type PostsRepository struct {
@@ -22,19 +14,19 @@ func NewPostsRepository(db *sql.DB) *PostsRepository {
 	return &PostsRepository{db}
 }
 
-func (pr *PostsRepository) FetchById(id int) (entity.Post, error) {
+func (pr *PostsRepository) FetchById(ctx context.Context, id int) (entity.Post, error) {
 	post := entity.Post{}
-	tx, err := pr.db.Begin()
+	tx, err := pr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return post, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(SELECT_QUERY + POSTS + BY_ID)
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM posts WHERE id = ?;")
 	if err != nil {
 		return post, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return post, err
 	}
@@ -47,19 +39,19 @@ func (pr *PostsRepository) FetchById(id int) (entity.Post, error) {
 	return post, nil
 }
 
-func (pr *PostsRepository) FetchAll() ([]entity.Post, error) {
+func (pr *PostsRepository) FetchAll(ctx context.Context) ([]entity.Post, error) {
 	posts := []entity.Post{}
-	tx, err := pr.db.Begin()
+	tx, err := pr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(SELECT_QUERY + POSTS)
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM posts;")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query()
+	rows, err := stmt.QueryContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -74,19 +66,19 @@ func (pr *PostsRepository) FetchAll() ([]entity.Post, error) {
 	return posts, nil
 }
 
-func (pr *PostsRepository) FetchByUserId(id int) ([]entity.Post, error) {
+func (pr *PostsRepository) FetchByUserId(ctx context.Context, id int) ([]entity.Post, error) {
 	posts := []entity.Post{}
-	tx, err := pr.db.Begin()
+	tx, err := pr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(SELECT_QUERY + POSTS + BY_USER_ID)
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM posts WHERE user_id = ?;")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -101,19 +93,19 @@ func (pr *PostsRepository) FetchByUserId(id int) ([]entity.Post, error) {
 	return posts, nil
 }
 
-func (pr *PostsRepository) FetchByCategoryId(id int) ([]entity.Post, error) {
+func (pr *PostsRepository) FetchByCategoryId(ctx context.Context, id int) ([]entity.Post, error) {
 	posts := []entity.Post{}
-	tx, err := pr.db.Begin()
+	tx, err := pr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare("SELECT post_id FROM post_categories WHERE category_id = ?")
+	stmt, err := tx.PrepareContext(ctx, "SELECT post_id FROM post_categories WHERE category_id = ?")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -128,18 +120,18 @@ func (pr *PostsRepository) FetchByCategoryId(id int) ([]entity.Post, error) {
 	return posts, nil
 }
 
-func (pr *PostsRepository) Store(post entity.Post) (int64, error) {
-	tx, err := pr.db.Begin()
+func (pr *PostsRepository) Store(ctx context.Context, post entity.Post) (int64, error) {
+	tx, err := pr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return 0, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(`INSERT INTO posts(user_id, date, title, content) VALUES(?,?,?,?);`)
+	stmt, err := tx.PrepareContext(ctx, `INSERT INTO posts(user_id, date, title, content) VALUES(?,?,?,?);`)
 	if err != nil {
 		return 0, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(post.User.Id, post.Date, post.Title, post.Content)
+	res, err := stmt.ExecContext(ctx, post.User.Id, post.Date, post.Title, post.Content)
 	if err != nil {
 		return 0, err
 	}

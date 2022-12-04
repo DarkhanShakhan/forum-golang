@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"forum_app/internal/entity"
 )
@@ -13,19 +14,19 @@ func NewCommentsRepository(db *sql.DB) *CommentsRepository {
 	return &CommentsRepository{db}
 }
 
-func (cr *CommentsRepository) FetchById(id int) (entity.Comment, error) {
+func (cr *CommentsRepository) FetchById(ctx context.Context, id int) (entity.Comment, error) {
 	comment := entity.Comment{}
-	tx, err := cr.db.Begin()
+	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return comment, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare("SELECT * FROM comments WHERE id = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE id = ?;")
 	if err != nil {
 		return comment, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return comment, err
 	}
@@ -38,19 +39,19 @@ func (cr *CommentsRepository) FetchById(id int) (entity.Comment, error) {
 	return comment, nil
 }
 
-func (cr *CommentsRepository) FetchByPostId(id int) ([]entity.Comment, error) {
+func (cr *CommentsRepository) FetchByPostId(ctx context.Context, id int) ([]entity.Comment, error) {
 	comments := []entity.Comment{}
-	tx, err := cr.db.Begin()
+	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare("SELECT * FROM comments WHERE post_id = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE post_id = ?;")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -65,19 +66,19 @@ func (cr *CommentsRepository) FetchByPostId(id int) ([]entity.Comment, error) {
 	return comments, nil
 }
 
-func (cr *CommentsRepository) FetchByUserId(id int) ([]entity.Comment, error) {
+func (cr *CommentsRepository) FetchByUserId(ctx context.Context, id int) ([]entity.Comment, error) {
 	comments := []entity.Comment{}
-	tx, err := cr.db.Begin()
+	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare("SELECT * FROM comments WHERE user_id = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE user_id = ?;")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(id)
+	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -92,18 +93,18 @@ func (cr *CommentsRepository) FetchByUserId(id int) ([]entity.Comment, error) {
 	return comments, nil
 }
 
-func (cr *CommentsRepository) Store(comment entity.Comment) (int64, error) {
-	tx, err := cr.db.Begin()
+func (cr *CommentsRepository) Store(ctx context.Context, comment entity.Comment) (int64, error) {
+	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return 0, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(`INSERT INTO comments(post_id, user_id, date, content) VALUES(?,?,?,?);`)
+	stmt, err := tx.PrepareContext(ctx, `INSERT INTO comments(post_id, user_id, date, content) VALUES(?,?,?,?);`)
 	if err != nil {
 		return 0, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(comment.Post.Id, comment.User.Id, comment.Date, comment.Content)
+	res, err := stmt.ExecContext(ctx, comment.Post.Id, comment.User.Id, comment.Date, comment.Content)
 	if err != nil {
 		return 0, err
 	}

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"forum_app/internal/entity"
@@ -14,20 +15,20 @@ func NewCommentReactionsRepository(db *sql.DB) *CommentReactionsRepository {
 	return &CommentReactionsRepository{db}
 }
 
-func (crr *CommentReactionsRepository) FetchByCommentId(id int, like bool) ([]entity.Reaction, error) {
+func (crr *CommentReactionsRepository) FetchByCommentId(ctx context.Context, id int, like bool) ([]entity.Reaction, error) {
 	reactions := []entity.Reaction{}
-	tx, err := crr.db.Begin()
+	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare("SELECT user_id, date, like FROM comment_reactions WHERE comment_id = ? AND like = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT user_id, date, like FROM comment_reactions WHERE comment_id = ? AND like = ?;")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
-	rows, err := stmt.Query(id, like)
+	rows, err := stmt.QueryContext(ctx, id, like)
 	if err != nil {
 		return nil, err
 	}
@@ -42,18 +43,19 @@ func (crr *CommentReactionsRepository) FetchByCommentId(id int, like bool) ([]en
 	return reactions, nil
 }
 
-func (crr *CommentReactionsRepository) StoreReaction(commentReaction entity.CommentReaction) error {
-	tx, err := crr.db.Begin()
+func (crr *CommentReactionsRepository) StoreReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
+
+	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(`INSERT INTO comment_reactions(comment_id, user_id, date, like) VALUES(?, ?, ?, ?)`)
+	stmt, err := tx.PrepareContext(ctx, `INSERT INTO comment_reactions(comment_id, user_id, date, like) VALUES(?, ?, ?, ?)`)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	if _, err = stmt.Exec(commentReaction.Comment.Id, commentReaction.Reaction.User.Id, commentReaction.Reaction.Date, commentReaction.Reaction.Like); err != nil {
+	if _, err = stmt.ExecContext(ctx, commentReaction.Comment.Id, commentReaction.Reaction.User.Id, commentReaction.Reaction.Date, commentReaction.Reaction.Like); err != nil {
 		return err
 	}
 	if err = tx.Commit(); err != nil {
@@ -62,18 +64,18 @@ func (crr *CommentReactionsRepository) StoreReaction(commentReaction entity.Comm
 	return nil
 }
 
-func (crr *CommentReactionsRepository) UpdateReaction(commentReaction entity.CommentReaction) error {
-	tx, err := crr.db.Begin()
+func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
+	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(`UPDATE comment_reactions SET like = ? WHERE comment_id = ? AND user_id = ?;`)
+	stmt, err := tx.PrepareContext(ctx, `UPDATE comment_reactions SET like = ? WHERE comment_id = ? AND user_id = ?;`)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(commentReaction.Like, commentReaction.Post.Id, commentReaction.Reaction.User.Id)
+	res, err := stmt.ExecContext(ctx, commentReaction.Like, commentReaction.Post.Id, commentReaction.Reaction.User.Id)
 	if err != nil {
 		return err
 	}
@@ -90,18 +92,18 @@ func (crr *CommentReactionsRepository) UpdateReaction(commentReaction entity.Com
 	return nil
 }
 
-func (crr *CommentReactionsRepository) DeleteReaction(commentReaction entity.CommentReaction) error {
-	tx, err := crr.db.Begin()
+func (crr *CommentReactionsRepository) DeleteReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
+	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare(`DELETE FROM comment_reactions WHERE comment_id = ? AND user_id = ?;`)
+	stmt, err := tx.PrepareContext(ctx, `DELETE FROM comment_reactions WHERE comment_id = ? AND user_id = ?;`)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(commentReaction.Post.Id, commentReaction.Reaction.User.Id)
+	res, err := stmt.ExecContext(ctx, commentReaction.Post.Id, commentReaction.Reaction.User.Id)
 	if err != nil {
 		return err
 	}
@@ -118,20 +120,20 @@ func (crr *CommentReactionsRepository) DeleteReaction(commentReaction entity.Com
 	return nil
 }
 
-func (crr *CommentReactionsRepository) FetchByUserId(userId int, like bool) ([]entity.CommentReaction, error) {
+func (crr *CommentReactionsRepository) FetchByUserId(ctx context.Context, userId int, like bool) ([]entity.CommentReaction, error) {
 	commentReactions := []entity.CommentReaction{}
-	tx, err := crr.db.Begin()
+	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.Prepare("SELECT comment_id, date, like FROM comment_reactions WHERE user_id = ? AND like = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT comment_id, date, like FROM comment_reactions WHERE user_id = ? AND like = ?;")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
-	rows, err := stmt.Query(userId, like)
+	rows, err := stmt.QueryContext(ctx, userId, like)
 	if err != nil {
 		return nil, err
 	}
