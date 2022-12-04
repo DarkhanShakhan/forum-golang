@@ -1,25 +1,28 @@
 package usecase
 
-import "forum_app/internal/entity"
+import (
+	"context"
+	"forum_app/internal/entity"
+)
 
 type CommentsRepository interface {
-	FetchById(int) (entity.Comment, error)
-	Store(entity.Comment) (int64, error)
+	FetchById(context.Context, int) (entity.Comment, error)
+	Store(context.Context, entity.Comment) (int64, error)
 	// Update(entity.Comment) error
 	// DeleteById(int) error
 }
 
 type CommentReactionsRepository interface {
-	FetchByCommentId(int, bool) ([]entity.Reaction, error)
-	StoreReaction(entity.CommentReaction) error
-	UpdateReaction(entity.CommentReaction) error
-	DeleteReaction(entity.CommentReaction) error
+	FetchByCommentId(context.Context, int, bool) ([]entity.Reaction, error)
+	StoreReaction(context.Context, entity.CommentReaction) error
+	UpdateReaction(context.Context, entity.CommentReaction) error
+	DeleteReaction(context.Context, entity.CommentReaction) error
 }
 
 type PostsRepository interface {
-	FetchById(int) (entity.Post, error)
+	FetchById(context.Context, int) (entity.Post, error)
 }
 
 type UsersRepository interface {
-	FetchById(int) (entity.User, error)
+	FetchById(context.Context, int) (entity.User, error)
 }

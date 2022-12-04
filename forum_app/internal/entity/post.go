@@ -1,5 +1,6 @@
 package entity
 
+//FIXME: change user, title, category as required fields
 type Post struct {
 	Id            int        `json:"id,omitempty"`
 	User          User       `json:"user,omitempty"`

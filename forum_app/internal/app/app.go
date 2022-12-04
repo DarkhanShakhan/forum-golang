@@ -1,6 +1,7 @@
 package app
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -9,13 +10,16 @@ import (
 func Run() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile)
-
+	f, _ := os.OpenFile("logging.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	defer f.Close()
+	wrt := io.MultiWriter(os.Stderr, f)
+	errorLog.SetOutput(wrt)
 	h := NewHandler(errorLog)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/users", h.UsersAllHandler)
 	mux.HandleFunc("/user/id", h.UserByIdHandler)
 	mux.HandleFunc("/user/email", h.UserByEmailHandler)
-	mux.HandleFunc("/post", h.PostFullHandler)
+	mux.HandleFunc("/post", h.PostDetailsHandler)
 	mux.HandleFunc("/posts", h.PostsAllHandler)
 	mux.HandleFunc("/post/save", h.StorePostHandler)
 

@@ -1,27 +1,30 @@
 package app
 
-import "forum_app/internal/entity"
+import (
+	"context"
+	"forum_app/internal/entity"
+)
 
 type UserUsecase interface {
-	FetchById(int) (entity.User, error)
-	FetchAll() ([]entity.User, error)
-	FetchByEmail(string) (entity.User, error)
+	FetchById(context.Context, int) (entity.User, error)
+	FetchAll(context.Context) ([]entity.User, error)
+	FetchByEmail(context.Context, string) (entity.User, error)
 }
 
 type PostUsecase interface {
-	FetchById(int) (entity.Post, error)
-	FetchAll() ([]entity.Post, error)
-	FetchCategoryPosts(entity.Category) (entity.Category, error)
-	Store(entity.Post) (int64, error)
-	StorePostReaction(entity.PostReaction) error
-	UpdatePostReaction(entity.PostReaction) error
-	DeletePostReaction(entity.PostReaction) error
+	FetchById(context.Context, int) (entity.Post, error)
+	FetchAll(context.Context) ([]entity.Post, error)
+	FetchCategoryPosts(context.Context, entity.Category) (entity.Category, error)
+	Store(context.Context, entity.Post) (int64, error)
+	StorePostReaction(context.Context, entity.PostReaction) error
+	UpdatePostReaction(context.Context, entity.PostReaction) error
+	DeletePostReaction(context.Context, entity.PostReaction) error
 }
 
 type CommentUsecase interface {
-	FetchById(int) (entity.Comment, error)
-	Store(entity.Comment) (int64, error)
-	StoreCommentReaction(entity.CommentReaction) error
-	UpdateCommentReaction(entity.CommentReaction) error
-	DeleteCommentReaction(entity.CommentReaction) error
+	FetchById(context.Context, int) (entity.Comment, error)
+	Store(context.Context, entity.Comment) (int64, error)
+	StoreCommentReaction(context.Context, entity.CommentReaction) error
+	UpdateCommentReaction(context.Context, entity.CommentReaction) error
+	DeleteCommentReaction(context.Context, entity.CommentReaction) error
 }
