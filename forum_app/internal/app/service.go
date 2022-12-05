@@ -37,8 +37,6 @@ func NewHandler(errorLog *log.Logger) *Handler {
 	return &Handler{errorLog, ucase, pcase, ccase}
 }
 
-func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Request) {}
-
 func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Request) {}
 
 func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Request) {}

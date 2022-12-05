@@ -24,7 +24,7 @@ func (ur *UsersRepository) FetchById(ctx context.Context, id int) (entity.User, 
 		return user, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM users WHERE id = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT id, name, email, registration_date FROM users WHERE id = ?;")
 	if err != nil {
 		ur.errorLog.Println(err)
 		return user, err
@@ -36,7 +36,7 @@ func (ur *UsersRepository) FetchById(ctx context.Context, id int) (entity.User, 
 		return user, err
 	}
 	if rows.Next() {
-		rows.Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.RegDate)
+		rows.Scan(&user.Id, &user.Name, &user.Email, &user.RegDate)
 	}
 	if err = tx.Commit(); err != nil {
 		ur.errorLog.Println(err)
@@ -53,7 +53,7 @@ func (ur *UsersRepository) FetchAll(ctx context.Context) ([]entity.User, error) 
 		return users, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM users;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT id, name, email, registration_date FROM users;")
 	if err != nil {
 		ur.errorLog.Println(err)
 		return users, err
@@ -66,7 +66,7 @@ func (ur *UsersRepository) FetchAll(ctx context.Context) ([]entity.User, error) 
 	}
 	for rows.Next() {
 		tempUser := entity.User{}
-		rows.Scan(&tempUser.Id, &tempUser.Name, &tempUser.Email, &tempUser.Password, &tempUser.RegDate)
+		rows.Scan(&tempUser.Id, &tempUser.Name, &tempUser.Email, &tempUser.RegDate)
 		users = append(users, tempUser)
 	}
 	if err = tx.Commit(); err != nil {

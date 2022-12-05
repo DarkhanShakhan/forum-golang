@@ -24,6 +24,9 @@ func Run() {
 	mux.HandleFunc("/posts", h.PostsAllHandler)
 	mux.HandleFunc("/category", h.CategoryPostsHandler)
 
+	//post
+	mux.HandleFunc("/post/save", h.StorePostHandler)
+	mux.HandleFunc("/post_reaction/save", h.StorePostReactionHandler)
 	srv := &http.Server{
 		Addr:     "localhost:8080",
 		ErrorLog: errorLog,

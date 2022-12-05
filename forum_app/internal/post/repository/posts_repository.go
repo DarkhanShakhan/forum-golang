@@ -156,11 +156,29 @@ func (pr *PostsRepository) Store(ctx context.Context, post entity.Post) (int64, 
 		pr.errorLog.Println(err)
 		return 0, err
 	}
+	stmt_cat, err := tx.PrepareContext(ctx, `INSERT INTO post_categories(post_id, category_id) VALUES(?,?);`)
+	if err != nil {
+		pr.errorLog.Println(err)
+		return 0, err
+	}
+	defer stmt_cat.Close()
+	post_id, err := res.LastInsertId()
+	if err != nil {
+		pr.errorLog.Println(err)
+		return 0, err
+	}
+	for _, category := range post.Category {
+		_, err = stmt_cat.ExecContext(ctx, post_id, category.Id)
+		if err != nil {
+			pr.errorLog.Println(err)
+			return 0, err
+		}
+	}
 	if err = tx.Commit(); err != nil {
 		pr.errorLog.Println(err)
 		return 0, err
 	}
-	return res.LastInsertId()
+	return post_id, nil
 }
 
 // for future use

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"forum_app/internal/entity"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -166,25 +165,85 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel = context.WithTimeout(context.Background(), duration)
 	}
 	defer cancel()
-	if r.Method != http.MethodPut {
-		log.Println("StorePostHandler: method not allowed (" + r.Method + ")")
+	if r.Method != http.MethodPost {
+		h.errorLog.Printf("invalid method: %s\n", r.Method)
 		w.WriteHeader(405)
 		return
 	}
 	var post entity.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		log.Println("StorePostHandler: bad request")
+	if err != nil || !validatePostData(post) {
+		h.errorLog.Println("bad request")
 		w.WriteHeader(400)
 		return
 	}
 	id, err := h.pcase.Store(ctx, post)
+	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	default:
+	}
 	if err != nil {
-		log.Println("StorePostHandler: " + err.Error())
+		h.errorLog.Println(err)
 		w.WriteHeader(500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
 	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", id)))
+}
+
+func validatePostData(post entity.Post) bool {
+	if post.Title == "" {
+		return false
+	} else if post.User.Id == 0 {
+		return false
+	} else if post.Category == nil {
+		return false
+	}
+	return true
+}
+
+func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(context.Background(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodPost {
+		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		w.WriteHeader(405)
+		return
+	}
+	var post_reaction entity.PostReaction
+	err := json.NewDecoder(r.Body).Decode(&post_reaction)
+	//FIXME:validate data
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	err = h.pcase.StorePostReaction(ctx, post_reaction)
+	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	default:
+	}
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500)
+		return
+	}
+	w.WriteHeader(201)
 }

@@ -139,7 +139,14 @@ func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int) (entity.C
 	}
 	for ix, post := range category.Posts {
 		category.Posts[ix], err = u.postsRepo.FetchById(ctx, post.Id)
-		u.errorLog.Println(err)
+		if err != nil {
+			u.errorLog.Println(err)
+		}
+		category.Posts[ix].User, err = u.usersRepo.FetchById(ctx, category.Posts[ix].User.Id)
+		if err != nil {
+			u.errorLog.Println(err)
+		}
+
 	}
 	category.CountTotals()
 	return category, nil
