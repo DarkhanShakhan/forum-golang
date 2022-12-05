@@ -11,22 +11,33 @@ type CommentsUsecase struct {
 	commentReactionsRepo CommentReactionsRepository
 	postsRepo            PostsRepository
 	usersRepo            UsersRepository
+	errorLog             *log.Logger
 }
 
-func NewCommentsUsecase(commentsRepo CommentsRepository, commentReactionsRepo CommentReactionsRepository, postsRepo PostsRepository, usersRepo UsersRepository) *CommentsUsecase {
+func NewCommentsUsecase(commentsRepo CommentsRepository, commentReactionsRepo CommentReactionsRepository, postsRepo PostsRepository, usersRepo UsersRepository, errorLog *log.Logger) *CommentsUsecase {
 	return &CommentsUsecase{
 		commentsRepo:         commentsRepo,
 		commentReactionsRepo: commentReactionsRepo,
 		postsRepo:            postsRepo,
-		usersRepo:            usersRepo}
+		usersRepo:            usersRepo,
+		errorLog:             errorLog,
+	}
 }
 
 func (cu *CommentsUsecase) FetchById(ctx context.Context, id int) (entity.Comment, error) {
 	comment, err := cu.commentsRepo.FetchById(ctx, id)
 	if err != nil {
+		cu.errorLog.Println(err)
 		return entity.Comment{}, err
 	}
+
+	comment.CountTotals()
+	return comment, nil
+}
+
+func (cu *CommentsUsecase) fetchCommentDetails(ctx context.Context, comment *entity.Comment) {
 	var (
+		err         error
 		post        = make(chan entity.Post)
 		user        = make(chan entity.User)
 		likes       = make(chan []entity.Reaction)
@@ -38,32 +49,30 @@ func (cu *CommentsUsecase) FetchById(ctx context.Context, id int) (entity.Commen
 	)
 	go cu.fetchPost(ctx, comment.Post.Id, post, errPost)
 	go cu.fetchUser(ctx, comment.User.Id, user, errUser)
-	go cu.fetchReaction(ctx, id, true, likes, errLikes)
-	go cu.fetchReaction(ctx, id, false, dislikes, errDislikes)
+	go cu.fetchReaction(ctx, comment.Id, true, likes, errLikes)
+	go cu.fetchReaction(ctx, comment.Id, false, dislikes, errDislikes)
 
 	for i := 0; i < 4; i++ {
 		select {
 		case comment.Post = <-post:
 			if err = <-errPost; err != nil {
-				log.Println(err)
+				cu.errorLog.Println(err)
 			}
 
 		case comment.User = <-user:
 			if err = <-errUser; err != nil {
-				log.Println(err)
+				cu.errorLog.Println(err)
 			}
 		case comment.Likes = <-likes:
 			if err = <-errLikes; err != nil {
-				log.Println(err)
+				cu.errorLog.Println(err)
 			}
 		case comment.Dislikes = <-dislikes:
 			if err = <-errDislikes; err != nil {
-				log.Println(err)
+				cu.errorLog.Println(err)
 			}
 		}
 	}
-	comment.CountTotals()
-	return comment, nil
 }
 
 func (cu *CommentsUsecase) fetchPost(ctx context.Context, postId int, post chan entity.Post, errPost chan error) {
@@ -84,11 +93,11 @@ func (cu *CommentsUsecase) fetchReaction(ctx context.Context, id int, like bool,
 	errReactions <- err
 }
 
-//create comment
+// create comment
 func (cu *CommentsUsecase) Store(ctx context.Context, comment entity.Comment) (int64, error) {
-
 	id, err := cu.commentsRepo.Store(ctx, comment)
 	if err != nil {
+		cu.errorLog.Println(err)
 		return 0, err
 	}
 	return id, nil

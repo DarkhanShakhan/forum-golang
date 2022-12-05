@@ -4,36 +4,42 @@ import (
 	"context"
 	"database/sql"
 	"forum_app/internal/entity"
+	"log"
 )
 
 type CommentsRepository struct {
-	db *sql.DB
+	db       *sql.DB
+	errorLog *log.Logger
 }
 
-func NewCommentsRepository(db *sql.DB) *CommentsRepository {
-	return &CommentsRepository{db}
+func NewCommentsRepository(db *sql.DB, errorLog *log.Logger) *CommentsRepository {
+	return &CommentsRepository{db, errorLog}
 }
 
 func (cr *CommentsRepository) FetchById(ctx context.Context, id int) (entity.Comment, error) {
 	comment := entity.Comment{}
 	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
+		cr.errorLog.Println(err)
 		return comment, err
 	}
 	defer tx.Rollback()
 	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE id = ?;")
 	if err != nil {
+		cr.errorLog.Println(err)
 		return comment, err
 	}
 	defer stmt.Close()
 	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
+		cr.errorLog.Println(err)
 		return comment, err
 	}
 	if rows.Next() {
 		rows.Scan(&comment.Id, &comment.Post.Id, &comment.User.Id, &comment.Date, &comment.Content)
 	}
 	if err = tx.Commit(); err != nil {
+		cr.errorLog.Println(err)
 		return entity.Comment{}, err
 	}
 	return comment, nil
@@ -43,16 +49,19 @@ func (cr *CommentsRepository) FetchByPostId(ctx context.Context, id int) ([]enti
 	comments := []entity.Comment{}
 	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	defer tx.Rollback()
 	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE post_id = ?;")
 	if err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	defer stmt.Close()
 	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	if rows.Next() {
@@ -61,6 +70,7 @@ func (cr *CommentsRepository) FetchByPostId(ctx context.Context, id int) ([]enti
 		comments = append(comments, comment)
 	}
 	if err = tx.Commit(); err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	return comments, nil
@@ -70,16 +80,19 @@ func (cr *CommentsRepository) FetchByUserId(ctx context.Context, id int) ([]enti
 	comments := []entity.Comment{}
 	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	defer tx.Rollback()
 	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE user_id = ?;")
 	if err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	defer stmt.Close()
 	rows, err := stmt.QueryContext(ctx, id)
 	if err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	if rows.Next() {
@@ -88,6 +101,7 @@ func (cr *CommentsRepository) FetchByUserId(ctx context.Context, id int) ([]enti
 		comments = append(comments, comment)
 	}
 	if err = tx.Commit(); err != nil {
+		cr.errorLog.Println(err)
 		return nil, err
 	}
 	return comments, nil
@@ -96,19 +110,23 @@ func (cr *CommentsRepository) FetchByUserId(ctx context.Context, id int) ([]enti
 func (cr *CommentsRepository) Store(ctx context.Context, comment entity.Comment) (int64, error) {
 	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
+		cr.errorLog.Println(err)
 		return 0, err
 	}
 	defer tx.Rollback()
 	stmt, err := tx.PrepareContext(ctx, `INSERT INTO comments(post_id, user_id, date, content) VALUES(?,?,?,?);`)
 	if err != nil {
+		cr.errorLog.Println(err)
 		return 0, err
 	}
 	defer stmt.Close()
 	res, err := stmt.ExecContext(ctx, comment.Post.Id, comment.User.Id, comment.Date, comment.Content)
 	if err != nil {
+		cr.errorLog.Println(err)
 		return 0, err
 	}
 	if err = tx.Commit(); err != nil {
+		cr.errorLog.Println(err)
 		return 0, err
 	}
 	return res.LastInsertId()
