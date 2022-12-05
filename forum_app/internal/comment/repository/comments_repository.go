@@ -53,7 +53,7 @@ func (cr *CommentsRepository) FetchByPostId(ctx context.Context, id int) ([]enti
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE post_id = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT c.id, c.user_id, u.name, c.date, c.content FROM comments AS c LEFT JOIN users AS u ON c.user_id=u.id WHERE post_id = ?;")
 	if err != nil {
 		cr.errorLog.Println(err)
 		return nil, err
@@ -64,9 +64,9 @@ func (cr *CommentsRepository) FetchByPostId(ctx context.Context, id int) ([]enti
 		cr.errorLog.Println(err)
 		return nil, err
 	}
-	if rows.Next() {
+	for rows.Next() {
 		comment := entity.Comment{}
-		rows.Scan(&comment.Id, &comment.Post.Id, &comment.User.Id, &comment.Date, &comment.Content)
+		rows.Scan(&comment.Id, &comment.User.Id, &comment.User.Name, &comment.Date, &comment.Content)
 		comments = append(comments, comment)
 	}
 	if err = tx.Commit(); err != nil {
@@ -84,7 +84,7 @@ func (cr *CommentsRepository) FetchByUserId(ctx context.Context, id int) ([]enti
 		return nil, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM comments WHERE user_id = ?;")
+	stmt, err := tx.PrepareContext(ctx, "SELECT c.id, c.post_id, p.title, c.date, c.content FROM comments AS c LEFT JOIN posts AS p ON c.post_id=p.id WHERE c.user_id = ?;")
 	if err != nil {
 		cr.errorLog.Println(err)
 		return nil, err
@@ -97,7 +97,7 @@ func (cr *CommentsRepository) FetchByUserId(ctx context.Context, id int) ([]enti
 	}
 	if rows.Next() {
 		comment := entity.Comment{}
-		rows.Scan(&comment.Id, &comment.Post.Id, &comment.User.Id, &comment.Date, &comment.Content)
+		rows.Scan(&comment.Id, &comment.Post.Id, &comment.Post.Title, &comment.Date, &comment.Content)
 		comments = append(comments, comment)
 	}
 	if err = tx.Commit(); err != nil {
