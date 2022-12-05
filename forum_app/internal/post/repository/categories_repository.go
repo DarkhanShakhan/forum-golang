@@ -17,6 +17,35 @@ func NewCategoriesRepository(db *sql.DB, errorLog *log.Logger) *CategoriesReposi
 	return &CategoriesRepository{db, errorLog}
 }
 
+func (cr *CategoriesRepository) FetchById(ctx context.Context, id int) (entity.Category, error) {
+	category := entity.Category{}
+	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		cr.errorLog.Println(err)
+		return entity.Category{}, err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM categories WHERE id = ?;")
+	if err != nil {
+		cr.errorLog.Println(err)
+		return entity.Category{}, err
+	}
+	defer stmt.Close()
+	rows, err := stmt.QueryContext(ctx, id)
+	if err != nil {
+		cr.errorLog.Println(err)
+		return entity.Category{}, err
+	}
+	if rows.Next() {
+		rows.Scan(&category.Id, &category.Title)
+	}
+	if err = tx.Commit(); err != nil {
+		cr.errorLog.Println(err)
+		return entity.Category{}, err
+	}
+	return category, nil
+}
+
 func (cr *CategoriesRepository) FetchAllCategories(ctx context.Context) ([]entity.Category, error) {
 	categories := []entity.Category{}
 	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})

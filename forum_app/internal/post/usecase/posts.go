@@ -22,7 +22,8 @@ func NewPostsUsecase(postsRepo PostsRepository, postReactionsRepo PostReactionsR
 		commentsRepo:      commentsRepo,
 		categoriesRepo:    categoriesRepo,
 		usersRepo:         usersRepo,
-		errorLog:          errorLog}
+		errorLog:          errorLog,
+	}
 }
 
 func (u *PostsUsecase) FetchById(ctx context.Context, id int) (entity.Post, error) {
@@ -80,6 +81,7 @@ func (u *PostsUsecase) fetchPostDetails(ctx context.Context, post *entity.Post) 
 	}
 	post.CountTotals()
 }
+
 func (u *PostsUsecase) FetchAll(ctx context.Context) ([]entity.Post, error) {
 	posts, err := u.postsRepo.FetchAll(ctx)
 	if err != nil {
@@ -98,6 +100,7 @@ func (u *PostsUsecase) fetchUser(ctx context.Context, id int, user chan entity.U
 	user <- tempUser
 	errUser <- err
 }
+
 func (u *PostsUsecase) fetchComments(ctx context.Context, id int, comments chan []entity.Comment, errComments chan error) {
 	tempComments, err := u.commentsRepo.FetchByPostId(ctx, id)
 	comments <- tempComments
@@ -122,8 +125,13 @@ func (u *PostsUsecase) fetchDislikes(ctx context.Context, id int, dislikes chan 
 	errDislikes <- err
 }
 
-func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, category entity.Category) (entity.Category, error) {
+func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int) (entity.Category, error) {
 	var err error
+	category, err := u.categoriesRepo.FetchById(ctx, id)
+	if err != nil {
+		u.errorLog.Println(err)
+		return entity.Category{}, err
+	}
 	category.Posts, err = u.postsRepo.FetchByCategoryId(ctx, category.Id)
 	if err != nil {
 		u.errorLog.Println(err)
@@ -166,7 +174,7 @@ func (u *PostsUsecase) DeletePostReaction(ctx context.Context, postReaction enti
 	return u.postReactionsRepo.DeleteReaction(ctx, postReaction)
 }
 
-//for future use
+// for future use
 // func (u *PostsUsecase) Update(post entity.Post) error {
 // 	err := u.postsRepo.Update(post)
 // 	if err != nil {

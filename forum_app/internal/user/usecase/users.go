@@ -22,7 +22,8 @@ func NewUsersUsecase(userRepo UsersRepository, postRepo PostsRepository, postRea
 		postReactionsRepo:    postReactionsRepo,
 		commentRepo:          commentRepo,
 		commentReactionsRepo: commentReactionsRepo,
-		errorLog:             errorLog}
+		errorLog:             errorLog,
+	}
 }
 
 func (u *UsersUsecase) FetchById(ctx context.Context, id int) (entity.User, error) {
@@ -36,7 +37,6 @@ func (u *UsersUsecase) FetchById(ctx context.Context, id int) (entity.User, erro
 }
 
 func (u *UsersUsecase) fetchUserDetails(ctx context.Context, user *entity.User) {
-
 	var (
 		err                error
 		posts              = make(chan []entity.Post)

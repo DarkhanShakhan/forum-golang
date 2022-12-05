@@ -1,1 +1,6 @@
-ERROR	2022/12/05 01:48:24 service.go:65: context deadline exceeded
+ERROR	2022/12/05 14:42:07 /home/student/forum-golang/forum_app/internal/post/repository/categories_repository.go:36: sql: expected 1 arguments, got 0
+ERROR	2022/12/05 14:42:07 /home/student/forum-golang/forum_app/internal/post/usecase/posts.go:132: sql: expected 1 arguments, got 0
+ERROR	2022/12/05 14:42:07 /home/student/forum-golang/forum_app/internal/app/service.go:375: sql: expected 1 arguments, got 0
+ERROR	2022/12/05 14:44:24 /home/student/forum-golang/forum_app/internal/post/repository/categories_repository.go:36: sql: expected 1 arguments, got 0
+ERROR	2022/12/05 14:44:24 /home/student/forum-golang/forum_app/internal/post/usecase/posts.go:132: sql: expected 1 arguments, got 0
+ERROR	2022/12/05 14:44:24 /home/student/forum-golang/forum_app/internal/app/service.go:375: sql: expected 1 arguments, got 0

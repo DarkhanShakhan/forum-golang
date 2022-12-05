@@ -16,12 +16,13 @@ func Run() {
 	errorLog.SetOutput(wrt)
 	h := NewHandler(errorLog)
 	mux := http.NewServeMux()
+	// get
 	mux.HandleFunc("/users", h.UsersAllHandler)
-	mux.HandleFunc("/user/id", h.UserByIdHandler)
+	mux.HandleFunc("/user", h.UserDetailsHandler)
 	mux.HandleFunc("/user/email", h.UserByEmailHandler)
 	mux.HandleFunc("/post", h.PostDetailsHandler)
 	mux.HandleFunc("/posts", h.PostsAllHandler)
-	mux.HandleFunc("/post/save", h.StorePostHandler)
+	mux.HandleFunc("/category", h.CategoryPostsHandler)
 
 	srv := &http.Server{
 		Addr:     "localhost:8080",

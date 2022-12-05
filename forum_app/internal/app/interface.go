@@ -14,7 +14,7 @@ type UserUsecase interface {
 type PostUsecase interface {
 	FetchById(context.Context, int) (entity.Post, error)
 	FetchAll(context.Context) ([]entity.Post, error)
-	FetchCategoryPosts(context.Context, entity.Category) (entity.Category, error)
+	FetchCategoryPosts(context.Context, int) (entity.Category, error)
 	Store(context.Context, entity.Post) (int64, error)
 	StorePostReaction(context.Context, entity.PostReaction) error
 	UpdatePostReaction(context.Context, entity.PostReaction) error
