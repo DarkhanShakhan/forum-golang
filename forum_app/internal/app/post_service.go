@@ -250,10 +250,10 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 		ctx    context.Context
 		cancel context.CancelFunc
 	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	if _, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithCancel(r.Context()) //deadline is already set
 	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
+		ctx, cancel = context.WithTimeout(r.Context(), duration)
 	}
 	defer cancel()
 	if r.Method != http.MethodPut {
@@ -271,6 +271,48 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	}
 	errChan := make(chan error)
 	go h.pcase.UpdatePostReaction(ctx, post_reaction, errChan)
+	select {
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.WriteHeader(204)
+}
+
+func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if _, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithCancel(r.Context()) //deadline is already set
+	} else {
+		ctx, cancel = context.WithTimeout(r.Context(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodDelete {
+		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		w.WriteHeader(405)
+		return
+	}
+	var post_reaction entity.PostReaction
+	err := json.NewDecoder(r.Body).Decode(&post_reaction)
+	//FIXME:validate data
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	errChan := make(chan error)
+	go h.pcase.DeletePostReaction(ctx, post_reaction, errChan)
 	select {
 	case err = <-errChan:
 		if err != nil {

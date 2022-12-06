@@ -113,13 +113,14 @@ func (rr *PostReactionsRepository) DeleteReaction(ctx context.Context, postReact
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, `DELETE FROM post_reactions WHERE post_id = ? AND user_id = ?;`)
+	//FIXME: how to validate existence of data
+	stmt, err := tx.PrepareContext(ctx, `DELETE FROM post_reactions WHERE post_id = ? AND user_id = ? AND like = ?;`)
 	if err != nil {
 		rr.errorLog.Println(err)
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, postReaction.Post.Id, postReaction.Reaction.User.Id)
+	res, err := stmt.ExecContext(ctx, postReaction.Post.Id, postReaction.Reaction.User.Id, postReaction.Reaction.Like)
 	if err != nil {
 		rr.errorLog.Println(err)
 		return err

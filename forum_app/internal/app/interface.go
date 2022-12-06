@@ -18,7 +18,7 @@ type PostUsecase interface {
 	Store(context.Context, entity.Post) (int64, error)
 	StorePostReaction(context.Context, entity.PostReaction) error
 	UpdatePostReaction(context.Context, entity.PostReaction, chan error)
-	DeletePostReaction(context.Context, entity.PostReaction) error
+	DeletePostReaction(context.Context, entity.PostReaction, chan error)
 }
 
 type CommentUsecase interface {
@@ -26,5 +26,5 @@ type CommentUsecase interface {
 	Store(context.Context, entity.Comment) (int64, error)
 	StoreCommentReaction(context.Context, entity.CommentReaction) error
 	UpdateCommentReaction(context.Context, entity.CommentReaction, chan error)
-	DeleteCommentReaction(context.Context, entity.CommentReaction) error
+	DeleteCommentReaction(context.Context, entity.CommentReaction, chan error)
 }

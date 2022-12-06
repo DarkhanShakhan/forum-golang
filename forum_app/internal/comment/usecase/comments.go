@@ -119,6 +119,6 @@ func (u *CommentsUsecase) UpdateCommentReaction(ctx context.Context, commentReac
 	err <- u.commentReactionsRepo.UpdateReaction(ctx, commentReaction)
 }
 
-func (u *CommentsUsecase) DeleteCommentReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
-	return u.commentReactionsRepo.DeleteReaction(ctx, commentReaction)
+func (u *CommentsUsecase) DeleteCommentReaction(ctx context.Context, commentReaction entity.CommentReaction, err chan error) {
+	err <- u.commentReactionsRepo.DeleteReaction(ctx, commentReaction)
 }

@@ -37,6 +37,8 @@ func Run() {
 	mux.HandleFunc("/post_reaction/update", h.UpdatePostReactionHandler)
 	mux.HandleFunc("/comment_reaction/update", h.UpdateCommentReactionHandler)
 
+	//delete
+	mux.HandleFunc("/post_reaction/delete", h.DeletePostReactionHandler)
 	srv := &http.Server{
 		Addr:     "localhost:8080",
 		ErrorLog: errorLog,

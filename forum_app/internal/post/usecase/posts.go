@@ -177,8 +177,8 @@ func (u *PostsUsecase) UpdatePostReaction(ctx context.Context, postReaction enti
 	err <- u.postReactionsRepo.UpdateReaction(ctx, postReaction)
 }
 
-func (u *PostsUsecase) DeletePostReaction(ctx context.Context, postReaction entity.PostReaction) error {
-	return u.postReactionsRepo.DeleteReaction(ctx, postReaction)
+func (u *PostsUsecase) DeletePostReaction(ctx context.Context, postReaction entity.PostReaction, err chan error) {
+	err <- u.postReactionsRepo.DeleteReaction(ctx, postReaction)
 }
 
 // for future use
