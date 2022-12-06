@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+//FIXME: add info logging when database open
+
 func Run() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile)
@@ -32,6 +34,8 @@ func Run() {
 
 	//put
 	mux.HandleFunc("/post_reaction/update", h.UpdatePostReactionHandler)
+	mux.HandleFunc("/comment_reaction/update", h.UpdateCommentReactionHandler)
+
 	srv := &http.Server{
 		Addr:     "localhost:8080",
 		ErrorLog: errorLog,
