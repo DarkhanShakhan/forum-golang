@@ -17,7 +17,7 @@ type PostUsecase interface {
 	FetchCategoryPosts(context.Context, int) (entity.Category, error)
 	Store(context.Context, entity.Post) (int64, error)
 	StorePostReaction(context.Context, entity.PostReaction) error
-	UpdatePostReaction(context.Context, entity.PostReaction) error
+	UpdatePostReaction(context.Context, entity.PostReaction, chan error)
 	DeletePostReaction(context.Context, entity.PostReaction) error
 }
 

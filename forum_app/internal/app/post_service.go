@@ -60,6 +60,7 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+//FIXME: change contexts to goroutines
 // TODO: done
 func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 	var (
@@ -153,7 +154,6 @@ func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
 }
-
 func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx    context.Context
@@ -195,7 +195,6 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(201)
 	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", id)))
 }
-
 func validatePostData(post entity.Post) bool {
 	if post.Title == "" {
 		return false
@@ -206,7 +205,6 @@ func validatePostData(post entity.Post) bool {
 	}
 	return true
 }
-
 func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx    context.Context
@@ -246,4 +244,45 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	w.WriteHeader(201)
+}
+func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(context.Background(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodPut {
+		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		w.WriteHeader(405)
+		return
+	}
+	var post_reaction entity.PostReaction
+	err := json.NewDecoder(r.Body).Decode(&post_reaction)
+	//FIXME:validate data
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	errChan := make(chan error)
+	go h.pcase.UpdatePostReaction(ctx, post_reaction, errChan)
+	select {
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.WriteHeader(204)
 }

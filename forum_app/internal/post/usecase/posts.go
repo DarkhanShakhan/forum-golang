@@ -173,8 +173,8 @@ func (u *PostsUsecase) StorePostReaction(ctx context.Context, postReaction entit
 	return u.postReactionsRepo.StoreReaction(ctx, postReaction)
 }
 
-func (u *PostsUsecase) UpdatePostReaction(ctx context.Context, postReaction entity.PostReaction) error {
-	return u.postReactionsRepo.UpdateReaction(ctx, postReaction)
+func (u *PostsUsecase) UpdatePostReaction(ctx context.Context, postReaction entity.PostReaction, err chan error) {
+	err <- u.postReactionsRepo.UpdateReaction(ctx, postReaction)
 }
 
 func (u *PostsUsecase) DeletePostReaction(ctx context.Context, postReaction entity.PostReaction) error {

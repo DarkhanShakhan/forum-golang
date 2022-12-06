@@ -58,3 +58,4 @@ ERROR	2022/12/06 01:43:01 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2022/12/06 02:10:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/comment_service.go:23: invalid method: GET
 ERROR	2022/12/06 02:27:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/comment/repository/comments_repository.go:89: ambiguous column name: user_id
 ERROR	2022/12/06 02:27:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:69: ambiguous column name: user_id
+ERROR	2022/12/07 01:57:25 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:283: context deadline exceeded

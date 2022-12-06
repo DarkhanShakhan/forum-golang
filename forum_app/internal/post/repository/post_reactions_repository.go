@@ -73,6 +73,7 @@ func (rr *PostReactionsRepository) StoreReaction(ctx context.Context, postReacti
 	return nil
 }
 
+//FIXME: check if reactions exists
 func (rr *PostReactionsRepository) UpdateReaction(ctx context.Context, postReaction entity.PostReaction) error {
 	tx, err := rr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
