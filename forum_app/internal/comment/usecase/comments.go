@@ -115,8 +115,8 @@ func (cu *CommentsUsecase) StoreCommentReaction(ctx context.Context, commentReac
 	return cu.commentReactionsRepo.StoreReaction(ctx, commentReaction)
 }
 
-func (u *CommentsUsecase) UpdateCommentReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
-	return u.commentReactionsRepo.UpdateReaction(ctx, commentReaction)
+func (u *CommentsUsecase) UpdateCommentReaction(ctx context.Context, commentReaction entity.CommentReaction, err chan error) {
+	err <- u.commentReactionsRepo.UpdateReaction(ctx, commentReaction)
 }
 
 func (u *CommentsUsecase) DeleteCommentReaction(ctx context.Context, commentReaction entity.CommentReaction) error {

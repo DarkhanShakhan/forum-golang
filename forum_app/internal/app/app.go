@@ -8,6 +8,7 @@ import (
 )
 
 //FIXME: add info logging when database open
+//TODO: middleware for inserting context deadline
 
 func Run() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)

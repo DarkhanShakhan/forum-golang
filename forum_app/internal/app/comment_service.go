@@ -57,9 +57,9 @@ func (h *Handler) StoreCommentReactionHandler(w http.ResponseWriter, r *http.Req
 		cancel context.CancelFunc
 	)
 	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+		ctx, cancel = context.WithDeadline(r.Context(), deadline)
 	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
+		ctx, cancel = context.WithTimeout(r.Context(), duration)
 	}
 	defer cancel()
 	if r.Method != http.MethodPost {
@@ -90,4 +90,46 @@ func (h *Handler) StoreCommentReactionHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 	w.WriteHeader(201)
+}
+func (h *Handler) UpdateCommentReactionHandler(w http.ResponseWriter, r *http.Request) {
+
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(r.Context(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(r.Context(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodPut {
+		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		w.WriteHeader(405)
+		return
+	}
+	var comment_reaction entity.CommentReaction
+	err := json.NewDecoder(r.Body).Decode(&comment_reaction)
+	//FIXME:validate data
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	errChan := make(chan error)
+	go h.ccase.UpdateCommentReaction(ctx, comment_reaction, errChan)
+	select {
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.WriteHeader(204)
 }

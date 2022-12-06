@@ -41,6 +41,4 @@ func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Reque
 
 func (h *Handler) CommentByIdHandler(w http.ResponseWriter, r *http.Request) {}
 
-func (h *Handler) UpdateCommentReactionHandler(w http.ResponseWriter, r *http.Request) {}
-
 func (h *Handler) DeleteCommentReaction(w http.ResponseWriter, r *http.Request) {}

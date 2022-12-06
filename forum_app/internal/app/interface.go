@@ -25,6 +25,6 @@ type CommentUsecase interface {
 	FetchById(context.Context, int) (entity.Comment, error)
 	Store(context.Context, entity.Comment) (int64, error)
 	StoreCommentReaction(context.Context, entity.CommentReaction) error
-	UpdateCommentReaction(context.Context, entity.CommentReaction) error
+	UpdateCommentReaction(context.Context, entity.CommentReaction, chan error)
 	DeleteCommentReaction(context.Context, entity.CommentReaction) error
 }
