@@ -10,3 +10,8 @@ type Category struct {
 func (c *Category) CountTotals() {
 	c.TotalPosts = len(c.Posts)
 }
+
+type CatResult struct {
+	Cat Category
+	Err error
+}

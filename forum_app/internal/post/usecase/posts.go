@@ -26,14 +26,14 @@ func NewPostsUsecase(postsRepo PostsRepository, postReactionsRepo PostReactionsR
 	}
 }
 
-func (u *PostsUsecase) FetchById(ctx context.Context, id int) (entity.Post, error) {
+func (u *PostsUsecase) FetchById(ctx context.Context, id int, postRes chan entity.PostResult) {
 	post, err := u.postsRepo.FetchById(ctx, id)
 	if err != nil {
 		u.errorLog.Println(err)
-		return entity.Post{}, err
+		postRes <- entity.PostResult{Err: err}
 	}
 	u.fetchPostDetails(ctx, &post)
-	return post, nil
+	postRes <- entity.PostResult{Post: post}
 }
 
 func (u *PostsUsecase) fetchPostDetails(ctx context.Context, post *entity.Post) {
@@ -82,17 +82,16 @@ func (u *PostsUsecase) fetchPostDetails(ctx context.Context, post *entity.Post) 
 	post.CountTotals()
 }
 
-func (u *PostsUsecase) FetchAll(ctx context.Context) ([]entity.Post, error) {
+func (u *PostsUsecase) FetchAll(ctx context.Context, postsRes chan entity.PostsResult) {
 	posts, err := u.postsRepo.FetchAll(ctx)
 	if err != nil {
-		u.errorLog.Println(err)
-		return nil, err
+		postsRes <- entity.PostsResult{Err: err}
 	}
 	for ix := range posts {
 		u.fetchPostDetails(ctx, &posts[ix])
 		posts[ix].Comments, posts[ix].Likes, posts[ix].Dislikes = nil, nil, nil
 	}
-	return posts, nil
+	postsRes <- entity.PostsResult{Posts: posts}
 }
 
 func (u *PostsUsecase) fetchUser(ctx context.Context, id int, user chan entity.User, errUser chan error) {
@@ -125,17 +124,15 @@ func (u *PostsUsecase) fetchDislikes(ctx context.Context, id int, dislikes chan 
 	errDislikes <- err
 }
 
-func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int) (entity.Category, error) {
+func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int, catRes chan entity.CatResult) {
 	var err error
 	category, err := u.categoriesRepo.FetchById(ctx, id)
 	if err != nil {
-		u.errorLog.Println(err)
-		return entity.Category{}, err
+		catRes <- entity.CatResult{Err: err}
 	}
 	category.Posts, err = u.postsRepo.FetchByCategoryId(ctx, category.Id)
 	if err != nil {
-		u.errorLog.Println(err)
-		return category, err
+		catRes <- entity.CatResult{Err: err}
 	}
 	for ix, post := range category.Posts {
 		category.Posts[ix], err = u.postsRepo.FetchById(ctx, post.Id)
@@ -149,28 +146,19 @@ func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int) (entity.C
 
 	}
 	category.CountTotals()
-	return category, nil
+	catRes <- entity.CatResult{Cat: category}
 }
 
-// func (u *PostsUsecase) FetchAllSorted() ([]entity.Post, error) {
-// 	posts, err := u.postsRepo.FetchAllSorted()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return posts, nil
-// }
-
-func (u *PostsUsecase) Store(ctx context.Context, post entity.Post) (int64, error) {
+func (u *PostsUsecase) Store(ctx context.Context, post entity.Post, res chan entity.Result) {
 	id, err := u.postsRepo.Store(ctx, post)
 	if err != nil {
-		u.errorLog.Println(err)
-		return 0, err
+		res <- entity.Result{Err: err}
 	}
-	return id, nil
+	res <- entity.Result{Id: id}
 }
 
-func (u *PostsUsecase) StorePostReaction(ctx context.Context, postReaction entity.PostReaction) error {
-	return u.postReactionsRepo.StoreReaction(ctx, postReaction)
+func (u *PostsUsecase) StorePostReaction(ctx context.Context, postReaction entity.PostReaction, err chan error) {
+	err <- u.postReactionsRepo.StoreReaction(ctx, postReaction)
 }
 
 func (u *PostsUsecase) UpdatePostReaction(ctx context.Context, postReaction entity.PostReaction, err chan error) {
@@ -180,20 +168,3 @@ func (u *PostsUsecase) UpdatePostReaction(ctx context.Context, postReaction enti
 func (u *PostsUsecase) DeletePostReaction(ctx context.Context, postReaction entity.PostReaction, err chan error) {
 	err <- u.postReactionsRepo.DeleteReaction(ctx, postReaction)
 }
-
-// for future use
-// func (u *PostsUsecase) Update(post entity.Post) error {
-// 	err := u.postsRepo.Update(post)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
-
-// func (u *PostsUsecase) DeleteById(id int) error {
-// 	err := u.postsRepo.Delete(id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }

@@ -26,22 +26,28 @@ func (h *Handler) UsersAllHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(405)
 		return
 	}
-	users, err := h.ucase.FetchAll(ctx)
+
+	usersChan := make(chan entity.UsersResult)
+	var usersRes entity.UsersResult
+	var err error
+	h.ucase.FetchAll(ctx, usersChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
+	case usersRes = <-usersChan:
+
+		if err = usersRes.Err; err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
 	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
-		return
-	}
-	response, err := json.Marshal(users)
+
+	response, err := json.Marshal(usersRes.Users)
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500)
@@ -80,22 +86,26 @@ func (h *Handler) UserByEmailHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400) // bad request
 		return
 	}
-	user, err := h.ucase.FetchByEmail(ctx, email)
+	userChan := make(chan entity.UserResult)
+	var userRes entity.UserResult
+	var err error
+	go h.ucase.FetchByEmail(ctx, email, userChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
-	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
-		return
+	case userRes = <-userChan:
+		err = userRes.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500) // internal server error ???
+			return
+		}
 	}
 
-	response, err := json.Marshal(user)
+	response, err := json.Marshal(userRes.User)
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500) // internal server error
@@ -134,22 +144,25 @@ func (h *Handler) UserDetailsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	user, err := h.ucase.FetchById(ctx, id)
+	userChan := make(chan entity.UserResult)
+	var userRes entity.UserResult
+	go h.ucase.FetchById(ctx, id, userChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
-	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
-		return
+	case userRes = <-userChan:
+		err = userRes.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500) // internal server error ???
+			return
+		}
 	}
 
-	response, err := json.Marshal(user)
+	response, err := json.Marshal(userRes.User)
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500) // internal server error

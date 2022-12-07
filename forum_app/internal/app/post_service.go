@@ -36,21 +36,24 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	post, err := h.pcase.FetchById(ctx, id)
+	postChan := make(chan entity.PostResult)
+	var postResult entity.PostResult
+	go h.pcase.FetchById(ctx, id, postChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
+	case postResult = <-postChan:
+		if postResult.Err != nil {
+			h.errorLog.Println(postResult.Err)
+			w.WriteHeader(500) // internal server error ???
+			return
+		}
 	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
-		return
-	}
-	response, err := json.Marshal(post)
+
+	response, err := json.Marshal(postResult.Post)
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500)
@@ -78,21 +81,25 @@ func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(405)
 		return
 	}
-	posts, err := h.pcase.FetchAll(ctx)
+	postsChan := make(chan entity.PostsResult)
+	var postsRes entity.PostsResult
+	var err error
+	go h.pcase.FetchAll(ctx, postsChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
+	case postsRes = <-postsChan:
+		if err = postsRes.Err; err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
 	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
-	}
-	response, err := json.Marshal(posts)
+
+	response, err := json.Marshal(postsRes.Posts)
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500)
@@ -130,22 +137,24 @@ func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	category, err := h.pcase.FetchCategoryPosts(ctx, id)
+	catChan := make(chan entity.CatResult)
+	var catResult entity.CatResult
+	go h.pcase.FetchCategoryPosts(ctx, id, catChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
-	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
-		return
+	case catResult = <-catChan:
+		if catResult.Err != nil {
+			h.errorLog.Println(catResult.Err)
+			w.WriteHeader(500) // internal server error ???
+			return
+		}
 	}
 
-	response, err := json.Marshal(category)
+	response, err := json.Marshal(catResult.Cat)
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500) // internal server error
@@ -177,23 +186,25 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	id, err := h.pcase.Store(ctx, post)
+	resChan := make(chan entity.Result)
+	var res entity.Result
+	go h.pcase.Store(ctx, post, resChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
-	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
+	case res = <-resChan:
+		if res.Err != nil {
+			h.errorLog.Println(res.Err)
+			w.WriteHeader(500)
+			return
+		}
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", id)))
+	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", res.Id)))
 }
 func validatePostData(post entity.Post) bool {
 	if post.Title == "" {
@@ -229,19 +240,20 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 		w.WriteHeader(400)
 		return
 	}
-	err = h.pcase.StorePostReaction(ctx, post_reaction)
+	errChan := make(chan error)
+	go h.pcase.StorePostReaction(ctx, post_reaction, errChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
-	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
 	}
 	w.WriteHeader(201)
 }

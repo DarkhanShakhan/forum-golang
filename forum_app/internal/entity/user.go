@@ -33,3 +33,13 @@ type Result struct {
 	Id  int64
 	Err error
 }
+
+type UserResult struct {
+	User User
+	Err  error
+}
+
+type UsersResult struct {
+	Users []User
+	Err   error
+}

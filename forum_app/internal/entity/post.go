@@ -21,3 +21,13 @@ func (p *Post) CountTotals() {
 	p.TotalLikes = len(p.Likes)
 	p.TotalDislikes = len(p.Dislikes)
 }
+
+type PostResult struct {
+	Post Post
+	Err  error
+}
+
+type PostsResult struct {
+	Posts []Post
+	Err   error
+}

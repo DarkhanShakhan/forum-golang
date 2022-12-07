@@ -32,23 +32,25 @@ func (h *Handler) StoreCommentHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	id, err := h.ccase.Store(ctx, comment)
+	resChan := make(chan entity.Result)
+	var result entity.Result
+	go h.ccase.Store(ctx, comment, resChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
-	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
+	case result = <-resChan:
+		if result.Err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", id)))
+	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", result.Id)))
 }
 
 func (h *Handler) StoreCommentReactionHandler(w http.ResponseWriter, r *http.Request) {
@@ -75,20 +77,22 @@ func (h *Handler) StoreCommentReactionHandler(w http.ResponseWriter, r *http.Req
 		w.WriteHeader(400)
 		return
 	}
-	err = h.ccase.StoreCommentReaction(ctx, comment_reaction)
+	errChan := make(chan error)
+	go h.ccase.StoreCommentReaction(ctx, comment_reaction, errChan)
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
 		w.WriteHeader(408) // request timeout
 		return
-	default:
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
 	}
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
-	}
+
 	w.WriteHeader(201)
 }
 func (h *Handler) UpdateCommentReactionHandler(w http.ResponseWriter, r *http.Request) {

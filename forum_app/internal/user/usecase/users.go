@@ -26,14 +26,14 @@ func NewUsersUsecase(userRepo UsersRepository, postRepo PostsRepository, postRea
 	}
 }
 
-func (u *UsersUsecase) FetchById(ctx context.Context, id int) (entity.User, error) {
+func (u *UsersUsecase) FetchById(ctx context.Context, id int, userRes chan entity.UserResult) {
 	user, err := u.userRepo.FetchById(ctx, id)
 	if err != nil {
 		u.errorLog.Println(err)
-		return entity.User{}, err
+		userRes <- entity.UserResult{Err: err}
 	}
 	u.fetchUserDetails(ctx, &user)
-	return user, nil
+	userRes <- entity.UserResult{User: user}
 }
 
 func (u *UsersUsecase) fetchUserDetails(ctx context.Context, user *entity.User) {
@@ -90,22 +90,20 @@ func (u *UsersUsecase) fetchUserDetails(ctx context.Context, user *entity.User) 
 	user.CountTotals()
 }
 
-func (u *UsersUsecase) FetchByEmail(ctx context.Context, email string) (entity.User, error) {
+func (u *UsersUsecase) FetchByEmail(ctx context.Context, email string, userRes chan entity.UserResult) {
 	user, err := u.userRepo.FetchByEmail(ctx, email)
 	if err != nil {
-		u.errorLog.Println(err)
-		return entity.User{}, err
+		userRes <- entity.UserResult{Err: err}
 	}
-	return user, nil
+	userRes <- entity.UserResult{User: user}
 }
 
-func (u *UsersUsecase) FetchAll(ctx context.Context) ([]entity.User, error) {
+func (u *UsersUsecase) FetchAll(ctx context.Context, usersRes chan entity.UsersResult) {
 	users, err := u.userRepo.FetchAll(ctx)
 	if err != nil {
-		u.errorLog.Println(err)
-		return nil, err
+		usersRes <- entity.UsersResult{Err: err}
 	}
-	return users, nil
+	usersRes <- entity.UsersResult{Users: users}
 }
 
 // func (u *UsersUsecase) Update(user entity.User) error {

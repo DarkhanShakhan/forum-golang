@@ -16,3 +16,8 @@ func (c *Comment) CountTotals() {
 	c.TotalLikes = len(c.Likes)
 	c.TotalDislikes = len(c.Dislikes)
 }
+
+type CommentResult struct {
+	Comment Comment
+	Err     error
+}

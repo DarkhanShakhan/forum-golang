@@ -24,15 +24,14 @@ func NewCommentsUsecase(commentsRepo CommentsRepository, commentReactionsRepo Co
 	}
 }
 
-func (cu *CommentsUsecase) FetchById(ctx context.Context, id int) (entity.Comment, error) {
+func (cu *CommentsUsecase) FetchById(ctx context.Context, id int, commentRes chan entity.CommentResult) {
 	comment, err := cu.commentsRepo.FetchById(ctx, id)
 	if err != nil {
-		cu.errorLog.Println(err)
-		return entity.Comment{}, err
+		commentRes <- entity.CommentResult{Err: err}
 	}
 
 	comment.CountTotals()
-	return comment, nil
+	commentRes <- entity.CommentResult{Comment: comment}
 }
 
 func (cu *CommentsUsecase) fetchCommentDetails(ctx context.Context, comment *entity.Comment) {
@@ -93,26 +92,16 @@ func (cu *CommentsUsecase) fetchReaction(ctx context.Context, id int, like bool,
 	errReactions <- err
 }
 
-// create comment
-func (cu *CommentsUsecase) Store(ctx context.Context, comment entity.Comment) (int64, error) {
+func (cu *CommentsUsecase) Store(ctx context.Context, comment entity.Comment, res chan entity.Result) {
 	id, err := cu.commentsRepo.Store(ctx, comment)
 	if err != nil {
-		cu.errorLog.Println(err)
-		return 0, err
+		res <- entity.Result{Err: err}
 	}
-	return id, nil
+	res <- entity.Result{Id: id}
 }
 
-// func (cu *CommentsUsecase) Update(comment entity.Comment) error {
-// 	return cu.commentsRepo.Update(comment)
-// }
-
-// func (cu *CommentsUsecase) DeleteById(id int) error {
-// 	return cu.commentsRepo.DeleteById(id)
-// }
-
-func (cu *CommentsUsecase) StoreCommentReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
-	return cu.commentReactionsRepo.StoreReaction(ctx, commentReaction)
+func (cu *CommentsUsecase) StoreCommentReaction(ctx context.Context, commentReaction entity.CommentReaction, err chan error) {
+	err <- cu.commentReactionsRepo.StoreReaction(ctx, commentReaction)
 }
 
 func (u *CommentsUsecase) UpdateCommentReaction(ctx context.Context, commentReaction entity.CommentReaction, err chan error) {
