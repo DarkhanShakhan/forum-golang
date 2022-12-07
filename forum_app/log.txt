@@ -1,6 +1,0 @@
-ERROR	2022/12/08 01:22:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/repository/post_reactions_repository.go:66: UNIQUE constraint failed: post_reactions.post_id, post_reactions.user_id
-ERROR	2022/12/08 01:22:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:242: UNIQUE constraint failed: post_reactions.post_id, post_reactions.user_id
-ERROR	2022/12/08 01:30:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/repository/post_reactions_repository.go:100: no row has been affected
-ERROR	2022/12/08 01:30:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:277: no row has been affected
-ERROR	2022/12/08 01:35:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:122: UNIQUE constraint failed: users.email
-ERROR	2022/12/08 01:35:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:197: <nil>
