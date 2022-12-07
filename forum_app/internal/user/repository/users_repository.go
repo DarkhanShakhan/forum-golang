@@ -104,6 +104,31 @@ func (ur *UsersRepository) FetchByEmail(ctx context.Context, email string) (enti
 	return user, nil
 }
 
+func (ur *UsersRepository) Store(ctx context.Context, user entity.User) (int64, error) {
+	tx, err := ur.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		ur.errorLog.Println(err)
+		return 0, err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.PrepareContext(ctx, "INSERT INTO users(name, email, password, registration_date) VALUES (?, ?, ?, ?);")
+	if err != nil {
+		ur.errorLog.Println(err)
+		return 0, err
+	}
+	defer stmt.Close()
+	res, err := stmt.ExecContext(ctx, user.Name, user.Email, user.Password, user.RegDate)
+	if err != nil {
+		ur.errorLog.Println(err)
+		return 0, err
+	}
+	if err = tx.Commit(); err != nil {
+		ur.errorLog.Println(err)
+		return 0, err
+	}
+	return res.LastInsertId()
+}
+
 //for future use
 // func (ur *UsersRepository) Update(user entity.User) error {
 // 	query := UPDATE_QUERY

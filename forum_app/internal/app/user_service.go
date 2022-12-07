@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"forum_app/internal/entity"
 	"net/http"
 	"strconv"
 )
@@ -156,4 +157,54 @@ func (h *Handler) UserDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
+}
+
+func (h *Handler) StoreUserHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(context.Background(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodPost {
+		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		w.WriteHeader(405) // method not allowed
+		return
+	}
+
+	if err := r.ParseForm(); err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500) // internal server error ???
+		return
+	}
+	var user entity.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	resChan := make(chan entity.Result)
+	var res entity.Result
+	go h.ucase.Store(ctx, user, resChan)
+	select {
+	case res = <-resChan:
+		if res.Err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500)
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", res.Id)))
 }

@@ -139,3 +139,8 @@ func (u *UsersUsecase) fetchCommentReactions(ctx context.Context, id int, like b
 	commentReactions <- tempCommentReactions
 	errCommentReactions <- err
 }
+
+func (u *UsersUsecase) Store(ctx context.Context, user entity.User, result chan entity.Result) {
+	id, err := u.userRepo.Store(ctx, user)
+	result <- entity.Result{Id: id, Err: err}
+}

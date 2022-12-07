@@ -145,7 +145,10 @@ func (pr *PostsRepository) Store(ctx context.Context, post entity.Post) (int64, 
 		return 0, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, `INSERT INTO posts(user_id, date, title, content) VALUES(?,?,?,?);`)
+	stmt, err := tx.PrepareContext(
+		ctx,
+		`INSERT INTO posts(user_id, date, title, content) 
+		VALUES(?,?,?,?);`)
 	if err != nil {
 		pr.errorLog.Println(err)
 		return 0, err

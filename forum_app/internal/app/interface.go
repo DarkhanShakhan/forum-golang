@@ -9,6 +9,7 @@ type UserUsecase interface {
 	FetchById(context.Context, int) (entity.User, error)
 	FetchAll(context.Context) ([]entity.User, error)
 	FetchByEmail(context.Context, string) (entity.User, error)
+	Store(context.Context, entity.User, chan entity.Result)
 }
 
 type PostUsecase interface {

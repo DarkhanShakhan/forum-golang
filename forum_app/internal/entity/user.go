@@ -28,3 +28,8 @@ func (u *User) CountTotals() {
 	u.TotalCommentLikes = len(u.CommentLikes)
 	u.TotalCommentDislikes = len(u.CommentDislikes)
 }
+
+type Result struct {
+	Id  int64
+	Err error
+}
