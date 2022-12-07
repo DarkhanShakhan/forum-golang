@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"forum_app/internal/entity"
 	"log"
+	"time"
 )
 
 type PostsRepository struct {
@@ -154,7 +155,7 @@ func (pr *PostsRepository) Store(ctx context.Context, post entity.Post) (int64, 
 		return 0, err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, post.User.Id, post.Date, post.Title, post.Content)
+	res, err := stmt.ExecContext(ctx, post.User.Id, time.Now().Format("2006-01-02"), post.Title, post.Content)
 	if err != nil {
 		pr.errorLog.Println(err)
 		return 0, err

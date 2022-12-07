@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"forum_app/internal/entity"
 	"log"
+	"time"
 )
 
 type CommentsRepository struct {
@@ -120,7 +121,7 @@ func (cr *CommentsRepository) Store(ctx context.Context, comment entity.Comment)
 		return 0, err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, comment.Post.Id, comment.User.Id, comment.Date, comment.Content)
+	res, err := stmt.ExecContext(ctx, comment.Post.Id, comment.User.Id, time.Now().Format("2006-01-02"), comment.Content)
 	if err != nil {
 		cr.errorLog.Println(err)
 		return 0, err

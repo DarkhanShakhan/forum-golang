@@ -6,6 +6,7 @@ import (
 	"errors"
 	"forum_app/internal/entity"
 	"log"
+	"time"
 )
 
 type CommentReactionsRepository struct {
@@ -62,7 +63,7 @@ func (crr *CommentReactionsRepository) StoreReaction(ctx context.Context, commen
 		return err
 	}
 	defer stmt.Close()
-	if _, err = stmt.ExecContext(ctx, commentReaction.Comment.Id, commentReaction.Reaction.User.Id, commentReaction.Reaction.Date, commentReaction.Reaction.Like); err != nil {
+	if _, err = stmt.ExecContext(ctx, commentReaction.Comment.Id, commentReaction.Reaction.User.Id, time.Now().Format("2006-01-02"), commentReaction.Reaction.Like); err != nil {
 		crr.errorLog.Println(err)
 		return err
 	}
@@ -80,13 +81,13 @@ func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, comme
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, `UPDATE comment_reactions SET like = ? WHERE comment_id = ? AND user_id = ?;`)
+	stmt, err := tx.PrepareContext(ctx, `UPDATE comment_reactions SET like = ? AND date = ? WHERE comment_id = ? AND user_id = ?;`)
 	if err != nil {
 		crr.errorLog.Println(err)
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, commentReaction.Like, commentReaction.Post.Id, commentReaction.Reaction.User.Id)
+	res, err := stmt.ExecContext(ctx, commentReaction.Like, time.Now().Format("2006-01-02"), commentReaction.Post.Id, commentReaction.Reaction.User.Id)
 	if err != nil {
 		crr.errorLog.Println(err)
 		return err
@@ -95,6 +96,9 @@ func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, comme
 	if rAffected > 1 {
 		crr.errorLog.Println(errors.New("more than one row has been affected"))
 		return errors.New("more than one row has been affected")
+	} else if rAffected == 0 {
+		crr.errorLog.Println(errors.New("no row has been affected"))
+		return errors.New("no row has been affected")
 	}
 	if err != nil {
 		crr.errorLog.Println(err)

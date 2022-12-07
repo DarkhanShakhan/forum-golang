@@ -6,6 +6,7 @@ import (
 	"errors"
 	"forum_app/internal/entity"
 	"log"
+	"time"
 )
 
 type PostReactionsRepository struct {
@@ -62,6 +63,7 @@ func (rr *PostReactionsRepository) StoreReaction(ctx context.Context, postReacti
 		return err
 	}
 	defer stmt.Close()
+	postReaction.Reaction.Date = time.Now().Format("2006-01-02")
 	if _, err = stmt.ExecContext(ctx, postReaction.Post.Id, postReaction.Reaction.User.Id, postReaction.Reaction.Date, postReaction.Reaction.Like); err != nil {
 		rr.errorLog.Println(err)
 		return err
@@ -81,13 +83,14 @@ func (rr *PostReactionsRepository) UpdateReaction(ctx context.Context, postReact
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, `UPDATE post_reactions SET like = ? WHERE post_id = ? AND user_id = ?;`)
+	stmt, err := tx.PrepareContext(ctx, `UPDATE post_reactions SET like = ? AND date = ? WHERE post_id = ? AND user_id = ?;`)
 	if err != nil {
 		rr.errorLog.Println(err)
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, postReaction.Like, postReaction.Post.Id, postReaction.Reaction.User.Id)
+	postReaction.Reaction.Date = time.Now().Format("2006-01-02")
+	res, err := stmt.ExecContext(ctx, postReaction.Like, postReaction.Reaction.Date, postReaction.Post.Id, postReaction.Reaction.User.Id)
 	if err != nil {
 		rr.errorLog.Println(err)
 		return err

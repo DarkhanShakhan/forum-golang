@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"forum_app/internal/entity"
 	"log"
+	"time"
 )
 
 type UsersRepository struct {
@@ -117,6 +118,7 @@ func (ur *UsersRepository) Store(ctx context.Context, user entity.User) (int64, 
 		return 0, err
 	}
 	defer stmt.Close()
+	user.RegDate = time.Now().Format("2006-01-02")
 	res, err := stmt.ExecContext(ctx, user.Name, user.Email, user.Password, user.RegDate)
 	if err != nil {
 		ur.errorLog.Println(err)
@@ -128,52 +130,3 @@ func (ur *UsersRepository) Store(ctx context.Context, user entity.User) (int64, 
 	}
 	return res.LastInsertId()
 }
-
-//for future use
-// func (ur *UsersRepository) Update(user entity.User) error {
-// 	query := UPDATE_QUERY
-// 	if user.Id == 0 {
-// 		return errors.New("user id not provided")
-// 	}
-// 	if user.Name != "" {
-// 		query += NAME + `"` + user.Name + `"`
-// 	}
-// 	if user.Password != "" {
-// 		if user.Name != "" {
-// 			query += `,`
-// 		}
-// 		query += PASSWORD + `"` + user.Password + `"`
-// 	}
-// 	if query == UPDATE_QUERY {
-// 		return errors.New("no attributes to update")
-// 	}
-// 	query += BY_ID
-// 	fmt.Println(query)
-// 	result, err := ur.db.Exec(query, user.Id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	nbr, err := result.RowsAffected()
-// 	if nbr > 1 {
-// 		return errors.New("more than one row has been affected")
-// 	}
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
-
-// func (ur *UsersRepository) Delete(id int) error {
-// 	result, err := ur.db.Exec(DELETE_QUERY+BY_ID, id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	nbr, err := result.RowsAffected()
-// 	if nbr > 1 {
-// 		return errors.New("more than one row has been affected")
-// 	}
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
