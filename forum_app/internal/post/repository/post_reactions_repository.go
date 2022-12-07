@@ -96,6 +96,9 @@ func (rr *PostReactionsRepository) UpdateReaction(ctx context.Context, postReact
 	if rAffected > 1 {
 		rr.errorLog.Println(errors.New("more than one row has been affected"))
 		return errors.New("more than one row has been affected")
+	} else if rAffected == 0 {
+		rr.errorLog.Println(errors.New("no row has been affected"))
+		return errors.New("no row has been affected")
 	}
 	if err != nil {
 		return err

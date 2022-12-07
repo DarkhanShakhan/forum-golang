@@ -13,7 +13,7 @@ import (
 func Run() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile)
-	f, _ := os.OpenFile("logging.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, _ := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	defer f.Close()
 	wrt := io.MultiWriter(os.Stderr, f)
 	errorLog.SetOutput(wrt)
