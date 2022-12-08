@@ -103,7 +103,7 @@ func (u *UsersUsecase) FetchAll(ctx context.Context, usersRes chan entity.UsersR
 	if err != nil {
 		usersRes <- entity.UsersResult{Err: err}
 	}
-	usersRes <- entity.UsersResult{Users: users}
+	usersRes <- entity.UsersResult{Users: users, Err: err}
 }
 
 // func (u *UsersUsecase) Update(user entity.User) error {

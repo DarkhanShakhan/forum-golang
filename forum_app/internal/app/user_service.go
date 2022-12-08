@@ -30,21 +30,21 @@ func (h *Handler) UsersAllHandler(w http.ResponseWriter, r *http.Request) {
 	usersChan := make(chan entity.UsersResult)
 	var usersRes entity.UsersResult
 	var err error
-	h.ucase.FetchAll(ctx, usersChan)
+	go h.ucase.FetchAll(ctx, usersChan)
 	select {
-	case <-ctx.Done():
-		err = ctx.Err()
-		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
-		return
 	case usersRes = <-usersChan:
-
 		if err = usersRes.Err; err != nil {
 			h.errorLog.Println(err)
 			w.WriteHeader(500)
 			w.Write([]byte(err.Error()))
 			return
 		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+
 	}
 
 	response, err := json.Marshal(usersRes.Users)

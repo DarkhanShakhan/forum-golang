@@ -81,7 +81,7 @@ func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, comme
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, `UPDATE comment_reactions SET like = ? AND date = ? WHERE comment_id = ? AND user_id = ?;`)
+	stmt, err := tx.PrepareContext(ctx, `UPDATE comment_reactions SET like = ?, date = ? WHERE comment_id = ? AND user_id = ?;`)
 	if err != nil {
 		crr.errorLog.Println(err)
 		return err

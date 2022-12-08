@@ -83,7 +83,7 @@ func (rr *PostReactionsRepository) UpdateReaction(ctx context.Context, postReact
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, `UPDATE post_reactions SET like = ? AND date = ? WHERE post_id = ? AND user_id = ?;`)
+	stmt, err := tx.PrepareContext(ctx, `UPDATE post_reactions SET like = ?, date = ? WHERE post_id = ? AND user_id = ?;`)
 	if err != nil {
 		rr.errorLog.Println(err)
 		return err
