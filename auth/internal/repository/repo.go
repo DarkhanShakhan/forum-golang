@@ -1,7 +1,7 @@
 package auth_repo
 
 import (
-	e "auth/internal/entity"
+	"auth/internal/entity"
 	"context"
 	"database/sql"
 	"log"
@@ -17,7 +17,7 @@ func NewSessionsRepository(db *sql.DB, errorLog *log.Logger) *SessionsRepository
 	return &SessionsRepository{db, errorLog}
 }
 
-func (sr *SessionsRepository) Store(ctx context.Context, session e.Session) error {
+func (sr *SessionsRepository) Store(ctx context.Context, session entity.Session) error {
 	tx, err := sr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		sr.errorLog.Println(err)
