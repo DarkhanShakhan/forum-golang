@@ -21,14 +21,14 @@ func New() (*sql.DB, error) {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL UNIQUE,
 		email TEXT NOT NULL UNIQUE,
-		password TEXT,
+		password TEXT NOT NULL UNIQUE,
 		registration_date TEXT
 		);
 	`
 	_, err = db.Exec(users)
-	// db.Exec(`INSERT INTO users(name,email, password) VALUES ("user1", "user1", "user1");`)
-	// db.Exec(`INSERT INTO users(name, email, password) VALUES ("user2", "user2", "user2");`)
-	// db.Exec(`INSERT INTO users(name, email, password) VALUES ("user3", "user3", "user3");`)
+	if err != nil {
+		return nil, err
+	}
 	posts := `
 	CREATE TABLE IF NOT EXISTS posts (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,6 +39,9 @@ func New() (*sql.DB, error) {
 		);
 	`
 	_, err = db.Exec(posts)
+	if err != nil {
+		return nil, err
+	}
 	postReactions := `
 	CREATE TABLE IF NOT EXISTS post_reactions (
 		post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
@@ -49,26 +52,29 @@ func New() (*sql.DB, error) {
 		);
 	`
 	_, err = db.Exec(postReactions)
+	if err != nil {
+		return nil, err
+	}
 	categories := `
 	CREATE TABLE IF NOT EXISTS categories (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		title TEXT UNIQUE
 	);`
-	db.Exec(categories)
-	// cat1 := `
-	// Insert into categories(title) values("sql");`
-	// cat2 := `insert into categories(title) values("python");`
-	// cat3 := `insert into categories(title) values("golang");`
-	// db.Exec(cat1)
-	// db.Exec(cat2)
-	// db.Exec(cat3)
+	_, err = db.Exec(categories)
+	if err != nil {
+		return nil, err
+	}
+	//FIXME: add categories
 	postCategories := `
 	CREATE TABLE IF NOT EXISTS post_categories (
 		post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
 		category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
 		UNIQUE(post_id, category_id)
 	);`
-	db.Exec(postCategories)
+	_, err = db.Exec(postCategories)
+	if err != nil {
+		return nil, err
+	}
 	comments := `
 	CREATE TABLE IF NOT EXISTS comments (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +83,10 @@ func New() (*sql.DB, error) {
 		date STRING,
 		content STRING
 	);`
-	db.Exec(comments)
+	_, err = db.Exec(comments)
+	if err != nil {
+		return nil, err
+	}
 	commentReactions := `
 	CREATE TABLE IF NOT EXISTS comment_reactions (
 		comment_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
@@ -87,17 +96,9 @@ func New() (*sql.DB, error) {
 		UNIQUE(comment_id, user_id)
 		);
 	`
-	db.Exec(commentReactions)
-
-	sessions := `
-	CREATE TABLE IF NOT EXISTS sessions (
-		session TEXT UNIQUE,
-		user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-		expiry_date TEXT
-	);`
-	db.Exec(sessions)
-
-	s1 := `INSERT INTO sessions(session, user_id) VALUES("hello", 1);`
-	db.Exec(s1)
+	_, err = db.Exec(commentReactions)
+	if err != nil {
+		return nil, err
+	}
 	return db, nil
 }
