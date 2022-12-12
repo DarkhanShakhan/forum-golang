@@ -10,3 +10,15 @@ type SessionResult struct {
 	Session Session
 	Err     error
 }
+
+type AuthStatus int
+
+const (
+	Authorised AuthStatus = iota
+	NonAuthorised
+)
+
+type AuthStatusResult struct {
+	Status AuthStatus
+	Err    error
+}

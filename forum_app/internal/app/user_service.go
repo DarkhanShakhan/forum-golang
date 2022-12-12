@@ -188,7 +188,7 @@ func (h *Handler) StoreUserHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(405) // method not allowed
 		return
 	}
-
+	//FIXME: do we need to parse if data is in the body
 	if err := r.ParseForm(); err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500) // internal server error ???

@@ -9,7 +9,6 @@ import (
 	uUcse "forum_app/internal/user/usecase"
 	"forum_app/pkg/sqlite3"
 	"log"
-	"net/http"
 	"time"
 )
 
@@ -36,7 +35,3 @@ func NewHandler(errorLog *log.Logger) *Handler {
 	ccase := cUcse.NewCommentsUsecase(commentsRepo, cReactionsRepo, postsRepo, usersRepo, errorLog)
 	return &Handler{errorLog, ucase, pcase, ccase}
 }
-
-func (h *Handler) CommentByIdHandler(w http.ResponseWriter, r *http.Request) {}
-
-func (h *Handler) DeleteCommentReaction(w http.ResponseWriter, r *http.Request) {}
