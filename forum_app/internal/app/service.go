@@ -21,7 +21,7 @@ type Handler struct {
 	ccase    CommentUsecase
 }
 
-// TODO: done
+// FIXME:deal with error from sqlite3
 func NewHandler(errorLog *log.Logger) *Handler {
 	db, _ := sqlite3.New()
 	usersRepo := ur.NewUsersRepository(db, errorLog)

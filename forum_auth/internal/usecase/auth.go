@@ -1,4 +1,4 @@
-package auth_usecase
+package usecase
 
 import (
 	"bytes"
@@ -19,8 +19,8 @@ type AuthUsecase struct {
 	errLog      *log.Logger
 }
 
-func NewAuthUsecase(sessionRepo SessionsRepo, errLog *log.Logger) AuthUsecase {
-	return AuthUsecase{sessionRepo: sessionRepo, errLog: errLog}
+func NewAuthUsecase(sessionRepo SessionsRepo, errLog *log.Logger) *AuthUsecase {
+	return &AuthUsecase{sessionRepo: sessionRepo, errLog: errLog}
 }
 
 func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credentials, sessionRes chan entity.SessionResult) {

@@ -49,4 +49,5 @@ func Run() {
 	infoLog.Println("Listening on localhost:8080")
 	err := srv.ListenAndServe()
 	errorLog.Fatal(err)
+	//TODO: graceful shutdown
 }
