@@ -7,7 +7,7 @@ import (
 )
 
 func New() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "./db/session.db")
+	db, err := sql.Open("sqlite3", "./session.db")
 	if err != nil {
 		return nil, err
 	}

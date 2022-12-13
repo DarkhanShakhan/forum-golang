@@ -24,7 +24,7 @@ func NewAuthUsecase(sessionRepo SessionsRepo, errLog *log.Logger) *AuthUsecase {
 }
 
 func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credentials, sessionRes chan entity.SessionResult) {
-	requestUrl := fmt.Sprintf("localhost:8080/user/email?email=%s", credentials.Email)
+	requestUrl := fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, requestUrl, nil)
 	if err != nil {
 		sessionRes <- entity.SessionResult{Err: err}
@@ -37,7 +37,7 @@ func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credential
 		return
 	}
 
-	//FIXME:validate user
+	// FIXME:validate user
 	user := entity.Credentials{}
 	err = json.NewDecoder(response.Body).Decode(&user)
 	if err != nil {
@@ -62,7 +62,7 @@ func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credential
 }
 
 func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credentials, credsRes chan entity.CredentialsResult) {
-	requestUrl := "localhost:8080/user/save"
+	requestUrl := "http://localhost:8080/user/save"
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 	if err != nil {
 		credsRes <- entity.CredentialsResult{Err: err}
@@ -104,14 +104,14 @@ func (au *AuthUsecase) Authenticate(ctx context.Context, session entity.Session,
 		authStatus <- entity.AuthStatusResult{Status: entity.NonAuthorised, Err: errors.New("session doesn't exist")}
 		return
 	}
-	//FIXME:validate expiry date
+	// FIXME:validate expiry date
 
 	token, err := uuid.NewV4()
 	if err != nil {
 		authStatus <- entity.AuthStatusResult{Status: entity.NonAuthorised, Err: err}
 		return
 	}
-	session.Token = token.String() //updates token: expiry is updated in repo
+	session.Token = token.String() // updates token: expiry is updated in repo
 	err = au.sessionRepo.Update(ctx, session)
 	if err != nil {
 		authStatus <- entity.AuthStatusResult{Status: entity.NonAuthorised, Err: err}

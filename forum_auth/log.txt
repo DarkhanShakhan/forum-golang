@@ -1,0 +1,8 @@
+ERROR	2022/12/13 14:19:50 /home/student/forum-golang/forum_auth/internal/app/service.go:61: <nil>
+ERROR	2022/12/13 14:21:12 /home/student/forum-golang/forum_auth/internal/app/service.go:61: Get "localhost:8080/user/email?email=darkhan.shakhanov@gmail.com": unsupported protocol scheme "localhost"
+ERROR	2022/12/13 14:23:12 /home/student/forum-golang/forum_auth/internal/app/service.go:61: crypto/bcrypt: hashedSecret too short to be a bcrypted password
+ERROR	2022/12/13 14:24:25 /home/student/forum-golang/forum_auth/internal/app/service.go:61: crypto/bcrypt: hashedSecret too short to be a bcrypted password
+ERROR	2022/12/13 14:36:06 /home/student/forum-golang/forum_auth/internal/repository/repo.go:59: no such table: users
+ERROR	2022/12/13 14:36:06 /home/student/forum-golang/forum_auth/internal/app/service.go:61: no such table: users
+ERROR	2022/12/13 14:37:35 /home/student/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/13 14:37:35 /home/student/forum-golang/forum_auth/internal/app/service.go:61: UNIQUE constraint failed: sessions.user_id

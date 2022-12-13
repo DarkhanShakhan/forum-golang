@@ -25,7 +25,7 @@ func (sr *SessionsRepository) Fetch(ctx context.Context, token string) (entity.S
 		return entity.Session{}, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM post_reactions WHERE token=?")
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM sessions WHERE token=?")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return entity.Session{}, err
@@ -54,7 +54,7 @@ func (sr *SessionsRepository) Store(ctx context.Context, session entity.Session)
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "INSERT INTO users(user_id, token, expiry_date) VALUES (?, ?, ?);")
+	stmt, err := tx.PrepareContext(ctx, "INSERT INTO sessions(user_id, token, expiry_date) VALUES (?, ?, ?);")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return err
@@ -81,7 +81,7 @@ func (sr *SessionsRepository) Update(ctx context.Context, session entity.Session
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "UPDATE users SET token=?, date=? WHERE user_id =?;")
+	stmt, err := tx.PrepareContext(ctx, "UPDATE sessions SET token=?, date=? WHERE user_id =?;")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return err
