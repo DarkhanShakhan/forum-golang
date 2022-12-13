@@ -19,6 +19,7 @@ const (
 )
 
 type AuthStatusResult struct {
-	Status AuthStatus
-	Err    error
+	Status AuthStatus `json:"status,omitempty"`
+	Token  string     `json:"token,omitempty"`
+	Err    error      `json:"error,omitempty"`
 }

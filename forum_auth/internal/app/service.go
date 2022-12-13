@@ -70,7 +70,13 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"token\":%s}", sessionRes.Session.Token)))
+	result, err := json.Marshal(sessionRes.Session)
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500) // FIXME: not sure
+		return
+	}
+	w.Write(result)
 }
 
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
@@ -115,9 +121,74 @@ func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", credentials.Id))) // is it necessary?
+	result, err := json.Marshal(credentials)
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500) // FIXME: not sure
+		return
+	}
+	w.Write(result)
 }
-func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {}
+
+func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(context.Background(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodGet {
+		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		w.WriteHeader(405)
+		return
+	}
+	authStatusChan := make(chan entity.AuthStatusResult)
+	authStatusRes := entity.AuthStatusResult{}
+	var session entity.Session
+	err := json.NewDecoder(r.Body).Decode(&session)
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	go h.aucase.Authenticate(ctx, session, authStatusChan)
+	select {
+	case authStatusRes = <-authStatusChan:
+		if authStatusRes.Err != nil {
+			h.errorLog.Println(authStatusRes.Err)
+			w.Header().Set("Content-Type", "application/json")
+			authStatusRes.Err = nil
+			result, err := json.Marshal(authStatusRes)
+			if err != nil {
+				h.errorLog.Println(err)
+				w.WriteHeader(500) // FIXME: not sure
+				return
+			}
+			w.WriteHeader(200) // FIXME: not sure
+			w.Write(result)
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	result, err := json.Marshal(authStatusRes)
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500) // FIXME: not sure
+		return
+	}
+	w.WriteHeader(200)
+	w.Write(result)
+}
+
 func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx    context.Context

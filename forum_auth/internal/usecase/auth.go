@@ -116,7 +116,7 @@ func (au *AuthUsecase) Authenticate(ctx context.Context, session entity.Session,
 	if err != nil {
 		authStatus <- entity.AuthStatusResult{Status: entity.NonAuthorised, Err: err}
 	}
-	authStatus <- entity.AuthStatusResult{Status: entity.Authorised}
+	authStatus <- entity.AuthStatusResult{Status: entity.Authorised, Token: session.Token}
 }
 
 func (au *AuthUsecase) SignOut(ctx context.Context, session entity.Session, err chan error) {

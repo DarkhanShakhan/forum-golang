@@ -81,7 +81,7 @@ func (sr *SessionsRepository) Update(ctx context.Context, session entity.Session
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "UPDATE sessions SET token=?, date=? WHERE user_id =?;")
+	stmt, err := tx.PrepareContext(ctx, "UPDATE sessions SET token=?, expiry_date=? WHERE user_id =?;")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return err
