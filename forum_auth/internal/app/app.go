@@ -18,7 +18,7 @@ func Run() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/sign_in", h.SignInHandler)
-	mux.HandleFunc("/sing_out", h.SignOutHandler)
+	mux.HandleFunc("/sign_out", h.SignOutHandler)
 	mux.HandleFunc("/authenticate", h.Authenticate)
 	mux.HandleFunc("/sign_up", h.SignUpHandler)
 	srv := &http.Server{
@@ -29,5 +29,5 @@ func Run() {
 	infoLog.Println("Listening on localhost:8081")
 	err := srv.ListenAndServe()
 	errorLog.Fatal(err)
-	//TODO: graceful shutdown
+	// TODO: graceful shutdown
 }

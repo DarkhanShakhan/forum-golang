@@ -119,4 +119,43 @@ func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 }
 func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {}
 func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(context.Background(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodDelete {
+		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		w.WriteHeader(405)
+		return
+	}
+	errChan := make(chan error)
+	session := entity.Session{}
+	err := json.NewDecoder(r.Body).Decode(&session)
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	go h.aucase.SignOut(ctx, session, errChan)
+	select {
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			w.WriteHeader(500) // FIXME: no sure
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(204) // no content
 }

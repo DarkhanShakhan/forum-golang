@@ -108,13 +108,14 @@ func (sr *SessionsRepository) Delete(ctx context.Context, session entity.Session
 		return err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "DELETE FROM sessions WHERE user_id=?;")
+	stmt, err := tx.PrepareContext(ctx, "DELETE FROM sessions WHERE token=?;")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.ExecContext(ctx, session.UserId)
+	_, err = stmt.ExecContext(ctx, session.Token)
+	// FIXME: checks for invalid token or nil token rows affected
 	if err != nil {
 		sr.errorLog.Println(err)
 		return err
