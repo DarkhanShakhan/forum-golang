@@ -14,8 +14,8 @@ type SessionResult struct {
 type AuthStatus int
 
 const (
-	Authorised AuthStatus = iota
-	NonAuthorised
+	NonAuthorised AuthStatus = iota
+	Authorised
 )
 
 type AuthStatusResult struct {
