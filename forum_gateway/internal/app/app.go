@@ -10,6 +10,8 @@ func Run() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/sign_in", f)
+	mux.HandleFunc("/signin_google", SignInGoogleHandler)
+	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
 	handler := Authenticate(mux)
 	srv := &http.Server{
 		Addr:    "localhost:8082",
