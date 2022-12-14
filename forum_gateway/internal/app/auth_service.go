@@ -20,8 +20,8 @@ func AuthCodeURL(state string) string {
 	var buf bytes.Buffer
 	buf.WriteString("https://accounts.google.com/o/oauth2/auth")
 	v := url.Values{"response_type": {"code"}, "client_id": {"927216100551-rqhe20jmdl3h10jqno3lqt8rrer41r71.apps.googleusercontent.com"}}
-	v.Set("redirect_uri", "http://localhost:8080/callback")
-	v.Set("scope", "https://www.googleapis.com/auth/userinfo.email")
+	v.Set("redirect_uri", "http://localhost:8082/google_callback")
+	v.Set("scope", "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile")
 	v.Set("state", state)
 	buf.WriteByte('?')
 	buf.WriteString(v.Encode())
@@ -63,7 +63,7 @@ func Exchange(code string) (Token, error) {
 	var buf bytes.Buffer
 	buf.WriteString("https://oauth2.googleapis.com/token?")
 	v := url.Values{"grant_type": {"authorization_code"}, "code": {code}}
-	v.Set("redirect_uri", "http://localhost:8080/callback")
+	v.Set("redirect_uri", "http://localhost:8082/google_callback")
 	v.Set("client_id", "927216100551-rqhe20jmdl3h10jqno3lqt8rrer41r71.apps.googleusercontent.com")
 	v.Set("client_secret", "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")
 	buf.WriteString(v.Encode())
