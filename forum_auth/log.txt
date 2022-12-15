@@ -16,3 +16,11 @@ ERROR	2022/12/13 15:29:25 /home/student/forum-golang/forum_auth/internal/app/ser
 ERROR	2022/12/13 15:36:47 /home/student/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
 ERROR	2022/12/13 15:38:50 /home/student/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
 ERROR	2022/12/13 15:39:44 /home/student/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2022/12/15 20:06:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:61: crypto/bcrypt: hashedSecret too short to be a bcrypted password
+ERROR	2022/12/15 20:14:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2022/12/15 20:16:34 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/15 20:16:34 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:264: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/15 20:17:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/15 20:17:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:264: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/15 20:20:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/15 20:20:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:264: UNIQUE constraint failed: sessions.user_id

@@ -21,5 +21,6 @@ const (
 type AuthStatusResult struct {
 	Status AuthStatus `json:"status,omitempty"`
 	Token  string     `json:"token,omitempty"`
+	UserId int64      `json:"user_id,omitempty"`
 	Err    error      `json:"error,omitempty"`
 }
