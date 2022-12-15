@@ -122,3 +122,68 @@ func (au *AuthUsecase) Authenticate(ctx context.Context, session entity.Session,
 func (au *AuthUsecase) SignOut(ctx context.Context, session entity.Session, err chan error) {
 	err <- au.sessionRepo.Delete(ctx, session)
 }
+
+func (au *AuthUsecase) OauthSignIn(ctx context.Context, credentials entity.Credentials, sessionRes chan entity.SessionResult) {
+	requestUrl := fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, requestUrl, nil)
+	if err != nil {
+		sessionRes <- entity.SessionResult{Err: err}
+		return
+	}
+	client := http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		sessionRes <- entity.SessionResult{Err: err}
+		return
+	}
+	user := entity.Credentials{}
+	err = json.NewDecoder(response.Body).Decode(&user)
+	if err != nil {
+		sessionRes <- entity.SessionResult{Err: err}
+		return
+	}
+	if user.Id == 0 {
+		res := au.storeUser(ctx, credentials)
+		if res.Err != nil {
+			sessionRes <- entity.SessionResult{Err: res.Err}
+			return
+		}
+		user = res.Credentials
+	}
+	sessionRes <- au.createSession(ctx, user)
+}
+
+func (au *AuthUsecase) storeUser(ctx context.Context, credentials entity.Credentials) entity.CredentialsResult {
+	requestUrl := "http://localhost:8080/user/save"
+	requestBody, err := json.Marshal(credentials)
+	if err != nil {
+		return entity.CredentialsResult{Err: err}
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, requestUrl, bytes.NewReader(requestBody))
+	if err != nil {
+		return entity.CredentialsResult{Err: err}
+	}
+	client := http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		return entity.CredentialsResult{Err: err}
+	}
+	user := entity.Credentials{}
+	err = json.NewDecoder(response.Body).Decode(&user)
+	if err != nil {
+		return entity.CredentialsResult{Err: err}
+	}
+	return entity.CredentialsResult{Credentials: user}
+}
+
+func (au *AuthUsecase) createSession(ctx context.Context, credentials entity.Credentials) entity.SessionResult {
+	token, err := uuid.NewV4()
+	if err != nil {
+		return entity.SessionResult{Err: err}
+	}
+	session := entity.Session{UserId: credentials.Id, Token: token.String()}
+	if err = au.sessionRepo.Store(ctx, session); err != nil {
+		return entity.SessionResult{Err: err}
+	}
+	return entity.SessionResult{Session: session}
+}

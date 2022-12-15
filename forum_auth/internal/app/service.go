@@ -230,3 +230,54 @@ func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(204) // no content
 }
+
+func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	if deadline, ok := r.Context().Deadline(); ok {
+		ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	} else {
+		ctx, cancel = context.WithTimeout(context.Background(), duration)
+	}
+	defer cancel()
+	if r.Method != http.MethodPost {
+		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		w.WriteHeader(405)
+		return
+	}
+	sessionChan := make(chan entity.SessionResult)
+	var sessionRes entity.SessionResult
+	var err error
+	credentials := entity.Credentials{}
+	err = json.NewDecoder(r.Body).Decode(&credentials)
+	if err != nil {
+		h.errorLog.Println("bad request")
+		w.WriteHeader(400)
+		return
+	}
+	go h.aucase.OauthSignIn(ctx, credentials, sessionChan)
+	select {
+	case sessionRes = <-sessionChan:
+		if sessionRes.Err != nil {
+			h.errorLog.Println(sessionRes.Err)
+			w.WriteHeader(500) // FIXME: no sure
+			return
+		}
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		w.WriteHeader(408) // request timeout
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	result, err := json.Marshal(sessionRes.Session)
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500) // FIXME: not sure
+		return
+	}
+	w.Write(result)
+}

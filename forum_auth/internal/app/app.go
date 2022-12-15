@@ -21,6 +21,7 @@ func Run() {
 	mux.HandleFunc("/sign_out", h.SignOutHandler)
 	mux.HandleFunc("/authenticate", h.Authenticate)
 	mux.HandleFunc("/sign_up", h.SignUpHandler)
+	mux.HandleFunc("/oauth_signin", h.OauthSignInHandler)
 	srv := &http.Server{
 		Addr:     "localhost:8081",
 		ErrorLog: errorLog,
