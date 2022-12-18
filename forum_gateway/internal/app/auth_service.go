@@ -36,6 +36,39 @@ func postSignIn(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(r.Form.Encode()))
 }
 
+func SignUpHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getSignUp(w, r)
+	case http.MethodPost:
+		postSignUp(w, r)
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+	}
+}
+
+func getSignUp(w http.ResponseWriter, r *http.Request) {
+	templ, err := template.ParseFiles("web/sign_up.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	templ.Execute(w, nil)
+}
+
+func postSignUp(w http.ResponseWriter, r *http.Request) {
+
+	r.ParseForm()
+	w.Write([]byte(r.Form.Encode()))
+}
+
+func SignOutHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+}
+
 func SignInGoogleHandler(w http.ResponseWriter, r *http.Request) {
 	url := AuthCodeURL(oauthStateString)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
@@ -69,7 +102,7 @@ func getUserInfo(state string, code string) ([]byte, error) {
 	if state != oauthStateString {
 		return nil, fmt.Errorf("invalid oauth state")
 	}
-	token, err := Exchange(code)
+	token, err := exchange(code)
 	if err != nil {
 		return nil, fmt.Errorf("code exchange failed: %s", err.Error())
 	}
@@ -84,7 +117,7 @@ func getUserInfo(state string, code string) ([]byte, error) {
 	}
 	return contents, nil
 }
-func Exchange(code string) (Token, error) {
+func exchange(code string) (Token, error) {
 	var buf bytes.Buffer
 	buf.WriteString("https://oauth2.googleapis.com/token?")
 	v := url.Values{"grant_type": {"authorization_code"}, "code": {code}}

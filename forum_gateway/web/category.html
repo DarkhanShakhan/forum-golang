@@ -10,8 +10,8 @@
     ID: {{.id}} <br>
     Title: {{.title}}<br>
     Posts: <br>{{range.posts}}
-    Title - {{.title}}<br>
-    User - <a href="http://localhost:8082/user/{{.user.id}}">{{.user.name}}</a><br>
+    Title - <a href="/post/{{.post.id}}">{{.title}}</a><br>
+    User - <a href="/user/{{.user.id}}">{{.user.name}}</a><br>
     {{end}}<br>
     <br>
 </body>

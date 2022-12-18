@@ -63,11 +63,11 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	templ, err := template.New("post").Parse(`<html>Title: {{.title}}<br>Categories: {{range.categories}} {{.title}} {{end}}<br>Content: {{.content}}<br> User: <a href="http://localhost:8082/user/{{.user.id}}">{{.user.name}}</a> </html>`)
+	templ, err := template.ParseFiles("web/post.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	templ.ExecuteTemplate(w, "post", target)
+	templ.Execute(w, target)
 }
 
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
@@ -133,11 +133,11 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	templ, err := template.New("post").Parse(`<html>Name: {{.name}}<br>Posts: {{.posts}}<br>Likes: {{.total_post_likes}}<br>Dislikes: {{.total_post_dislikes}}</html>`)
+	templ, err := template.ParseFiles("web/user.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	templ.ExecuteTemplate(w, "post", target)
+	templ.Execute(w, target)
 }
 
 func CategoryHandler(w http.ResponseWriter, r *http.Request) {
