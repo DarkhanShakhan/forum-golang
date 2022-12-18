@@ -1,0 +1,36 @@
+ERROR	2022/12/18 01:55:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:55:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:55:26 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:55:26 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:55:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:56:06 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:56:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:56:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:58:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 01:59:47 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:00:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:11:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:11:35 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:14:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:15:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:15:54 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:16:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:36: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 02:20:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:31: invalid character 'i' looking for beginning of value
+ERROR	2022/12/18 02:24:14 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:31: json: cannot unmarshal string into Go struct field Post.id of type int
+ERROR	2022/12/18 02:30:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:31: invalid character '}' looking for beginning of value
+ERROR	2022/12/18 02:59:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:31: invalid character '}' looking for beginning of value
+ERROR	2022/12/18 03:06:50 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:143: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/18 03:16:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:143: strconv.Atoi: parsing ".id": invalid syntax
+ERROR	2022/12/18 03:17:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:143: strconv.Atoi: parsing ".id": invalid syntax
+ERROR	2022/12/18 03:17:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:143: strconv.Atoi: parsing ".id": invalid syntax
+ERROR	2022/12/18 03:24:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:136: strconv.Atoi: parsing "id": invalid syntax
+ERROR	2022/12/18 15:01:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:03:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:04:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:05:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:186: bad request
+ERROR	2022/12/18 15:08:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:10:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:11:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:23:44 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:26:47 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
+ERROR	2022/12/18 15:28:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:187: bad request

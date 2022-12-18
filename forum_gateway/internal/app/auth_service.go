@@ -4,12 +4,37 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 )
 
 var oauthStateString = "pseudo-random"
+
+func SignInHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getSignIn(w, r)
+	case http.MethodPost:
+		postSignIn(w, r)
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+	}
+}
+
+func getSignIn(w http.ResponseWriter, r *http.Request) {
+	templ, err := template.ParseFiles("web/sign_in.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	templ.Execute(w, nil)
+}
+
+func postSignIn(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	w.Write([]byte(r.Form.Encode()))
+}
 
 func SignInGoogleHandler(w http.ResponseWriter, r *http.Request) {
 	url := AuthCodeURL(oauthStateString)
