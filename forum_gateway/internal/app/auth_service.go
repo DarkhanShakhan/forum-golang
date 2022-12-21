@@ -33,7 +33,48 @@ func getSignIn(w http.ResponseWriter, r *http.Request) {
 
 func postSignIn(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	w.Write([]byte(r.Form.Encode()))
+	// w.Write([]byte(r.Form.Encode()))
+	credentials := Credentials{Email: r.FormValue("email"), Password: r.FormValue("password")}
+	requestBody, err := json.Marshal(credentials)
+	if err != nil {
+		fmt.Println(1)
+		fmt.Println(err)
+		return
+	}
+	requestUrl := "http://localhost:8081/sign_in"
+	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
+	if err != nil {
+		fmt.Println(err)
+	}
+	client := http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		fmt.Println(2)
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(response.StatusCode)
+	session := Session{}
+	err = json.NewDecoder(response.Body).Decode(&session)
+	if err != nil {
+		fmt.Println(3)
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(session)
+}
+
+type Session struct {
+	Token      string `json:"token"`
+	UserId     int64  `json:"user_id"`
+	ExpiryDate string `json:"expiry_date"`
+}
+
+type Credentials struct {
+	Id       int64  `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +97,6 @@ func getSignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func postSignUp(w http.ResponseWriter, r *http.Request) {
-
 	r.ParseForm()
 	w.Write([]byte(r.Form.Encode()))
 }
@@ -66,7 +106,6 @@ func SignOutHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 }
 
 func SignInGoogleHandler(w http.ResponseWriter, r *http.Request) {
@@ -92,10 +131,11 @@ func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	//send email to forum_auth
-	//FIXME: create authGoogle endpoint
+	// send email to forum_auth
+	// FIXME: create authGoogle endpoint
 	fmt.Fprintf(w, "Content: %s\n", content)
 }
+
 func getUserInfo(state string, code string) ([]byte, error) {
 	fmt.Println(state)
 	fmt.Println(code)
@@ -117,6 +157,7 @@ func getUserInfo(state string, code string) ([]byte, error) {
 	}
 	return contents, nil
 }
+
 func exchange(code string) (Token, error) {
 	var buf bytes.Buffer
 	buf.WriteString("https://oauth2.googleapis.com/token?")

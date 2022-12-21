@@ -54,6 +54,7 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
+	fmt.Println(credentials)
 	go h.aucase.SignIn(ctx, credentials, sessionChan)
 	select {
 	case sessionRes = <-sessionChan:

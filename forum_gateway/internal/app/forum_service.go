@@ -15,7 +15,7 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	//FIXME: check authorised
+	// FIXME: check authorised
 	url := "http://localhost:8080/posts"
 	client := http.Client{}
 	response, err := client.Get(url)
@@ -45,7 +45,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	requestUrl := fmt.Sprintf("http://localhost:8080/post?id=%s", getID(r.URL.Path))
 	req, err := http.NewRequest("GET", requestUrl, nil)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -76,7 +75,7 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	//FIXME: check authorised
+	// FIXME: check authorised
 	url := "http://localhost:8080/users"
 	client := http.Client{}
 	response, err := client.Get(url)
@@ -115,7 +114,6 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	requestUrl := fmt.Sprintf("http://localhost:8080/user?id=%s", getID(r.URL.Path))
 	req, err := http.NewRequest("GET", requestUrl, nil)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -148,7 +146,6 @@ func CategoryHandler(w http.ResponseWriter, r *http.Request) {
 
 	requestUrl := fmt.Sprintf("http://localhost:8080/category?id=%s", getID(r.URL.Path))
 	req, err := http.NewRequest("GET", requestUrl, nil)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -184,6 +181,7 @@ func PostCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
 func getPostCreate(w http.ResponseWriter, r *http.Request) {
 	templ, err := template.ParseFiles("web/post_create.html")
 	if err != nil {

@@ -35,3 +35,9 @@ ERROR	2022/12/18 15:23:44 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2022/12/18 15:26:47 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:185: bad request
 ERROR	2022/12/18 15:28:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:187: bad request
 ERROR	2022/12/18 19:04:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "new": invalid syntax
+ERROR	2022/12/21 14:34:56 /home/student/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/21 14:53:16 /home/student/forum-golang/forum_app/internal/app/user_service.go:85: bad request: email is not provided
+ERROR	2022/12/21 14:54:00 /home/student/forum-golang/forum_app/internal/app/user_service.go:85: bad request: email is not provided
+ERROR	2022/12/21 14:55:23 /home/student/forum-golang/forum_app/internal/app/user_service.go:85: bad request: email is not provided
+ERROR	2022/12/21 14:57:22 /home/student/forum-golang/forum_app/internal/app/user_service.go:85: bad request: email is not provided
+ERROR	2022/12/21 14:58:56 /home/student/forum-golang/forum_app/internal/app/user_service.go:85: bad request: email is not provided

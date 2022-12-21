@@ -24,3 +24,10 @@ ERROR	2022/12/15 20:17:31 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2022/12/15 20:17:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:264: UNIQUE constraint failed: sessions.user_id
 ERROR	2022/12/15 20:20:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
 ERROR	2022/12/15 20:20:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:264: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/21 14:53:16 /home/student/forum-golang/forum_auth/internal/app/service.go:61: EOF
+ERROR	2022/12/21 14:54:00 /home/student/forum-golang/forum_auth/internal/app/service.go:61: EOF
+ERROR	2022/12/21 14:55:23 /home/student/forum-golang/forum_auth/internal/app/service.go:61: EOF
+ERROR	2022/12/21 14:57:22 /home/student/forum-golang/forum_auth/internal/app/service.go:62: EOF
+ERROR	2022/12/21 14:58:56 /home/student/forum-golang/forum_auth/internal/app/service.go:62: EOF
+ERROR	2022/12/21 14:59:51 /home/student/forum-golang/forum_auth/internal/app/service.go:62: crypto/bcrypt: hashedSecret too short to be a bcrypted password
+ERROR	2022/12/21 15:03:15 /home/student/forum-golang/forum_auth/internal/app/service.go:62: crypto/bcrypt: hashedPassword is not the hash of the given password
