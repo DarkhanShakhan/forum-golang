@@ -40,3 +40,5 @@ ERROR	2022/12/21 16:13:42 /home/student/forum-golang/forum_auth/internal/app/ser
 ERROR	2022/12/21 16:22:26 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist
 ERROR	2022/12/21 16:24:02 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist
 ERROR	2022/12/21 16:24:18 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist
+ERROR	2022/12/21 17:07:03 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist
+ERROR	2022/12/21 18:02:55 /home/student/forum-golang/forum_auth/internal/app/service.go:62: crypto/bcrypt: hashedPassword is not the hash of the given password

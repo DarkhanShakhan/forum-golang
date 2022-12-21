@@ -9,14 +9,17 @@
 <body>
     Sign In <br>
     <form action="/sign_up" method="POST">
+        Enter your name <br>
+        <input type="text" name="name"><br>
         Enter your email <br>
         <input type="text" name="email"><br>
         Enter your password <br>
         <input type="password" name="password"><br>
         Repeat your password <br>
         <input type="password" name="rep_password"><br>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit"><br>
     </form>
+    {{.}}
     <br>
     <a href="/signin_google">Sign up with Google</a>
 </body>
