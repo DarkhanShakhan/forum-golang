@@ -24,7 +24,6 @@ func NewAuthUsecase(sessionRepo SessionsRepo, errLog *log.Logger) *AuthUsecase {
 }
 
 func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credentials, sessionRes chan entity.SessionResult) {
-	fmt.Println(credentials.Email)
 	requestUrl := fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, requestUrl, nil)
 	if err != nil {

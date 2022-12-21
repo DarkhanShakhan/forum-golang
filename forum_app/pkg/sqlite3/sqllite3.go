@@ -8,7 +8,6 @@ import (
 
 func New() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./forum.db")
-
 	if err != nil {
 		return nil, err
 	}
@@ -19,7 +18,7 @@ func New() (*sql.DB, error) {
 	users := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL UNIQUE,
+		name TEXT,
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL UNIQUE,
 		registration_date TEXT
@@ -64,7 +63,7 @@ func New() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	//FIXME: add categories
+	// FIXME: add categories
 	postCategories := `
 	CREATE TABLE IF NOT EXISTS post_categories (
 		post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,

@@ -33,7 +33,10 @@ func getSignIn(w http.ResponseWriter, r *http.Request) {
 
 func postSignIn(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	// w.Write([]byte(r.Form.Encode()))
+	if r.Context().Value("authorised") == true {
+		w.WriteHeader(400)
+		return
+	}
 	credentials := Credentials{Email: r.FormValue("email"), Password: r.FormValue("password")}
 	requestBody, err := json.Marshal(credentials)
 	if err != nil {
@@ -56,12 +59,19 @@ func postSignIn(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(response.StatusCode)
 	session := Session{}
 	err = json.NewDecoder(response.Body).Decode(&session)
+	// FIXME: empty session check
 	if err != nil {
 		fmt.Println(3)
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(session)
+	if session.Token != "" {
+		cookie := http.Cookie{Name: "token", Value: session.Token}
+		http.SetCookie(w, &cookie)
+		http.Redirect(w, r, "/posts", 304)
+		return
+	}
+	w.Write([]byte("invalid"))
 }
 
 type Session struct {
@@ -98,7 +108,27 @@ func getSignUp(w http.ResponseWriter, r *http.Request) {
 
 func postSignUp(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	w.Write([]byte(r.Form.Encode()))
+	// FIXME: check password and username and email
+	credentials := Credentials{Name: r.FormValue("name"), Email: r.FormValue("email"), Password: r.FormValue("password")}
+	requestBody, err := json.Marshal(credentials)
+	if err != nil {
+		fmt.Println(1)
+		fmt.Println(err)
+		return
+	}
+	requestUrl := "http://localhost:8081/sign_up"
+	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
+	if err != nil {
+		fmt.Println(err)
+	}
+	client := http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		fmt.Println(2)
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(response.StatusCode)
 }
 
 func SignOutHandler(w http.ResponseWriter, r *http.Request) {
@@ -106,6 +136,10 @@ func SignOutHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	// if cookie, err := r.Cookie("token"); err == nil {
+	// 	token := cookie.Value
+	// 	Session{Token: to}
+	// }
 }
 
 func SignInGoogleHandler(w http.ResponseWriter, r *http.Request) {

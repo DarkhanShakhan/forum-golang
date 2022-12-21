@@ -31,3 +31,12 @@ ERROR	2022/12/21 14:57:22 /home/student/forum-golang/forum_auth/internal/app/ser
 ERROR	2022/12/21 14:58:56 /home/student/forum-golang/forum_auth/internal/app/service.go:62: EOF
 ERROR	2022/12/21 14:59:51 /home/student/forum-golang/forum_auth/internal/app/service.go:62: crypto/bcrypt: hashedSecret too short to be a bcrypted password
 ERROR	2022/12/21 15:03:15 /home/student/forum-golang/forum_auth/internal/app/service.go:62: crypto/bcrypt: hashedPassword is not the hash of the given password
+ERROR	2022/12/21 16:05:00 /home/student/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/21 16:05:00 /home/student/forum-golang/forum_auth/internal/app/service.go:62: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/21 16:05:44 /home/student/forum-golang/forum_auth/internal/repository/repo.go:67: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/21 16:05:44 /home/student/forum-golang/forum_auth/internal/app/service.go:62: UNIQUE constraint failed: sessions.user_id
+ERROR	2022/12/21 16:13:08 /home/student/forum-golang/forum_auth/internal/app/service.go:113: EOF
+ERROR	2022/12/21 16:13:42 /home/student/forum-golang/forum_auth/internal/app/service.go:62: crypto/bcrypt: hashedSecret too short to be a bcrypted password
+ERROR	2022/12/21 16:22:26 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist
+ERROR	2022/12/21 16:24:02 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist
+ERROR	2022/12/21 16:24:18 /home/student/forum-golang/forum_auth/internal/app/service.go:163: session doesn't exist

@@ -45,10 +45,11 @@ func Authenticate(next http.Handler) http.Handler {
 		cookie := http.Cookie{
 			Name:  "token",
 			Value: authStatus.Token,
+			Path:  "/",
 		}
 		http.SetCookie(w, &cookie)
 
-		//FIXME: validate data
+		// FIXME: validate data
 		ctx := context.WithValue(context.WithValue(r.Context(), "authorised", true), "user_id", authStatus.UserId)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
