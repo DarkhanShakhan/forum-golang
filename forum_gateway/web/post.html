@@ -7,15 +7,21 @@
     <title>Post</title>
 </head>
 <body>
-    Title: {{.title}} <br>
-    Likes: {{if .total_likes}} {{.total_likes}} {{else}} 0 {{end}} Dislikes: {{if .total_dislikes}} {{.total_dislikes}} {{else}} 0 {{end}}<br>
-    Author: <a href="/user/{{.user.id}}">{{.user.name}}</a> <br>
-    {{if .content}}Content: {{.content}} <br>{{end}} 
-    Categories: {{range.categories}} <a href="/category/{{.id}}">{{.title}}</a> {{end}} <br>
-    Comments: <br>{{range.comments}}
-    {{.comment_content}} <br>
-    <a href="/user/{{.user.id}}">{{.user.name}}</a>, {{.comment_date}} <br>
-    {{end}}
-    <!-- {{.}} -->
+    Title: {{.Content.title}} <br>
+    Likes: {{if .Content.total_likes}} {{.Content.total_likes}} {{else}} 0 {{end}} Dislikes: {{if .Content.total_dislikes}} {{.Content.total_dislikes}} {{else}} 0 {{end}}<br>
+    Author: <a href="/user/{{.Content.user.id}}">{{if .Content.user.name}} {{.Content.user.name}} {{else}} {{.Content.user.email}}{{end}}</a> <br>
+    {{if .Content.content}}Content: {{.Content.content}} {{else}}hello{{end}}<br> 
+    <!-- Categories: {{if .Content.categories}} 
+    {{range.Content.categories}} 
+    <a href="/category/{{.id}}">{{.title}}</a> 
+    {{end}} {{else}} Hell {{end}} <br>
+    de
+    {{if .Content.comments}}
+    Comments: <br>{{range.Content.comments}}
+    {{.Content.comment_content}} <br>
+    <a href="/user/{{.Content.user.id}}">{{.Content.user.name}}</a>, {{.Content.comment_date}} <br>
+     {{end}}
+    {{else}}
+    {{end}} -->
 </body>
 </html>

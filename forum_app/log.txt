@@ -44,3 +44,7 @@ ERROR	2022/12/21 14:58:56 /home/student/forum-golang/forum_app/internal/app/user
 ERROR	2022/12/21 16:13:08 /home/student/forum-golang/forum_app/internal/user/repository/users_repository.go:124: UNIQUE constraint failed: users.name
 ERROR	2022/12/21 16:13:08 /home/student/forum-golang/forum_app/internal/app/user_service.go:210: <nil>
 ERROR	2022/12/21 16:18:42 /home/student/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/29 02:55:36 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2022/12/29 03:11:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "save": invalid syntax
+ERROR	2022/12/29 03:11:12 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "create": invalid syntax
+ERROR	2022/12/29 03:40:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax

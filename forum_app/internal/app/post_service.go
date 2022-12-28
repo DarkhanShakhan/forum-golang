@@ -52,8 +52,7 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	response, err := json.Marshal(postResult.Post)
+	response, err := json.Marshal(entity.Response{Content: postResult.Post})
 	if err != nil {
 		h.errorLog.Println(err)
 		w.WriteHeader(500)

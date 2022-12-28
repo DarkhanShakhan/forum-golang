@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"forum_gateway/internal/entity"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -39,39 +40,34 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusBadRequest)
+		APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "/web/error.html")
 		return
 	}
 
 	requestUrl := fmt.Sprintf("http://localhost:8080/post?id=%s", getID(r.URL.Path))
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "/web/error.html")
 		return
 	}
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 		return
 	}
 	defer resp.Body.Close()
-	var target interface{}
-	err = json.NewDecoder(resp.Body).Decode(&target)
+	var response entity.Response
+	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 		return
 	}
-	templ, err := template.ParseFiles("web/post.html")
-	if err != nil {
-		fmt.Println(err)
-	}
-	templ.Execute(w, target)
+	APIResponse(w, http.StatusOK, response, "web/post.html")
 }
 
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		fmt.Println("here0")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
