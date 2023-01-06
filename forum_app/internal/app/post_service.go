@@ -10,30 +10,22 @@ import (
 )
 
 func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	if err := r.ParseForm(); err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(500)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	id, err := strconv.Atoi(r.Form.Get("id"))
 	if err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	postChan := make(chan entity.PostResult)
@@ -43,41 +35,29 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case postResult = <-postChan:
-		if postResult.Err != nil {
-			h.errorLog.Println(postResult.Err)
-			w.WriteHeader(500) // internal server error ???
+		err = postResult.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			if err == entity.ErrPostNotFound {
+				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-	response, err := json.Marshal(entity.Response{Content: postResult.Post})
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: postResult.Post})
 }
 
-//FIXME: change contexts to goroutines
-// TODO: done
 func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	postsChan := make(chan entity.PostsResult)
@@ -88,52 +68,36 @@ func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case postsRes = <-postsChan:
 		if err = postsRes.Err; err != nil {
 			h.errorLog.Println(err)
-			w.WriteHeader(500)
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-
-	response, err := json.Marshal(postsRes.Posts)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: postsRes.Posts})
 }
 func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405) // method not allowed
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 
 	id, err := strconv.Atoi(r.Form.Get("id"))
 	if err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	catChan := make(chan entity.CatResult)
@@ -143,35 +107,25 @@ func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case catResult = <-catChan:
-		if catResult.Err != nil {
-			h.errorLog.Println(catResult.Err)
-			w.WriteHeader(500) // internal server error ???
+		err = catResult.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			if err == entity.ErrCategoryNotFound {
+				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
+				return
+			}
+			//FIXME:check for existing category
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-
-	response, err := json.Marshal(catResult.Cat)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: catResult.Cat})
 }
 func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Printf("invalid method: %s\n", r.Method)

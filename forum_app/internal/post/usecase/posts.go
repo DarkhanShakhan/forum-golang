@@ -31,6 +31,12 @@ func (u *PostsUsecase) FetchById(ctx context.Context, id int, postRes chan entit
 	if err != nil {
 		u.errorLog.Println(err)
 		postRes <- entity.PostResult{Err: err}
+		return
+	}
+	if post.Id == 0 {
+		u.errorLog.Println(entity.ErrPostNotFound)
+		postRes <- entity.PostResult{Err: entity.ErrPostNotFound}
+		return
 	}
 	u.fetchPostDetails(ctx, &post)
 	postRes <- entity.PostResult{Post: post}
@@ -129,10 +135,16 @@ func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int, catRes ch
 	category, err := u.categoriesRepo.FetchById(ctx, id)
 	if err != nil {
 		catRes <- entity.CatResult{Err: err}
+		return
 	}
 	category.Posts, err = u.postsRepo.FetchByCategoryId(ctx, category.Id)
 	if err != nil {
 		catRes <- entity.CatResult{Err: err}
+		return
+	}
+	if category.Id == 0 {
+		catRes <- entity.CatResult{Err: entity.ErrCategoryNotFound}
+		return
 	}
 	for ix, post := range category.Posts {
 		category.Posts[ix], err = u.postsRepo.FetchById(ctx, post.Id)

@@ -48,3 +48,44 @@ ERROR	2022/12/29 02:55:36 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2022/12/29 03:11:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "save": invalid syntax
 ERROR	2022/12/29 03:11:12 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "create": invalid syntax
 ERROR	2022/12/29 03:40:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:35: strconv.Atoi: parsing "": invalid syntax
+ERROR	2023/01/06 16:27:44 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/01/06 16:27:44 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:123: user doesn't exist
+ERROR	2023/01/06 16:36:26 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/06 16:36:26 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:76: user doesn't exist
+ERROR	2023/01/06 16:37:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:124: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 16:37:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:170: <nil>
+ERROR	2023/01/06 19:34:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:126: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:34:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:54:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:127: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:54:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:55:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:127: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:55:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:56:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:127: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 19:56:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:04:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:126: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:04:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:05:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:126: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:05:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:15:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:126: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:15:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: user with a given email already exists
+ERROR	2023/01/06 20:18:08 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:125: UNIQUE constraint failed: users.email
+ERROR	2023/01/06 20:18:08 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: user with a given email already exists
+ERROR	2023/01/06 20:23:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:125: UNIQUE constraint failed: users.password
+ERROR	2023/01/06 20:23:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.password
+ERROR	2023/01/06 20:25:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:125: UNIQUE constraint failed: users.password
+ERROR	2023/01/06 20:25:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:171: UNIQUE constraint failed: users.password
+ERROR	2023/01/06 20:53:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:37: post doesn't exist
+ERROR	2023/01/06 20:53:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:43: post doesn't exist
+ERROR	2023/01/06 20:53:32 /usr/lib/go-1.18/src/net/http/server.go:3195: http: superfluous response.WriteHeader call from forum_app/internal/app.(*Handler).APIResponse (response_service.go:18)
+ERROR	2023/01/06 20:54:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:37: post doesn't exist
+ERROR	2023/01/06 20:54:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:43: post doesn't exist
+ERROR	2023/01/06 20:54:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:37: post doesn't exist
+ERROR	2023/01/06 20:54:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:43: post doesn't exist
+ERROR	2023/01/06 20:54:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:27: strconv.Atoi: parsing "dde": invalid syntax
+ERROR	2023/01/06 21:07:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:115: category doesn't exist
+ERROR	2023/01/06 21:07:28 /usr/lib/go-1.18/src/net/http/server.go:3195: http: superfluous response.WriteHeader call from forum_app/internal/app.(*Handler).APIResponse (response_service.go:18)
+ERROR	2023/01/06 21:08:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:115: category doesn't exist
+ERROR	2023/01/06 21:08:04 /usr/lib/go-1.18/src/net/http/server.go:3195: http: superfluous response.WriteHeader call from forum_app/internal/app.(*Handler).APIResponse (response_service.go:18)
+ERROR	2023/01/06 21:08:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:115: category doesn't exist
+ERROR	2023/01/06 21:08:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:99: strconv.Atoi: parsing "de": invalid syntax
+ERROR	2023/01/06 21:08:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:99: strconv.Atoi: parsing "": invalid syntax

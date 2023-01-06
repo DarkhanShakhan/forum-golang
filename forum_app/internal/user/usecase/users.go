@@ -31,6 +31,12 @@ func (u *UsersUsecase) FetchById(ctx context.Context, id int, userRes chan entit
 	if err != nil {
 		u.errorLog.Println(err)
 		userRes <- entity.UserResult{Err: err}
+		return
+	}
+	if user.Id == 0 {
+		u.errorLog.Println(entity.ErrUserNotFound)
+		userRes <- entity.UserResult{Err: entity.ErrUserNotFound}
+		return
 	}
 	u.fetchUserDetails(ctx, &user)
 	userRes <- entity.UserResult{User: user}
@@ -93,7 +99,14 @@ func (u *UsersUsecase) fetchUserDetails(ctx context.Context, user *entity.User) 
 func (u *UsersUsecase) FetchByEmail(ctx context.Context, email string, userRes chan entity.UserResult) {
 	user, err := u.userRepo.FetchByEmail(ctx, email)
 	if err != nil {
+		u.errorLog.Println(err)
 		userRes <- entity.UserResult{Err: err}
+		return //??
+	}
+	if user.Id == 0 {
+		u.errorLog.Println(entity.ErrUserNotFound)
+		userRes <- entity.UserResult{Err: entity.ErrUserNotFound}
+		return
 	}
 	userRes <- entity.UserResult{User: user}
 }
@@ -102,17 +115,10 @@ func (u *UsersUsecase) FetchAll(ctx context.Context, usersRes chan entity.UsersR
 	users, err := u.userRepo.FetchAll(ctx)
 	if err != nil {
 		usersRes <- entity.UsersResult{Err: err}
+		return
 	}
 	usersRes <- entity.UsersResult{Users: users, Err: err}
 }
-
-// func (u *UsersUsecase) Update(user entity.User) error {
-// 	return u.userRepo.Update(user)
-// }
-
-// func (u *UsersUsecase) DeleteById(id int) error {
-// 	return u.userRepo.DeleteById(id)
-// }
 
 func (u *UsersUsecase) fetchPosts(ctx context.Context, id int, posts chan []entity.Post, errPosts chan error) {
 	tempPosts, err := u.postRepo.FetchByUserId(ctx, id)

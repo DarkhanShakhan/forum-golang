@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"forum_app/internal/entity"
@@ -10,80 +9,54 @@ import (
 )
 
 func (h *Handler) UsersAllHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
-
 	usersChan := make(chan entity.UsersResult)
 	var usersRes entity.UsersResult
 	var err error
 	go h.ucase.FetchAll(ctx, usersChan)
 	select {
-	case usersRes = <-usersChan:
-		if err = usersRes.Err; err != nil {
-			h.errorLog.Println(err)
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-			return
-		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
-
+	case usersRes = <-usersChan:
+		if err = usersRes.Err; err != nil {
+			h.errorLog.Println(err)
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
 	}
 
-	response, err := json.Marshal(usersRes.Users)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: usersRes.Users})
 }
 
 func (h *Handler) UserByEmailHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405) // method not allowed
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 
 	email := r.Form.Get("email")
 	if email == "" {
 		h.errorLog.Println("bad request: email is not provided")
-		w.WriteHeader(400) // bad request
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	userChan := make(chan entity.UserResult)
@@ -94,54 +67,40 @@ func (h *Handler) UserByEmailHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case userRes = <-userChan:
 		err = userRes.Err
 		if err != nil {
 			h.errorLog.Println(err)
-			w.WriteHeader(500) // internal server error ???
+			if err == entity.ErrUserNotFound {
+				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-
-	response, err := json.Marshal(userRes.User)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: userRes.User})
 }
 
 func (h *Handler) UserDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405) // method not allowed
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
-
 	if err := r.ParseForm(); err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
-
 	id, err := strconv.Atoi(r.Form.Get("id"))
 	if err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	userChan := make(chan entity.UserResult)
@@ -151,73 +110,63 @@ func (h *Handler) UserDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case userRes = <-userChan:
 		err = userRes.Err
 		if err != nil {
 			h.errorLog.Println(err)
-			w.WriteHeader(500) // internal server error ???
+			if err == entity.ErrUserNotFound {
+				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-
-	response, err := json.Marshal(userRes.User)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: userRes.User})
 }
 
 func (h *Handler) StoreUserHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405) // method not allowed
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
-	//FIXME: do we need to parse if data is in the body
 	if err := r.ParseForm(); err != nil {
 		h.errorLog.Println(err)
-		w.WriteHeader(500) // internal server error ???
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	var user entity.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	resChan := make(chan entity.Result)
 	var res entity.Result
 	go h.ucase.Store(ctx, user, resChan)
 	select {
-	case res = <-resChan:
-		if res.Err != nil {
-			h.errorLog.Println(err)
-			w.WriteHeader(500)
-			return
-		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
+	case res = <-resChan:
+		err = res.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			if err == entity.ErrUserExists {
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "User with a given email already exists"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", res.Id)))
+	h.APIResponse(w, http.StatusCreated, entity.Response{Body: entity.User{Id: int(res.Id)}})
 }

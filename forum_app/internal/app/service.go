@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	cr "forum_app/internal/comment/repository"
 	cUcse "forum_app/internal/comment/usecase"
 	pr "forum_app/internal/post/repository"
@@ -34,4 +35,11 @@ func NewHandler(errorLog *log.Logger) *Handler {
 	pcase := pUcse.NewPostsUsecase(postsRepo, pReactionsRepo, commentsRepo, categoriesRepo, usersRepo, errorLog)
 	ccase := cUcse.NewCommentsUsecase(commentsRepo, cReactionsRepo, postsRepo, usersRepo, errorLog)
 	return &Handler{errorLog, ucase, pcase, ccase}
+}
+
+func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {
+	if deadline, ok := ctx.Deadline(); ok {
+		return context.WithDeadline(context.Background(), deadline)
+	}
+	return context.WithTimeout(context.Background(), duration)
 }

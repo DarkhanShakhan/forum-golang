@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"forum_app/internal/entity"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -122,8 +123,12 @@ func (ur *UsersRepository) Store(ctx context.Context, user entity.User) (int64, 
 	res, err := stmt.ExecContext(ctx, user.Name, user.Email, user.Password, user.RegDate)
 	if err != nil {
 		ur.errorLog.Println(err)
+		if strings.Contains(err.Error(), "UNIQUE constraint failed: users.email") {
+			return 0, entity.ErrUserExists
+		}
 		return 0, err
 	}
+
 	if err = tx.Commit(); err != nil {
 		ur.errorLog.Println(err)
 		return 0, err

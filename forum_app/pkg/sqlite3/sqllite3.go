@@ -20,7 +20,7 @@ func New() (*sql.DB, error) {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT,
 		email TEXT NOT NULL UNIQUE,
-		password TEXT NOT NULL UNIQUE,
+		password TEXT NOT NULL,
 		registration_date TEXT
 		);
 	`

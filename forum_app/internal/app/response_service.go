@@ -1,0 +1,20 @@
+package app
+
+import (
+	"encoding/json"
+	"forum_app/internal/entity"
+	"net/http"
+)
+
+func (h *Handler) APIResponse(w http.ResponseWriter, code int, response entity.Response) {
+	w.Header().Set("Content-Type", "application/json")
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500)
+		w.Write([]byte(`{"error":"Internal Server Error"}`))
+		return
+	}
+	w.WriteHeader(code)
+	w.Write(jsonResponse)
+}
