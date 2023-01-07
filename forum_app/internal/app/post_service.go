@@ -150,7 +150,7 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 		err = res.Err
 		if err != nil {
 			h.errorLog.Println(err)
-			if strings.Contains(err.Error(), "FOREIGN KEY constraint failed") {
+			if isConstraintError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
 			}
@@ -208,11 +208,11 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func validatePostReactionData(reaction entity.PostReaction) bool {
-	return reaction.Post.Id != 0 && reaction.Reaction.User.Id != 0
+	return reaction.Post.Id != 0 || reaction.Reaction.User.Id != 0
 }
 
 func isConstraintError(err error) bool {
-	return strings.Contains(err.Error(), "FOREIGN KEY constraint failed") || strings.Contains(err.Error(), "UNIQUE constraint failed: post_reactions.post_id, post_reactions.user_id")
+	return strings.Contains(err.Error(), "constraint failed")
 }
 
 func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Request) {
@@ -241,7 +241,7 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	case err = <-errChan:
 		if err != nil {
 			h.errorLog.Println(err)
-			if isConstraintError(err) {
+			if isConstraintError(err) || isNoRowAffectedError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
 			}
@@ -279,7 +279,7 @@ func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	case err = <-errChan:
 		if err != nil {
 			h.errorLog.Println(err)
-			if isConstraintError(err) {
+			if isConstraintError(err) || isNoRowAffectedError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
 			}
@@ -288,4 +288,8 @@ func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Reque
 		}
 	}
 	h.APIResponse(w, http.StatusNoContent, entity.Response{})
+}
+
+func isNoRowAffectedError(err error) bool {
+	return strings.Contains(err.Error(), "no row has been affected")
 }
