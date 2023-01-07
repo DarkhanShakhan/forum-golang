@@ -1,12 +1,12 @@
 package app
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"forum_app/internal/entity"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,6 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	case postResult = <-postChan:
 		err = postResult.Err
 		if err != nil {
-			h.errorLog.Println(err)
 			if err == entity.ErrPostNotFound {
 				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
 				return
@@ -51,7 +50,6 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	h.APIResponse(w, http.StatusOK, entity.Response{Body: postResult.Post})
 }
-
 func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
@@ -129,14 +127,14 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Printf("invalid method: %s\n", r.Method)
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post entity.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil || !validatePostData(post) {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	resChan := make(chan entity.Result)
@@ -146,18 +144,21 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case res = <-resChan:
-		if res.Err != nil {
-			h.errorLog.Println(res.Err)
-			w.WriteHeader(500)
+		err = res.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			if strings.Contains(err.Error(), "FOREIGN KEY constraint failed") {
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", res.Id)))
+	h.APIResponse(w, http.StatusCreated, entity.Response{Body: entity.Post{Id: int(res.Id)}})
 }
 func validatePostData(post entity.Post) bool {
 	if post.Title == "" {
@@ -170,27 +171,18 @@ func validatePostData(post entity.Post) bool {
 	return true
 }
 func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Printf("invalid method: %s\n", r.Method)
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
-	//FIXME:validate data
-	if err != nil {
+	if err != nil || !validatePostReactionData(post_reaction) {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{})
 		return
 	}
 	errChan := make(chan error)
@@ -199,97 +191,101 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case err = <-errChan:
 		if err != nil {
 			h.errorLog.Println(err)
-			w.WriteHeader(500)
+			if isConstraintError(err) {
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
-	w.WriteHeader(201)
+	h.APIResponse(w, http.StatusNoContent, entity.Response{})
 }
+
+func validatePostReactionData(reaction entity.PostReaction) bool {
+	return reaction.Post.Id != 0 && reaction.Reaction.User.Id != 0
+}
+
+func isConstraintError(err error) bool {
+	return strings.Contains(err.Error(), "FOREIGN KEY constraint failed") || strings.Contains(err.Error(), "UNIQUE constraint failed: post_reactions.post_id, post_reactions.user_id")
+}
+
 func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if _, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithCancel(r.Context()) //deadline is already set
-	} else {
-		ctx, cancel = context.WithTimeout(r.Context(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPut {
 		h.errorLog.Printf("invalid method: %s\n", r.Method)
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
-	//FIXME:validate data
-	if err != nil {
+	if err != nil || validatePostReactionData(post_reaction) {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	errChan := make(chan error)
 	go h.pcase.UpdatePostReaction(ctx, post_reaction, errChan)
 	select {
-	case err = <-errChan:
-		if err != nil {
-			h.errorLog.Println(err)
-			w.WriteHeader(500)
-			return
-		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			if isConstraintError(err) {
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
 	}
-	w.WriteHeader(204)
+	h.APIResponse(w, http.StatusNoContent, entity.Response{})
 }
 
 func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if _, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithCancel(r.Context()) //deadline is already set
-	} else {
-		ctx, cancel = context.WithTimeout(r.Context(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodDelete {
 		h.errorLog.Printf("invalid method: %s\n", r.Method)
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
-	//FIXME:validate data
-	if err != nil {
+	if err != nil || !validatePostReactionData(post_reaction) {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{})
 		return
 	}
 	errChan := make(chan error)
 	go h.pcase.DeletePostReaction(ctx, post_reaction, errChan)
 	select {
-	case err = <-errChan:
-		if err != nil {
-			h.errorLog.Println(err)
-			w.WriteHeader(500)
-			return
-		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
+
+	case err = <-errChan:
+		if err != nil {
+			h.errorLog.Println(err)
+			if isConstraintError(err) {
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+				return
+			}
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
 	}
-	w.WriteHeader(204)
+	h.APIResponse(w, http.StatusNoContent, entity.Response{})
 }

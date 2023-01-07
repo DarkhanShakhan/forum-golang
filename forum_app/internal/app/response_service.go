@@ -7,6 +7,10 @@ import (
 )
 
 func (h *Handler) APIResponse(w http.ResponseWriter, code int, response entity.Response) {
+	if code == 204 {
+		w.WriteHeader(204)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {

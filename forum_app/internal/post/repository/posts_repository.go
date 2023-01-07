@@ -184,23 +184,3 @@ func (pr *PostsRepository) Store(ctx context.Context, post entity.Post) (int64, 
 	}
 	return post_id, nil
 }
-
-// for future use
-// func (pr *PostsRepository) Update(entity.Post) error {
-// 	return nil
-// }
-
-// func (pr *PostsRepository) Delete(id int) error {
-// 	result, err := pr.db.Exec(DELETE_QUERY+POSTS+BY_ID, id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	nbr, err := result.RowsAffected()
-// 	if nbr > 1 {
-// 		return errors.New("more than one row has been affected")
-// 	}
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
