@@ -1,0 +1,10 @@
+package entity
+
+import "errors"
+
+var (
+	ErrRequestTimeout  = errors.New("Request Timeout")
+	ErrNotFound        = errors.New("Not Found")
+	ErrInternalServer  = errors.New("Internal Server Error")
+	ErrInvalidPassword = errors.New("Invalid password")
+)

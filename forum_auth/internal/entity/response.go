@@ -1,6 +1,6 @@
 package entity
 
 type Response struct {
-	Err     string      `json:"error,omitempty"`
-	Content interface{} `json:"content,omitempty"`
+	ErrorMessage string      `json:"error,omitempty"`
+	Body         interface{} `json:"body,omitempty"`
 }

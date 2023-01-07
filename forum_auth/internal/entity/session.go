@@ -1,9 +1,11 @@
 package entity
 
+import "time"
+
 type Session struct {
-	Token      string `json:"token"`
-	UserId     int64  `json:"user_id"`
-	ExpiryDate string `json:"expiry_date"`
+	Token      string    `json:"token,omitempty"`
+	UserId     int64     `json:"user_id,omitempty"`
+	ExpiryTime time.Time `json:"expiry_time,omitempty"`
 }
 
 type SessionResult struct {
@@ -19,8 +21,7 @@ const (
 )
 
 type AuthStatusResult struct {
-	Status AuthStatus `json:"status,omitempty"`
-	Token  string     `json:"token,omitempty"`
-	UserId int64      `json:"user_id,omitempty"`
-	Err    error      `json:"error,omitempty"`
+	Status  AuthStatus `json:"status,omitempty"`
+	Session Session    `json:"session,omitempty"`
+	Err     error      `json:"error,omitempty"`
 }

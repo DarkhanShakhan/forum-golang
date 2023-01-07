@@ -10,6 +10,7 @@ import (
 	"forum_auth/pkg/sqlite3"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -29,19 +30,11 @@ func NewHandler(errorLog *log.Logger) *Handler {
 }
 
 func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	sessionChan := make(chan entity.SessionResult)
@@ -49,37 +42,48 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	credentials := entity.Credentials{}
 	err = json.NewDecoder(r.Body).Decode(&credentials)
-	if err != nil {
+	if err != nil || !validateCredentials(credentials) {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
-	fmt.Println(credentials)
 	go h.aucase.SignIn(ctx, credentials, sessionChan)
 	select {
 	case sessionRes = <-sessionChan:
-		if sessionRes.Err != nil {
-			h.errorLog.Println(sessionRes.Err)
-			w.WriteHeader(500) // FIXME: no sure
+		err = sessionRes.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			if isConstraintError(err) {
+				h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"})
+				return
+			}
+			switch err {
+			case entity.ErrNotFound:
+				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "User with a given email doesn't exist"})
+			case entity.ErrRequestTimeout:
+				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
+			case entity.ErrInvalidPassword:
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Invalid Password"})
+			default:
+				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			}
 			return
 		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	result, err := json.Marshal(sessionRes.Session)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // FIXME: not sure
-		return
-	}
-	w.Write(result)
+	h.APIResponse(w, http.StatusCreated, entity.Response{Body: sessionRes.Session})
 }
 
+func validateCredentials(credentials entity.Credentials) bool {
+	return credentials.Email != "" && credentials.Password != ""
+}
+func isConstraintError(err error) bool {
+	return strings.Contains(err.Error(), "constraint failed")
+}
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx    context.Context
@@ -281,4 +285,28 @@ func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(result)
+}
+
+func (h *Handler) APIResponse(w http.ResponseWriter, code int, response entity.Response) {
+	if code == 204 {
+		w.WriteHeader(204)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		h.errorLog.Println(err)
+		w.WriteHeader(500)
+		w.Write([]byte(`{"error":"Internal Server Error"}`))
+		return
+	}
+	w.WriteHeader(code)
+	w.Write(jsonResponse)
+}
+
+func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {
+	if deadline, ok := ctx.Deadline(); ok {
+		return context.WithDeadline(context.Background(), deadline)
+	}
+	return context.WithTimeout(context.Background(), duration)
 }

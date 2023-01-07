@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"forum_auth/internal/entity"
+	"io"
 	"log"
 	"net/http"
 
@@ -36,29 +37,58 @@ func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credential
 		sessionRes <- entity.SessionResult{Err: err}
 		return
 	}
-
-	// FIXME:validate user
-	user := entity.Credentials{}
-	err = json.NewDecoder(response.Body).Decode(&user)
+	switch response.StatusCode {
+	case 405, 400, 500:
+		sessionRes <- entity.SessionResult{Err: entity.ErrInternalServer}
+		return
+	case 408:
+		sessionRes <- entity.SessionResult{Err: entity.ErrRequestTimeout}
+		return
+	case 404:
+		sessionRes <- entity.SessionResult{Err: entity.ErrNotFound}
+		return
+	}
+	user, err := getUser(response.Body)
 	if err != nil {
-		sessionRes <- entity.SessionResult{Err: err}
+		sessionRes <- entity.SessionResult{Err: entity.ErrInternalServer}
 		return
 	}
 	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(credentials.Password)); err != nil {
-		sessionRes <- entity.SessionResult{Err: err}
+		fmt.Println(err)
+		fmt.Println(user.Password)
+		sessionRes <- entity.SessionResult{Err: entity.ErrInvalidPassword}
 		return
 	}
 	token, err := uuid.NewV4()
 	if err != nil {
-		sessionRes <- entity.SessionResult{Err: err}
+		sessionRes <- entity.SessionResult{Err: entity.ErrInternalServer}
 		return
 	}
 	session := entity.Session{UserId: user.Id, Token: token.String()}
-	if err = au.sessionRepo.Store(ctx, session); err != nil {
+	if session, err = au.sessionRepo.Store(ctx, session); err != nil {
+		// if strings.Contains(err.Error(), "UNIQUE constraint failed: sessions.user_id") {
+		// 	checkExpiryTime()
+		// }
 		sessionRes <- entity.SessionResult{Err: err}
 		return
 	}
+	fmt.Println(session.ExpiryTime)
 	sessionRes <- entity.SessionResult{Session: session}
+}
+
+func getUser(response io.ReadCloser) (entity.Credentials, error) {
+	temp := entity.Response{}
+	err := json.NewDecoder(response).Decode(&temp)
+	if err != nil {
+		return entity.Credentials{}, err
+	}
+	jsonUser, err := json.Marshal(temp.Body)
+	if err != nil {
+		return entity.Credentials{}, err
+	}
+	user := entity.Credentials{}
+	err = json.Unmarshal(jsonUser, &user)
+	return user, err
 }
 
 func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credentials, credsRes chan entity.CredentialsResult) {
@@ -112,11 +142,11 @@ func (au *AuthUsecase) Authenticate(ctx context.Context, session entity.Session,
 		return
 	}
 	session.Token = token.String() // updates token: expiry is updated in repo
-	err = au.sessionRepo.Update(ctx, session)
+	session, err = au.sessionRepo.Update(ctx, session)
 	if err != nil {
 		authStatus <- entity.AuthStatusResult{Status: entity.NonAuthorised, Err: err}
 	}
-	authStatus <- entity.AuthStatusResult{Status: entity.Authorised, Token: session.Token, UserId: session.UserId}
+	authStatus <- entity.AuthStatusResult{Status: entity.Authorised, Session: session}
 }
 
 func (au *AuthUsecase) SignOut(ctx context.Context, session entity.Session, err chan error) {
@@ -182,7 +212,7 @@ func (au *AuthUsecase) createSession(ctx context.Context, credentials entity.Cre
 		return entity.SessionResult{Err: err}
 	}
 	session := entity.Session{UserId: credentials.Id, Token: token.String()}
-	if err = au.sessionRepo.Store(ctx, session); err != nil {
+	if session, err = au.sessionRepo.Store(ctx, session); err != nil {
 		return entity.SessionResult{Err: err}
 	}
 	return entity.SessionResult{Session: session}

@@ -37,8 +37,13 @@ func (sr *SessionsRepository) Fetch(ctx context.Context, token string) (entity.S
 		sr.errorLog.Println(err)
 		return entity.Session{}, err
 	}
+	temp := ""
 	if rows.Next() {
-		rows.Scan(&session.UserId, &session.Token, &session.ExpiryDate)
+		rows.Scan(&session.UserId, &session.Token, &temp)
+	}
+	session.ExpiryTime, err = time.Parse(time.Layout, temp)
+	if err != nil {
+		sr.errorLog.Println(err)
 	}
 	if err = tx.Commit(); err != nil {
 		sr.errorLog.Println(err)
@@ -47,58 +52,103 @@ func (sr *SessionsRepository) Fetch(ctx context.Context, token string) (entity.S
 	return session, nil
 }
 
-func (sr *SessionsRepository) Store(ctx context.Context, session entity.Session) error {
+func (sr *SessionsRepository) FetchByUserId(ctx context.Context, id int64) (entity.Session, error) {
+	session := entity.Session{}
 	tx, err := sr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.PrepareContext(ctx, "SELECT * FROM sessions WHERE user_id=?")
+	if err != nil {
+		sr.errorLog.Println(err)
+		return entity.Session{}, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.QueryContext(ctx, id)
+	if err != nil {
+		sr.errorLog.Println(err)
+		return entity.Session{}, err
+	}
+	temp := ""
+	if rows.Next() {
+		rows.Scan(&session.UserId, &session.Token, &session.ExpiryTime)
+	}
+	session.ExpiryTime, err = time.Parse(time.Layout, temp)
+	if err != nil {
+		sr.errorLog.Println(err)
+	}
+	if err = tx.Commit(); err != nil {
+		sr.errorLog.Println(err)
+		return entity.Session{}, err
+	}
+	return session, nil
+}
+
+func (sr *SessionsRepository) Store(ctx context.Context, session entity.Session) (entity.Session, error) {
+	tx, err := sr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		sr.errorLog.Println(err)
+		return entity.Session{}, err
 	}
 	defer tx.Rollback()
 	stmt, err := tx.PrepareContext(ctx, "INSERT INTO sessions(user_id, token, expiry_date) VALUES (?, ?, ?);")
 	if err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
 	}
 	defer stmt.Close()
 
-	session.ExpiryDate = time.Now().AddDate(0, 0, 15).Format("2006-01-02")
-	_, err = stmt.ExecContext(ctx, session.UserId, session.Token, session.ExpiryDate)
+	expiryTime := time.Now().AddDate(0, 0, 15).Format(time.Layout)
+	_, err = stmt.ExecContext(ctx, session.UserId, session.Token, expiryTime)
 	if err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
+	}
+	session.ExpiryTime, err = time.Parse(time.Layout, expiryTime)
+	if err != nil {
+		sr.errorLog.Println(err)
+		return entity.Session{}, err
 	}
 	if err = tx.Commit(); err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
 	}
-	return nil
+	return session, err
 }
 
-func (sr *SessionsRepository) Update(ctx context.Context, session entity.Session) error {
+func (sr *SessionsRepository) Update(ctx context.Context, session entity.Session) (entity.Session, error) {
 	tx, err := sr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
 	}
 	defer tx.Rollback()
 	stmt, err := tx.PrepareContext(ctx, "UPDATE sessions SET token=?, expiry_date=? WHERE user_id =?;")
 	if err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
 	}
 	defer stmt.Close()
 
-	session.ExpiryDate = time.Now().AddDate(0, 0, 15).Format("2006-01-02")
-	_, err = stmt.ExecContext(ctx, session.Token, session.ExpiryDate, session.UserId)
+	expiryTime := time.Now().AddDate(0, 0, 15).Format(time.Layout)
+	_, err = stmt.ExecContext(ctx, session.Token, expiryTime, session.UserId)
 	if err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
+	}
+	session.ExpiryTime, err = time.Parse(time.Layout, expiryTime)
+	if err != nil {
+		sr.errorLog.Println(err)
+		return entity.Session{}, err
 	}
 	if err = tx.Commit(); err != nil {
 		sr.errorLog.Println(err)
-		return err
+		return entity.Session{}, err
 	}
-	return nil
+	return session, nil
 }
 
 func (sr *SessionsRepository) Delete(ctx context.Context, session entity.Session) error {
