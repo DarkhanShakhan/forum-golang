@@ -122,3 +122,9 @@ ERROR	2023/01/07 16:47:03 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/07 16:47:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:267: bad request
 ERROR	2023/01/07 16:49:42 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:269: bad request
 ERROR	2023/01/07 16:50:12 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:269: bad request
+ERROR	2023/01/07 18:51:26 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/07 18:51:26 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
+ERROR	2023/01/07 19:08:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/07 19:08:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
+ERROR	2023/01/07 19:08:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/07 19:08:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
