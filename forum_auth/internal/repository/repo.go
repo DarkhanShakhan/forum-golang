@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const sessionExpiry = 10 * time.Minute
+
 type SessionsRepository struct {
 	db       *sql.DB
 	errorLog *log.Logger
@@ -101,7 +103,7 @@ func (sr *SessionsRepository) Store(ctx context.Context, session entity.Session)
 	}
 	defer stmt.Close()
 
-	expiryTime := time.Now().AddDate(0, 0, 15).Format(time.Layout)
+	expiryTime := time.Now().Add(sessionExpiry).Format(time.Layout)
 	_, err = stmt.ExecContext(ctx, session.UserId, session.Token, expiryTime)
 	if err != nil {
 		sr.errorLog.Println(err)
@@ -126,15 +128,15 @@ func (sr *SessionsRepository) Update(ctx context.Context, session entity.Session
 		return entity.Session{}, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "UPDATE sessions SET token=?, expiry_date=? WHERE user_id =?;")
+	stmt, err := tx.PrepareContext(ctx, "UPDATE sessions SET expiry_date=? WHERE token =?;")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return entity.Session{}, err
 	}
 	defer stmt.Close()
 
-	expiryTime := time.Now().AddDate(0, 0, 15).Format(time.Layout)
-	_, err = stmt.ExecContext(ctx, session.Token, expiryTime, session.UserId)
+	expiryTime := time.Now().Add(sessionExpiry).Format(time.Layout)
+	_, err = stmt.ExecContext(ctx, expiryTime, session.Token)
 	if err != nil {
 		sr.errorLog.Println(err)
 		return entity.Session{}, err

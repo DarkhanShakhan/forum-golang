@@ -112,10 +112,17 @@ func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	go h.aucase.SignUp(ctx, credentials, credentialsChan)
 	select {
 	case credentialsRes = <-credentialsChan:
-		// FIXME: check errors
-		if credentialsRes.Err != nil {
-			h.errorLog.Println(credentialsRes.Err)
-			w.WriteHeader(500) // FIXME: no sure
+		err := credentialsRes.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			switch err {
+			case entity.ErrEmailExists:
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "User with a given email already exists"})
+			case entity.ErrRequestTimeout:
+				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
+			default:
+				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			}
 			return
 		}
 	case <-ctx.Done():
@@ -151,14 +158,7 @@ func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {
 			h.errorLog.Println(authStatusRes.Err)
 			w.Header().Set("Content-Type", "application/json")
 			authStatusRes.Err = nil
-			result, err := json.Marshal(authStatusRes)
-			if err != nil {
-				h.errorLog.Println(err)
-				w.WriteHeader(500) // FIXME: not sure
-				return
-			}
-			w.WriteHeader(200) // FIXME: not sure
-			w.Write(result)
+			h.APIResponse(w, http.StatusOK, entity.Response{Body: authStatusRes})
 			return
 		}
 	case <-ctx.Done():
@@ -228,7 +228,7 @@ func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
 	case sessionRes = <-sessionChan:
 		if sessionRes.Err != nil {
 			h.errorLog.Println(sessionRes.Err)
-			w.WriteHeader(500) // FIXME: no sure
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	case <-ctx.Done():
