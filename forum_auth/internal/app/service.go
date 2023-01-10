@@ -37,10 +37,12 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
-	sessionChan := make(chan entity.SessionResult)
-	var sessionRes entity.SessionResult
-	var err error
-	credentials := entity.Credentials{}
+	var (
+		sessionChan chan entity.SessionResult
+		sessionRes  entity.SessionResult
+		err         error
+		credentials entity.Credentials
+	)
 	err = json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil || !validateCredentials(credentials) {
 		h.errorLog.Println("bad request")
@@ -81,38 +83,36 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 func validateCredentials(credentials entity.Credentials) bool {
 	return credentials.Email != "" && credentials.Password != ""
 }
+
 func isConstraintError(err error) bool {
 	return strings.Contains(err.Error(), "constraint failed")
 }
+
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	credentialsChan := make(chan entity.CredentialsResult)
-	var credentialsRes entity.CredentialsResult
-	var err error
-	credentials := entity.Credentials{}
+	var (
+		credentialsRes entity.CredentialsResult
+		err            error
+		credentials    entity.Credentials
+	)
+
 	err = json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	go h.aucase.SignUp(ctx, credentials, credentialsChan)
 	select {
 	case credentialsRes = <-credentialsChan:
+		// FIXME: check errors
 		if credentialsRes.Err != nil {
 			h.errorLog.Println(credentialsRes.Err)
 			w.WriteHeader(500) // FIXME: no sure
@@ -121,34 +121,18 @@ func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	result, err := json.Marshal(credentials)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // FIXME: not sure
-		return
-	}
-	w.Write(result)
+	h.APIResponse(w, http.StatusNoContent, entity.Response{})
 }
 
 func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	authStatusChan := make(chan entity.AuthStatusResult)
@@ -157,7 +141,7 @@ func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&session)
 	if err != nil {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	go h.aucase.Authenticate(ctx, session, authStatusChan)
@@ -180,34 +164,18 @@ func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	result, err := json.Marshal(authStatusRes)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // FIXME: not sure
-		return
-	}
-	w.WriteHeader(200)
-	w.Write(result)
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: authStatusRes})
 }
 
 func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodDelete {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	errChan := make(chan error)
@@ -215,7 +183,7 @@ func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&session)
 	if err != nil {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	go h.aucase.SignOut(ctx, session, errChan)
@@ -223,43 +191,36 @@ func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 	case err = <-errChan:
 		if err != nil {
 			h.errorLog.Println(err)
-			w.WriteHeader(500) // FIXME: no sure
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(204) // no content
+	h.APIResponse(w, http.StatusNoContent, entity.Response{})
 }
 
 func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-	)
-	if deadline, ok := r.Context().Deadline(); ok {
-		ctx, cancel = context.WithDeadline(context.Background(), deadline)
-	} else {
-		ctx, cancel = context.WithTimeout(context.Background(), duration)
-	}
+	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
 		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
-		w.WriteHeader(405)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
-	sessionChan := make(chan entity.SessionResult)
-	var sessionRes entity.SessionResult
-	var err error
-	credentials := entity.Credentials{}
+	var (
+		sessionChan chan entity.SessionResult
+		sessionRes  entity.SessionResult
+		err         error
+		credentials entity.Credentials
+	)
 	err = json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil {
 		h.errorLog.Println("bad request")
-		w.WriteHeader(400)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	go h.aucase.OauthSignIn(ctx, credentials, sessionChan)
@@ -273,18 +234,10 @@ func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errorLog.Println(err)
-		w.WriteHeader(408) // request timeout
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	result, err := json.Marshal(sessionRes.Session)
-	if err != nil {
-		h.errorLog.Println(err)
-		w.WriteHeader(500) // FIXME: not sure
-		return
-	}
-	w.Write(result)
+	h.APIResponse(w, http.StatusCreated, entity.Response{Body: sessionRes.Session})
 }
 
 func (h *Handler) APIResponse(w http.ResponseWriter, code int, response entity.Response) {

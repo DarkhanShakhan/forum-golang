@@ -165,7 +165,6 @@ func (sr *SessionsRepository) Delete(ctx context.Context, session entity.Session
 	}
 	defer stmt.Close()
 	_, err = stmt.ExecContext(ctx, session.Token)
-	// FIXME: checks for invalid token or nil token rows affected
 	if err != nil {
 		sr.errorLog.Println(err)
 		return err

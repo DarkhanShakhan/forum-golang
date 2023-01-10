@@ -73,3 +73,8 @@ ERROR	2023/01/07 21:32:53 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/07 21:32:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:167: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
 ERROR	2023/01/07 21:38:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:46: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
 ERROR	2023/01/07 21:38:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:167: session doesn't exist
+ERROR	2023/01/10 17:54:38 /home/student/forum-golang/forum_auth/internal/app/service.go:55: Get "http://localhost:8080/user/email?email=darkhan.shakhanov@gmail.com": dial tcp 127.0.0.1:8080: connect: connection refused
+ERROR	2023/01/10 17:56:50 /home/student/forum-golang/forum_auth/internal/app/service.go:55: Invalid password
+ERROR	2023/01/10 17:56:58 /home/student/forum-golang/forum_auth/internal/repository/repo.go:107: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/10 17:56:58 /home/student/forum-golang/forum_auth/internal/app/service.go:55: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/10 19:23:06 /home/student/forum-golang/forum_auth/internal/app/service.go:183: bad request

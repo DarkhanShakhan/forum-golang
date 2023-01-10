@@ -25,14 +25,7 @@ func NewAuthUsecase(sessionRepo SessionsRepo, errLog *log.Logger) *AuthUsecase {
 }
 
 func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credentials, sessionRes chan entity.SessionResult) {
-	requestUrl := fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, requestUrl, nil)
-	if err != nil {
-		sessionRes <- entity.SessionResult{Err: err}
-		return
-	}
-	client := http.Client{}
-	response, err := client.Do(req)
+	response, err := getResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email), nil)
 	if err != nil {
 		sessionRes <- entity.SessionResult{Err: err}
 		return
@@ -54,8 +47,6 @@ func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credential
 		return
 	}
 	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(credentials.Password)); err != nil {
-		fmt.Println(err)
-		fmt.Println(user.Password)
 		sessionRes <- entity.SessionResult{Err: entity.ErrInvalidPassword}
 		return
 	}
@@ -69,30 +60,14 @@ func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credential
 		// if strings.Contains(err.Error(), "UNIQUE constraint failed: sessions.user_id") {
 		// 	checkExpiryTime()
 		// }
+		// FIXME: check expiry time
 		sessionRes <- entity.SessionResult{Err: err}
 		return
 	}
-	fmt.Println(session.ExpiryTime)
 	sessionRes <- entity.SessionResult{Session: session}
 }
 
-func getUser(response io.ReadCloser) (entity.Credentials, error) {
-	temp := entity.Response{}
-	err := json.NewDecoder(response).Decode(&temp)
-	if err != nil {
-		return entity.Credentials{}, err
-	}
-	jsonUser, err := json.Marshal(temp.Body)
-	if err != nil {
-		return entity.Credentials{}, err
-	}
-	user := entity.Credentials{}
-	err = json.Unmarshal(jsonUser, &user)
-	return user, err
-}
-
 func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credentials, credsRes chan entity.CredentialsResult) {
-	requestUrl := "http://localhost:8080/user/save"
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 	if err != nil {
 		credsRes <- entity.CredentialsResult{Err: err}
@@ -104,17 +79,12 @@ func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credential
 		credsRes <- entity.CredentialsResult{Err: err}
 		return
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, requestUrl, bytes.NewReader(requestBody))
+	response, err := getResponse(ctx, http.MethodPost, "http://localhost:8080/user/save", requestBody)
 	if err != nil {
 		credsRes <- entity.CredentialsResult{Err: err}
 		return
 	}
-	client := http.Client{}
-	response, err := client.Do(req)
-	if err != nil {
-		credsRes <- entity.CredentialsResult{Err: err}
-		return
-	}
+	// FIXME: check for status codes and error messages
 	user := entity.Credentials{}
 	err = json.NewDecoder(response.Body).Decode(&user)
 	if err != nil {
@@ -154,26 +124,18 @@ func (au *AuthUsecase) SignOut(ctx context.Context, session entity.Session, err 
 }
 
 func (au *AuthUsecase) OauthSignIn(ctx context.Context, credentials entity.Credentials, sessionRes chan entity.SessionResult) {
-	requestUrl := fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, requestUrl, nil)
+	response, err := getResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/user/email?email=%s", credentials.Email), nil)
 	if err != nil {
 		sessionRes <- entity.SessionResult{Err: err}
 		return
 	}
-	client := http.Client{}
-	response, err := client.Do(req)
+	user, err := getUser(response.Body)
 	if err != nil {
 		sessionRes <- entity.SessionResult{Err: err}
 		return
 	}
-	user := entity.Credentials{}
-	err = json.NewDecoder(response.Body).Decode(&user)
-	if err != nil {
-		sessionRes <- entity.SessionResult{Err: err}
-		return
-	}
-	if user.Id == 0 {
-		res := au.storeUser(ctx, credentials)
+	if user.Id == 0 { // if user doesn't exist, it should be stored
+		res := storeUser(ctx, credentials)
 		if res.Err != nil {
 			sessionRes <- entity.SessionResult{Err: res.Err}
 			return
@@ -183,18 +145,21 @@ func (au *AuthUsecase) OauthSignIn(ctx context.Context, credentials entity.Crede
 	sessionRes <- au.createSession(ctx, user)
 }
 
-func (au *AuthUsecase) storeUser(ctx context.Context, credentials entity.Credentials) entity.CredentialsResult {
-	requestUrl := "http://localhost:8080/user/save"
+func getResponse(ctx context.Context, method string, url string, body []byte) (*http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	client := http.Client{}
+	return client.Do(req)
+}
+
+func storeUser(ctx context.Context, credentials entity.Credentials) entity.CredentialsResult {
 	requestBody, err := json.Marshal(credentials)
 	if err != nil {
 		return entity.CredentialsResult{Err: err}
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, requestUrl, bytes.NewReader(requestBody))
-	if err != nil {
-		return entity.CredentialsResult{Err: err}
-	}
-	client := http.Client{}
-	response, err := client.Do(req)
+	response, err := getResponse(ctx, http.MethodPost, "http://localhost:8080/user/save", requestBody)
 	if err != nil {
 		return entity.CredentialsResult{Err: err}
 	}
@@ -204,6 +169,21 @@ func (au *AuthUsecase) storeUser(ctx context.Context, credentials entity.Credent
 		return entity.CredentialsResult{Err: err}
 	}
 	return entity.CredentialsResult{Credentials: user}
+}
+
+func getUser(response io.ReadCloser) (entity.Credentials, error) {
+	temp := entity.Response{}
+	err := json.NewDecoder(response).Decode(&temp)
+	if err != nil {
+		return entity.Credentials{}, err
+	}
+	jsonUser, err := json.Marshal(temp.Body)
+	if err != nil {
+		return entity.Credentials{}, err
+	}
+	user := entity.Credentials{}
+	err = json.Unmarshal(jsonUser, &user)
+	return user, err
 }
 
 func (au *AuthUsecase) createSession(ctx context.Context, credentials entity.Credentials) entity.SessionResult {
