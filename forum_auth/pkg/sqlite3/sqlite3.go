@@ -16,7 +16,7 @@ func New() (*sql.DB, error) {
 	}
 	sessions := `
 	CREATE TABLE IF NOT EXISTS sessions (
-		user_id INTEGER NOT NULL,
+		user_id INTEGER NOT NULL UNIQUE,
 		token TEXT NOT NULL UNIQUE,
 		expiry_date TEXT NOT NULL
 	);`

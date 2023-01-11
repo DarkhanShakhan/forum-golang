@@ -19,7 +19,7 @@ type Handler struct {
 	aucase   AuthUsecase
 }
 
-const duration = 5 * time.Second
+const duration = 10 * time.Second
 
 // FIXME:deal with error from sqlite3
 func NewHandler(errorLog *log.Logger) *Handler {
@@ -37,8 +37,8 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
+	sessionChan := make(chan entity.SessionResult)
 	var (
-		sessionChan chan entity.SessionResult
 		sessionRes  entity.SessionResult
 		err         error
 		credentials entity.Credentials
@@ -51,6 +51,11 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	go h.aucase.SignIn(ctx, credentials, sessionChan)
 	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errorLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
+		return
 	case sessionRes = <-sessionChan:
 		err = sessionRes.Err
 		if err != nil {
@@ -71,11 +76,6 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-	case <-ctx.Done():
-		err = ctx.Err()
-		h.errorLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
-		return
 	}
 	h.APIResponse(w, http.StatusCreated, entity.Response{Body: sessionRes.Session})
 }
@@ -143,8 +143,10 @@ func (h *Handler) Authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	authStatusChan := make(chan entity.AuthStatusResult)
-	authStatusRes := entity.AuthStatusResult{}
-	var session entity.Session
+	var (
+		authStatusRes entity.AuthStatusResult
+		session       entity.Session
+	)
 	err := json.NewDecoder(r.Body).Decode(&session)
 	if err != nil {
 		h.errorLog.Println("bad request")
@@ -179,7 +181,7 @@ func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errChan := make(chan error)
-	session := entity.Session{}
+	var session entity.Session
 	err := json.NewDecoder(r.Body).Decode(&session)
 	if err != nil {
 		h.errorLog.Println("bad request")
@@ -211,8 +213,8 @@ func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
+	sessionChan := make(chan entity.SessionResult)
 	var (
-		sessionChan chan entity.SessionResult
 		sessionRes  entity.SessionResult
 		err         error
 		credentials entity.Credentials
@@ -226,8 +228,13 @@ func (h *Handler) OauthSignInHandler(w http.ResponseWriter, r *http.Request) {
 	go h.aucase.OauthSignIn(ctx, credentials, sessionChan)
 	select {
 	case sessionRes = <-sessionChan:
-		if sessionRes.Err != nil {
-			h.errorLog.Println(sessionRes.Err)
+		err = sessionRes.Err
+		if err != nil {
+			h.errorLog.Println(err)
+			if isConstraintError(err) {
+				h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"})
+				return
+			}
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}

@@ -98,7 +98,7 @@ func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credential
 			credsRes <- entity.CredentialsResult{Err: entity.ErrInternalServer}
 			return
 		}
-		if r.ErrorMessage == "User with a given email already exist" {
+		if r.ErrorMessage == "User with a given email already exists" {
 			credsRes <- entity.CredentialsResult{Err: entity.ErrEmailExists}
 			return
 		}
@@ -181,8 +181,7 @@ func storeUser(ctx context.Context, credentials entity.Credentials) entity.Crede
 	if err != nil {
 		return entity.CredentialsResult{Err: err}
 	}
-	user := entity.Credentials{}
-	err = json.NewDecoder(response.Body).Decode(&user)
+	user, err := getUser(response.Body)
 	if err != nil {
 		return entity.CredentialsResult{Err: err}
 	}

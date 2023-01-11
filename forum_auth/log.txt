@@ -78,3 +78,40 @@ ERROR	2023/01/10 17:56:50 /home/student/forum-golang/forum_auth/internal/app/ser
 ERROR	2023/01/10 17:56:58 /home/student/forum-golang/forum_auth/internal/repository/repo.go:107: UNIQUE constraint failed: sessions.user_id
 ERROR	2023/01/10 17:56:58 /home/student/forum-golang/forum_auth/internal/app/service.go:55: UNIQUE constraint failed: sessions.user_id
 ERROR	2023/01/10 19:23:06 /home/student/forum-golang/forum_auth/internal/app/service.go:183: bad request
+ERROR	2023/01/11 16:00:19 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:00:54 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:01:47 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:02:59 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:03:33 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:04:05 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:04:35 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:05:07 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:06:09 /home/student/forum-golang/forum_auth/internal/app/service.go:77: context deadline exceeded
+ERROR	2023/01/11 16:07:11 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:07:51 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:08:12 /home/student/forum-golang/forum_auth/internal/app/service.go:76: context deadline exceeded
+ERROR	2023/01/11 16:09:30 /home/student/forum-golang/forum_auth/internal/app/service.go:56: context deadline exceeded
+ERROR	2023/01/11 16:11:35 /home/student/forum-golang/forum_auth/internal/app/service.go:56: context deadline exceeded
+ERROR	2023/01/11 16:12:36 /home/student/forum-golang/forum_auth/internal/app/service.go:118: Internal Server Error
+ERROR	2023/01/11 16:15:48 /home/student/forum-golang/forum_auth/internal/app/service.go:118: Internal Server Error
+ERROR	2023/01/11 16:16:16 /home/student/forum-golang/forum_auth/internal/app/service.go:118: Internal Server Error
+ERROR	2023/01/11 16:16:49 /home/student/forum-golang/forum_auth/internal/app/service.go:118: Email already exists
+ERROR	2023/01/11 16:18:38 /home/student/forum-golang/forum_auth/internal/app/service.go:56: context deadline exceeded
+ERROR	2023/01/11 16:26:42 /home/student/forum-golang/forum_auth/internal/app/service.go:56: context deadline exceeded
+ERROR	2023/01/11 16:29:03 /home/student/forum-golang/forum_auth/internal/app/service.go:56: context deadline exceeded
+ERROR	2023/01/11 16:29:37 /home/student/forum-golang/forum_auth/internal/app/service.go:56: context deadline exceeded
+ERROR	2023/01/11 16:43:26 /home/student/forum-golang/forum_auth/internal/app/service.go:62: Invalid password
+ERROR	2023/01/11 16:43:33 /home/student/forum-golang/forum_auth/internal/app/service.go:62: Not Found
+ERROR	2023/01/11 16:43:41 /home/student/forum-golang/forum_auth/internal/app/service.go:48: bad request
+ERROR	2023/01/11 16:43:45 /home/student/forum-golang/forum_auth/internal/app/service.go:48: bad request
+ERROR	2023/01/11 16:44:12 /home/student/forum-golang/forum_auth/internal/app/service.go:62: Get "http://localhost:8080/user/email?email=username1991@gmail.com": dial tcp 127.0.0.1:8080: connect: connection refused
+ERROR	2023/01/11 16:44:50 /home/student/forum-golang/forum_auth/internal/app/service.go:117: Email already exists
+ERROR	2023/01/11 16:45:03 /home/student/forum-golang/forum_auth/internal/app/service.go:62: Invalid password
+ERROR	2023/01/11 16:48:34 /home/student/forum-golang/forum_auth/internal/repository/repo.go:109: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/11 16:48:34 /home/student/forum-golang/forum_auth/internal/app/service.go:62: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/11 16:54:57 /home/student/forum-golang/forum_auth/internal/repository/repo.go:109: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/11 16:54:57 /home/student/forum-golang/forum_auth/internal/app/service.go:232: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/11 16:56:22 /home/student/forum-golang/forum_auth/internal/repository/repo.go:109: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/11 16:56:22 /home/student/forum-golang/forum_auth/internal/app/service.go:233: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/11 16:57:44 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/11 16:57:44 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
