@@ -14,7 +14,7 @@ func (h *Handler) APIResponse(w http.ResponseWriter, code int, response entity.R
 	w.Header().Set("Content-Type", "application/json")
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		w.WriteHeader(500)
 		w.Write([]byte(`{"error":"Internal Server Error"}`))
 		return

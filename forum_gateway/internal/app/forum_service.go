@@ -232,3 +232,5 @@ type user struct {
 type category struct {
 	Id int `json:"id,omitempty"`
 }
+
+func CommentCreateHandler(w http.ResponseWriter, r *http.Request) {}

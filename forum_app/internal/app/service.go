@@ -16,25 +16,26 @@ import (
 const duration = 5 * time.Second
 
 type Handler struct {
-	errorLog *log.Logger
-	ucase    UserUsecase
-	pcase    PostUsecase
-	ccase    CommentUsecase
+	errLog  *log.Logger
+	infoLog *log.Logger
+	ucase   UserUsecase
+	pcase   PostUsecase
+	ccase   CommentUsecase
 }
 
 // FIXME:deal with error from sqlite3
-func NewHandler(errorLog *log.Logger) *Handler {
+func NewHandler(errLog, infoLog *log.Logger) *Handler {
 	db, _ := sqlite3.New()
-	usersRepo := ur.NewUsersRepository(db, errorLog)
-	postsRepo := pr.NewPostsRepository(db, errorLog)
-	pReactionsRepo := pr.NewPostReactionsRepository(db, errorLog)
-	categoriesRepo := pr.NewCategoriesRepository(db, errorLog)
-	commentsRepo := cr.NewCommentsRepository(db, errorLog)
-	cReactionsRepo := cr.NewCommentReactionsRepository(db, errorLog)
-	ucase := uUcse.NewUsersUsecase(usersRepo, postsRepo, pReactionsRepo, commentsRepo, cReactionsRepo, errorLog)
-	pcase := pUcse.NewPostsUsecase(postsRepo, pReactionsRepo, commentsRepo, categoriesRepo, usersRepo, errorLog)
-	ccase := cUcse.NewCommentsUsecase(commentsRepo, cReactionsRepo, postsRepo, usersRepo, errorLog)
-	return &Handler{errorLog, ucase, pcase, ccase}
+	usersRepo := ur.NewUsersRepository(db, errLog)
+	postsRepo := pr.NewPostsRepository(db, errLog)
+	pReactionsRepo := pr.NewPostReactionsRepository(db, errLog)
+	categoriesRepo := pr.NewCategoriesRepository(db, errLog)
+	commentsRepo := cr.NewCommentsRepository(db, errLog)
+	cReactionsRepo := cr.NewCommentReactionsRepository(db, errLog)
+	ucase := uUcse.NewUsersUsecase(usersRepo, postsRepo, pReactionsRepo, commentsRepo, cReactionsRepo, errLog)
+	pcase := pUcse.NewPostsUsecase(postsRepo, pReactionsRepo, commentsRepo, categoriesRepo, usersRepo, errLog)
+	ccase := cUcse.NewCommentsUsecase(commentsRepo, cReactionsRepo, postsRepo, usersRepo, errLog)
+	return &Handler{errLog, infoLog, ucase, pcase, ccase}
 }
 
 func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {

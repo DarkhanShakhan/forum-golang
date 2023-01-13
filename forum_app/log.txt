@@ -128,3 +128,5 @@ ERROR	2023/01/07 19:08:15 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/07 19:08:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
 ERROR	2023/01/07 19:08:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
 ERROR	2023/01/07 19:08:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
+INFO	2023/01/13 16:35:40 Listening on localhost:8080
+INFO	2023/01/13 16:44:04 Listening on localhost:8080

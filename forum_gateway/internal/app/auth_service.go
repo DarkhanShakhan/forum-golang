@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"forum_gateway/internal/entity"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -13,138 +14,42 @@ import (
 	"unicode"
 )
 
-var oauthStateString = "pseudo-random"
-
-func SignInHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		getSignIn(w, r)
-	case http.MethodPost:
-		postSignIn(w, r)
-	default:
-		w.WriteHeader(http.StatusBadRequest)
-	}
-}
-
-func getSignIn(w http.ResponseWriter, r *http.Request) {
-	templ, err := template.ParseFiles("web/sign_in.html")
-	if err != nil {
-		fmt.Println(err)
-	}
-	templ.Execute(w, nil)
-}
-
-func postSignIn(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	if r.Context().Value("authorised") == true {
-		w.WriteHeader(400)
-		return
-	}
-	credentials := Credentials{Email: r.FormValue("email"), Password: r.FormValue("password")}
-	requestBody, err := json.Marshal(credentials)
-	if err != nil {
-		fmt.Println(1)
-		fmt.Println(err)
-		return
-	}
-	requestUrl := "http://localhost:8081/sign_in"
-	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
-	if err != nil {
-		fmt.Println(err)
-	}
-	client := http.Client{}
-	response, err := client.Do(req)
-	if err != nil {
-		fmt.Println(2)
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(response.StatusCode)
-	session := Session{}
-	err = json.NewDecoder(response.Body).Decode(&session)
-	// FIXME: empty session check
-	if err != nil {
-		fmt.Println(3)
-		fmt.Println(err)
-		return
-	}
-	if session.Token != "" {
-		cookie := http.Cookie{Name: "token", Value: session.Token}
-		http.SetCookie(w, &cookie)
-		http.Redirect(w, r, "/posts", 304)
-		return
-	}
-	w.Write([]byte("invalid"))
-}
-
-type Session struct {
-	Token      string `json:"token"`
-	UserId     int64  `json:"user_id"`
-	ExpiryDate string `json:"expiry_date"`
-}
-
-type Credentials struct {
-	Id       int64  `json:"id,omitempty"`
-	Name     string `json:"name,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
-}
-
 // SIGN UP
-func SignUpHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Context().Value("authorised") == true {
-		w.WriteHeader(403) // FIXME: not sure
-		w.Write([]byte("you are already authorised. you can sign out"))
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
 		return
 	}
 	switch r.Method {
 	case http.MethodGet:
-		getSignUp(w, r)
+		h.getSignUp(w, r)
 	case http.MethodPost:
-		postSignUp(w, r)
+		h.postSignUp(w, r)
 	default:
-		w.WriteHeader(http.StatusBadRequest)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad request"}, "web/error.html")
 	}
 }
 
-func getSignUp(w http.ResponseWriter, r *http.Request) {
-	templ, err := template.ParseFiles("web/sign_up.html")
-	if err != nil {
-		w.WriteHeader(500)
-	}
-	templ.Execute(w, nil)
+func (h *Handler) getSignUp(w http.ResponseWriter, r *http.Request) {
+	h.APIResponse(w, http.StatusOK, entity.Response{}, "web/sign_up.html")
 }
 
-func postSignUp(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	rep_password := r.FormValue("rep_password")
-	if len(name) == 0 || !validEmail(email) || !validPassword(password) || password != rep_password {
-		// FIXME: send detailed error message
-		log.Println("invalid request: credentials verification")
-		templ, err := template.ParseFiles("web/sign_up.html")
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-		w.WriteHeader(400)
-		templ.Execute(w, "invalid request: credentials verification")
-		return
+	confirm_password := r.FormValue("confirm_password")
+	ok, message := checkCredentials(name, email, password, confirm_password)
+	if !ok {
+		h.errLog.Println(message)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "web/sign_up.html")
 	}
-	credentials := Credentials{Name: name, Email: email, Password: password}
+	credentials := entity.Credentials{Name: name, Email: email, Password: password}
 	requestBody, err := json.Marshal(credentials)
 	if err != nil {
-		log.Println(err)
-		templ, err := template.ParseFiles("web/sign_up.html")
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-		w.WriteHeader(400)
-		templ.Execute(w, "invalid request")
-		return
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "bad request"}, "web/error.html")
 	}
 	requestUrl := "http://localhost:8081/sign_up"
 	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
@@ -168,6 +73,31 @@ func postSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(response.Body) // FIXME: check for errors
 	http.Redirect(w, r, "/sign_in", http.StatusFound)
+}
+
+func checkCredentials(name, email, password, confirm_password string) (bool, string) {
+	if !validName(name) {
+		return false, "Invalid name format\nName should be at least 5 symbols long and shouldn't contain empty space"
+	} else if !validEmail(email) {
+		return false, "Invalid email format"
+	} else if !validPassword(password) {
+		return false, "Invalid password format\nPassword should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols"
+	} else if password != confirm_password {
+		return false, "Passwords don't match"
+	}
+	return true, ""
+}
+
+func validName(name string) bool {
+	if len(name) < 5 {
+		return false
+	}
+	for _, ch := range name {
+		if ch != ' ' {
+			return false
+		}
+	}
+	return true
 }
 
 func validEmail(email string) bool {
@@ -203,9 +133,68 @@ func validPassword(pass string) bool {
 	return true
 }
 
-type response struct {
-	Err     string      `json:"error,omitempty"`
-	Content interface{} `json:"content,omitempty"`
+var oauthStateString = "pseudo-random"
+
+func SignInHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getSignIn(w, r)
+	case http.MethodPost:
+		postSignIn(w, r)
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+	}
+}
+
+func getSignIn(w http.ResponseWriter, r *http.Request) {
+	templ, err := template.ParseFiles("web/sign_in.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	templ.Execute(w, nil)
+}
+
+func postSignIn(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	if r.Context().Value("authorised") == true {
+		w.WriteHeader(400)
+		return
+	}
+	credentials := entity.Credentials{Email: r.FormValue("email"), Password: r.FormValue("password")}
+	requestBody, err := json.Marshal(credentials)
+	if err != nil {
+		fmt.Println(1)
+		fmt.Println(err)
+		return
+	}
+	requestUrl := "http://localhost:8081/sign_in"
+	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
+	if err != nil {
+		fmt.Println(err)
+	}
+	client := http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		fmt.Println(2)
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(response.StatusCode)
+	session := entity.Session{}
+	err = json.NewDecoder(response.Body).Decode(&session)
+	// FIXME: empty session check
+	if err != nil {
+		fmt.Println(3)
+		fmt.Println(err)
+		return
+	}
+	if session.Token != "" {
+		cookie := http.Cookie{Name: "token", Value: session.Token}
+		http.SetCookie(w, &cookie)
+		http.Redirect(w, r, "/posts", 304)
+		return
+	}
+	w.Write([]byte("invalid"))
 }
 
 func SignOutHandler(w http.ResponseWriter, r *http.Request) {

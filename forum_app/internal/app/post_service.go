@@ -13,18 +13,18 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
-		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		h.errLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	if err := r.ParseForm(); err != nil {
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 	id, err := strconv.Atoi(r.Form.Get("id"))
 	if err != nil {
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
@@ -34,7 +34,7 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case postResult = <-postChan:
@@ -50,11 +50,12 @@ func (h *Handler) PostDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	h.APIResponse(w, http.StatusOK, entity.Response{Body: postResult.Post})
 }
+
 func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
-		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		h.errLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
@@ -65,36 +66,37 @@ func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case postsRes = <-postsChan:
 		if err = postsRes.Err; err != nil {
-			h.errorLog.Println(err)
+			h.errLog.Println(err)
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
 	h.APIResponse(w, http.StatusOK, entity.Response{Body: postsRes.Posts})
 }
+
 func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodGet {
-		h.errorLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		h.errLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
 
 	id, err := strconv.Atoi(r.Form.Get("id"))
 	if err != nil {
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
@@ -104,36 +106,37 @@ func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case catResult = <-catChan:
 		err = catResult.Err
 		if err != nil {
-			h.errorLog.Println(err)
+			h.errLog.Println(err)
 			if err == entity.ErrCategoryNotFound {
 				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
 				return
 			}
-			//FIXME:check for existing category
+			// FIXME:check for existing category
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
 	}
 	h.APIResponse(w, http.StatusOK, entity.Response{Body: catResult.Cat})
 }
+
 func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
-		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		h.errLog.Printf("invalid method: %s\n", r.Method)
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post entity.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil || !validatePostData(post) {
-		h.errorLog.Println("bad request")
+		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
@@ -143,13 +146,13 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case res = <-resChan:
 		err = res.Err
 		if err != nil {
-			h.errorLog.Println(err)
+			h.errLog.Println(err)
 			if isConstraintError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
@@ -160,6 +163,7 @@ func (h *Handler) StorePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	h.APIResponse(w, http.StatusCreated, entity.Response{Body: entity.Post{Id: int(res.Id)}})
 }
+
 func validatePostData(post entity.Post) bool {
 	if post.Title == "" {
 		return false
@@ -170,18 +174,19 @@ func validatePostData(post entity.Post) bool {
 	}
 	return true
 }
+
 func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPost {
-		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		h.errLog.Printf("invalid method: %s\n", r.Method)
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
 	if err != nil || !validatePostReactionData(post_reaction) {
-		h.errorLog.Println("bad request")
+		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{})
 		return
 	}
@@ -190,12 +195,12 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case err = <-errChan:
 		if err != nil {
-			h.errorLog.Println(err)
+			h.errLog.Println(err)
 			if isConstraintError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
@@ -219,14 +224,14 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodPut {
-		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		h.errLog.Printf("invalid method: %s\n", r.Method)
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
 	if err != nil || validatePostReactionData(post_reaction) {
-		h.errorLog.Println("bad request")
+		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
 	}
@@ -235,12 +240,12 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 	case err = <-errChan:
 		if err != nil {
-			h.errorLog.Println(err)
+			h.errLog.Println(err)
 			if isConstraintError(err) || isNoRowAffectedError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
@@ -256,14 +261,14 @@ func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	if r.Method != http.MethodDelete {
-		h.errorLog.Printf("invalid method: %s\n", r.Method)
+		h.errLog.Printf("invalid method: %s\n", r.Method)
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
 		return
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
 	if err != nil || !validatePostReactionData(post_reaction) {
-		h.errorLog.Println("bad request")
+		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{})
 		return
 	}
@@ -272,13 +277,13 @@ func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	select {
 	case <-ctx.Done():
 		err = ctx.Err()
-		h.errorLog.Println(err)
+		h.errLog.Println(err)
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
 		return
 
 	case err = <-errChan:
 		if err != nil {
-			h.errorLog.Println(err)
+			h.errLog.Println(err)
 			if isConstraintError(err) || isNoRowAffectedError(err) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 				return
