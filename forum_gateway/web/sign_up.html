@@ -16,10 +16,10 @@
         Enter your password <br>
         <input type="password" name="password"><br>
         Repeat your password <br>
-        <input type="password" name="rep_password"><br>
+        <input type="password" name="confirm_password"><br>
         <input type="submit" value="Submit"><br>
     </form>
-    {{.}}
+    {{if .ErrorMessage}} {{.ErrorMessage}} {{else}} {{end}}
     <br>
     <a href="/signin_google">Sign up with Google</a>
 </body>

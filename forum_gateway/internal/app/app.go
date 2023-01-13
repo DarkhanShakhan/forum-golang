@@ -1,6 +1,7 @@
 package app
 
 import (
+	"forum_gateway/internal/usecase"
 	"io"
 	"log"
 	"net/http"
@@ -11,14 +12,15 @@ func Run() {
 	mux := http.NewServeMux()
 	infoLog, errLog, file := getLogs("log.txt")
 	defer file.Close()
-	h := NewHandler(infoLog, errLog)
+	auUcase := usecase.NewAuthUsecase(errLog, infoLog)
+	h := NewHandler(errLog, infoLog, auUcase)
 	// auth
 	mux.Handle("/sign_up", Authenticate(http.HandlerFunc(h.SignUpHandler)))
 
 	mux.Handle("/signin_google", Authenticate(http.HandlerFunc(SignInGoogleHandler)))
 	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
 	mux.Handle("/posts", Authenticate(http.HandlerFunc(PostsHandler)))
-	mux.Handle("/posts/", Authenticate(http.HandlerFunc(PostHandler)))
+	// mux.Handle("/posts/", Authenticate(http.HandlerFunc(PostHandler)))
 	mux.Handle("/users", Authenticate(http.HandlerFunc(UsersHandler)))
 	mux.Handle("/users/", Authenticate(http.HandlerFunc(UserHandler)))
 	mux.Handle("/categories/", Authenticate(http.HandlerFunc(CategoryHandler)))

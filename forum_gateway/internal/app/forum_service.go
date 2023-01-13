@@ -38,32 +38,32 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "posts", target)
 }
 
-func PostHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "/web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "/web/error.html")
 		return
 	}
 
 	requestUrl := fmt.Sprintf("http://localhost:8080/post?id=%s", getID(r.URL.Path))
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
-		APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "/web/error.html")
+		h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "/web/error.html")
 		return
 	}
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+		h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 		return
 	}
 	defer resp.Body.Close()
 	var response entity.Response
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+		h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 		return
 	}
-	APIResponse(w, http.StatusOK, response, "web/post.html")
+	h.APIResponse(w, http.StatusOK, response, "web/post.html")
 }
 
 func UsersHandler(w http.ResponseWriter, r *http.Request) {

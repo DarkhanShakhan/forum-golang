@@ -1,0 +1,23 @@
+INFO	2023/01/13 19:32:17 Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/13 19:35:12 Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/13 19:35:16 Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/13 19:35:22 Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/13 19:36:19 Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/13 19:36:52 Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/13 19:38:01 Passwords don't match
+INFO	2023/01/13 19:38:24 Passwords don't match
+INFO	2023/01/13 19:38:51 Passwords don't match
+INFO	2023/01/13 19:39:49 Passwords don't match
+INFO	2023/01/13 19:41:28 Passwords don't match
+ERROR	2023/01/13 19:48:45 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:40: Invalid email format
+ERROR	2023/01/13 19:49:07 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:40: Invalid password format
+Password should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols
+ERROR	2023/01/13 19:49:50 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:52: Email already exists
+ERROR	2023/01/13 19:49:54 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:40: Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space

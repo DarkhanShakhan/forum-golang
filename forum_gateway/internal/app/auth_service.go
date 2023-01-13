@@ -7,11 +7,8 @@ import (
 	"forum_gateway/internal/entity"
 	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
-	"regexp"
-	"unicode"
 )
 
 // SIGN UP
@@ -36,101 +33,40 @@ func (h *Handler) getSignUp(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	name := r.FormValue("name")
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+	credentials := entity.GetCredentials(r)
 	confirm_password := r.FormValue("confirm_password")
-	ok, message := checkCredentials(name, email, password, confirm_password)
+	ok, message := credentials.Validate(confirm_password)
 	if !ok {
 		h.errLog.Println(message)
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "web/sign_up.html")
-	}
-	credentials := entity.Credentials{Name: name, Email: email, Password: password}
-	requestBody, err := json.Marshal(credentials)
-	if err != nil {
-		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "bad request"}, "web/error.html")
-	}
-	requestUrl := "http://localhost:8081/sign_up"
-	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-
 		return
 	}
-	client := http.Client{}
-	response, err := client.Do(req)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-		templ, err := template.ParseFiles("web/sign_up.html")
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	errChan := make(chan error)
+	var err error
+	go h.auUcase.SignUp(ctx, credentials, errChan)
+	select {
+	case err = <-errChan:
 		if err != nil {
-			return
+			h.errLog.Println(err)
+			switch err {
+			case entity.ErrEmailExists:
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "user with a given email already exists"}, "web/sign_up.html")
+				return
+			case entity.ErrRequestTimeout:
+				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
+			default:
+				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/errog.go")
+			}
 		}
-		templ.Execute(w, "internal server error")
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
 		return
 	}
-	fmt.Println(response.Body) // FIXME: check for errors
 	http.Redirect(w, r, "/sign_in", http.StatusFound)
-}
-
-func checkCredentials(name, email, password, confirm_password string) (bool, string) {
-	if !validName(name) {
-		return false, "Invalid name format\nName should be at least 5 symbols long and shouldn't contain empty space"
-	} else if !validEmail(email) {
-		return false, "Invalid email format"
-	} else if !validPassword(password) {
-		return false, "Invalid password format\nPassword should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols"
-	} else if password != confirm_password {
-		return false, "Passwords don't match"
-	}
-	return true, ""
-}
-
-func validName(name string) bool {
-	if len(name) < 5 {
-		return false
-	}
-	for _, ch := range name {
-		if ch != ' ' {
-			return false
-		}
-	}
-	return true
-}
-
-func validEmail(email string) bool {
-	return regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`).MatchString(email)
-}
-
-func validPassword(pass string) bool {
-	var (
-		upp, low, num, sym bool
-		tot                uint8
-	)
-	for _, char := range pass {
-		switch {
-		case unicode.IsUpper(char):
-			upp = true
-			tot++
-		case unicode.IsLower(char):
-			low = true
-			tot++
-		case unicode.IsNumber(char):
-			num = true
-			tot++
-		case unicode.IsPunct(char) || unicode.IsSymbol(char):
-			sym = true
-			tot++
-		default:
-			return false
-		}
-	}
-	if !upp || !low || !num || !sym || tot < 8 {
-		return false
-	}
-	return true
 }
 
 var oauthStateString = "pseudo-random"

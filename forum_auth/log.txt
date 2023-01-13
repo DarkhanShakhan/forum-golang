@@ -115,3 +115,11 @@ ERROR	2023/01/11 16:56:22 /home/student/forum-golang/forum_auth/internal/reposit
 ERROR	2023/01/11 16:56:22 /home/student/forum-golang/forum_auth/internal/app/service.go:233: UNIQUE constraint failed: sessions.user_id
 ERROR	2023/01/11 16:57:44 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
 ERROR	2023/01/11 16:57:44 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/13 19:43:56 /home/student/forum-golang/forum_auth/internal/repository/repo.go:109: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/13 19:43:56 /home/student/forum-golang/forum_auth/internal/app/service.go:62: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/13 19:49:50 /home/student/forum-golang/forum_auth/internal/app/service.go:117: Email already exists
+ERROR	2023/01/13 19:51:09 /home/student/forum-golang/forum_auth/internal/repository/repo.go:109: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/13 19:51:09 /home/student/forum-golang/forum_auth/internal/app/service.go:62: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/13 19:51:43 /home/student/forum-golang/forum_auth/internal/app/service.go:62: Invalid password
+ERROR	2023/01/13 19:54:13 /home/student/forum-golang/forum_auth/internal/repository/repo.go:109: UNIQUE constraint failed: sessions.user_id
+ERROR	2023/01/13 19:54:13 /home/student/forum-golang/forum_auth/internal/app/service.go:62: UNIQUE constraint failed: sessions.user_id
