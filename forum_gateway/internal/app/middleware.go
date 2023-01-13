@@ -48,7 +48,7 @@ func Authenticate(next http.Handler) http.Handler {
 			Path:  "/",
 		}
 		http.SetCookie(w, &cookie)
-
+		//	FIXME: expiry time
 		// FIXME: validate data
 		ctx := context.WithValue(context.WithValue(r.Context(), "authorised", true), "user_id", authStatus.UserId)
 

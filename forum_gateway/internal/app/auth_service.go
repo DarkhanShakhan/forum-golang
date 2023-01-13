@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"forum_gateway/internal/entity"
-	"html/template"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 )
+
+var oauthStateString = "pseudo-random"
 
 // SIGN UP
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
@@ -69,68 +70,63 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/sign_in", http.StatusFound)
 }
 
-var oauthStateString = "pseudo-random"
-
-func SignInHandler(w http.ResponseWriter, r *http.Request) {
+// SIGN IN
+func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("authorised") == true {
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
+		return
+	}
 	switch r.Method {
 	case http.MethodGet:
-		getSignIn(w, r)
+		h.getSignIn(w, r)
 	case http.MethodPost:
-		postSignIn(w, r)
+		h.postSignIn(w, r)
 	default:
-		w.WriteHeader(http.StatusBadRequest)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad request"}, "web/error.html")
 	}
 }
 
-func getSignIn(w http.ResponseWriter, r *http.Request) {
-	templ, err := template.ParseFiles("web/sign_in.html")
-	if err != nil {
-		fmt.Println(err)
-	}
-	templ.Execute(w, nil)
+func (h *Handler) getSignIn(w http.ResponseWriter, r *http.Request) {
+	h.APIResponse(w, http.StatusOK, entity.Response{}, "web/sign_in.html")
 }
 
-func postSignIn(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	if r.Context().Value("authorised") == true {
-		w.WriteHeader(400)
+
+	credentials := entity.GetCredentials(r)
+	// FIXME: validate credentials
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	sessionChan := make(chan entity.SessionResult)
+	var sessionRes entity.SessionResult
+
+	go h.auUcase.SignIn(ctx, credentials, sessionChan)
+
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
 		return
+	case sessionRes = <-sessionChan:
+		err := sessionRes.Err
+		if err != nil {
+			h.errLog.Println(err)
+			return
+		}
 	}
-	credentials := entity.Credentials{Email: r.FormValue("email"), Password: r.FormValue("password")}
-	requestBody, err := json.Marshal(credentials)
-	if err != nil {
-		fmt.Println(1)
-		fmt.Println(err)
-		return
-	}
-	requestUrl := "http://localhost:8081/sign_in"
-	req, err := http.NewRequest(http.MethodPost, requestUrl, bytes.NewReader(requestBody))
-	if err != nil {
-		fmt.Println(err)
-	}
-	client := http.Client{}
-	response, err := client.Do(req)
-	if err != nil {
-		fmt.Println(2)
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(response.StatusCode)
-	session := entity.Session{}
-	err = json.NewDecoder(response.Body).Decode(&session)
-	// FIXME: empty session check
-	if err != nil {
-		fmt.Println(3)
-		fmt.Println(err)
-		return
-	}
-	if session.Token != "" {
-		cookie := http.Cookie{Name: "token", Value: session.Token}
+	if sessionRes.Session.Token != "" {
+		cookie := http.Cookie{
+			Name:    "token",
+			Expires: sessionRes.Session.ExpiryTime,
+			Value:   sessionRes.Session.Token,
+			Path:    "/",
+		}
 		http.SetCookie(w, &cookie)
 		http.Redirect(w, r, "/posts", 304)
 		return
 	}
-	w.Write([]byte("invalid"))
+	h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.go")
 }
 
 func SignOutHandler(w http.ResponseWriter, r *http.Request) {

@@ -25,7 +25,7 @@ func Run() {
 	mux.Handle("/users/", Authenticate(http.HandlerFunc(UserHandler)))
 	mux.Handle("/categories/", Authenticate(http.HandlerFunc(CategoryHandler)))
 	mux.Handle("/posts/new", Authenticate(http.HandlerFunc(PostCreateHandler)))
-	mux.Handle("/sign_in", Authenticate(http.HandlerFunc(SignInHandler)))
+	mux.Handle("/sign_in", Authenticate(http.HandlerFunc(h.SignInHandler)))
 
 	mux.Handle("/sign_out", Authenticate(http.HandlerFunc(SignOutHandler)))
 	mux.Handle("/comments/new", Authenticate(http.HandlerFunc(CommentCreateHandler)))

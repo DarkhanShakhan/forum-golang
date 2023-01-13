@@ -23,3 +23,18 @@ func getResponse(response io.ReadCloser) (entity.Response, error) {
 	err := json.NewDecoder(response).Decode(&result)
 	return result, err
 }
+
+func getSession(response io.ReadCloser) (entity.Session, error) {
+	temp := entity.Response{}
+	err := json.NewDecoder(response).Decode(&temp)
+	if err != nil {
+		return entity.Session{}, err
+	}
+	jsonSession, err := json.Marshal(temp.Body)
+	if err != nil {
+		return entity.Session{}, err
+	}
+	session := entity.Session{}
+	err = json.Unmarshal(jsonSession, &session)
+	return session, err
+}
