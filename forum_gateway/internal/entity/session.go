@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 type Session struct {
 	Token      string    `json:"token,omitempty"`

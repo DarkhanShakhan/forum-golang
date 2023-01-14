@@ -27,7 +27,7 @@ func GetCredentials(r *http.Request) Credentials {
 	}
 }
 
-func (c Credentials) Validate(confirm_password string) (bool, string) {
+func (c Credentials) ValidateSignUp(confirm_password string) (bool, string) {
 	if !validName(c.Name) {
 		return false, "Invalid name format\nName should be at least 5 symbols long and shouldn't contain empty space"
 	} else if !validEmail(c.Email) {
@@ -38,6 +38,15 @@ func (c Credentials) Validate(confirm_password string) (bool, string) {
 		fmt.Println(c.Password)
 		fmt.Println(confirm_password)
 		return false, "Passwords don't match"
+	}
+	return true, ""
+}
+
+func (c Credentials) ValidateSignIn() (bool, string) {
+	if !validEmail(c.Email) {
+		return false, "Invalid email format"
+	} else if !validPassword(c.Password) {
+		return false, "Invalid password format\nPassword should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols"
 	}
 	return true, ""
 }

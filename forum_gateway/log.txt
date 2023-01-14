@@ -21,3 +21,35 @@ Password should contain at least one number, one uppercase letter, one lowercase
 ERROR	2023/01/13 19:49:50 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:52: Email already exists
 ERROR	2023/01/13 19:49:54 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:40: Invalid name format
 Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/14 16:36:50 Listening on localhost:8082
+ERROR	2023/01/14 16:37:38 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:53: Email already exists
+ERROR	2023/01/14 16:37:48 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:41: Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/14 16:52:05 Listening on localhost:8082
+ERROR	2023/01/14 16:52:17 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:114: Internal Server Error
+INFO	2023/01/14 16:53:32 Listening on localhost:8082
+ERROR	2023/01/14 16:53:39 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:114: Internal Server Error
+INFO	2023/01/14 16:54:41 Listening on localhost:8082
+ERROR	2023/01/14 16:54:47 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:114: Invalid password
+INFO	2023/01/14 16:55:40 Listening on localhost:8082
+ERROR	2023/01/14 16:55:45 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:114: Invalid password
+ERROR	2023/01/14 16:55:52 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:114: Not Found
+ERROR	2023/01/14 16:56:18 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:41: Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+ERROR	2023/01/14 16:58:04 /home/student/forum-golang/forum_gateway/internal/app/response.go:12: open web/error.go: no such file or directory
+INFO	2023/01/14 16:58:32 Listening on localhost:8082
+ERROR	2023/01/14 16:58:41 /home/student/forum-golang/forum_gateway/internal/app/response.go:12: open web/error.go: no such file or directory
+INFO	2023/01/14 16:59:47 Listening on localhost:8082
+INFO	2023/01/14 17:01:05 Listening on localhost:8082
+ERROR	2023/01/14 17:12:25 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:114: Internal Server Error
+INFO	2023/01/14 17:13:21 Listening on localhost:8082
+INFO	2023/01/14 17:19:46 Listening on localhost:8082
+ERROR	2023/01/14 17:19:50 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:99: Invalid password format
+Password should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols
+ERROR	2023/01/14 17:19:54 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:99: Invalid email format
+ERROR	2023/01/14 17:21:11 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:99: Invalid email format
+ERROR	2023/01/14 17:21:24 /home/student/forum-golang/forum_gateway/internal/usecase/auth.go:61: Post "http://localhost:8081/sign_in": dial tcp 127.0.0.1:8081: connect: connection refused
+ERROR	2023/01/14 17:21:24 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:120: Internal Server Error
+INFO	2023/01/14 17:54:32 Listening on localhost:8082
+ERROR	2023/01/14 17:55:17 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:43: Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space

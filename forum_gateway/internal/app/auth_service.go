@@ -14,7 +14,9 @@ var oauthStateString = "pseudo-random"
 
 // SIGN UP
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Context().Value("authorised"))
 	if r.Context().Value("authorised") == true {
+
 		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
 		return
 	}
@@ -36,7 +38,7 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	credentials := entity.GetCredentials(r)
 	confirm_password := r.FormValue("confirm_password")
-	ok, message := credentials.Validate(confirm_password)
+	ok, message := credentials.ValidateSignUp(confirm_password)
 	if !ok {
 		h.errLog.Println(message)
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "web/sign_up.html")
@@ -72,6 +74,7 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 
 // SIGN IN
 func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Context().Value("authorised"))
 	if r.Context().Value("authorised") == true {
 		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
 		return
@@ -94,6 +97,12 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	credentials := entity.GetCredentials(r)
+	ok, message := credentials.ValidateSignIn()
+	if !ok {
+		h.errLog.Println(message)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "web/sign_in.html")
+		return
+	}
 	// FIXME: validate credentials
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
@@ -106,15 +115,26 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err := ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
 		return
 	case sessionRes = <-sessionChan:
 		err := sessionRes.Err
 		if err != nil {
 			h.errLog.Println(err)
+			switch err {
+			case entity.ErrNotFound:
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "User with a given email doesn't exist"}, "web/sign_in.html")
+			case entity.ErrInvalidPassword:
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Invalid password"}, "web/sign_in.html")
+			case entity.ErrRequestTimeout:
+				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+			default:
+				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+			}
 			return
 		}
 	}
+	fmt.Println(sessionRes)
 	if sessionRes.Session.Token != "" {
 		cookie := http.Cookie{
 			Name:    "token",
@@ -126,7 +146,7 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/posts", 304)
 		return
 	}
-	h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.go")
+	h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 }
 
 func SignOutHandler(w http.ResponseWriter, r *http.Request) {

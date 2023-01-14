@@ -29,4 +29,5 @@ func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {
 type AuthUsecase interface {
 	SignUp(context.Context, entity.Credentials, chan error)
 	SignIn(context.Context, entity.Credentials, chan entity.SessionResult)
+	Authenticate(context.Context, string, chan entity.AuthStatusResult)
 }

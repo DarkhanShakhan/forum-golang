@@ -15,7 +15,8 @@ func Run() {
 	auUcase := usecase.NewAuthUsecase(errLog, infoLog)
 	h := NewHandler(errLog, infoLog, auUcase)
 	// auth
-	mux.Handle("/sign_up", Authenticate(http.HandlerFunc(h.SignUpHandler)))
+	mux.Handle("/sign_up", h.Authenticate(http.HandlerFunc(h.SignUpHandler)))
+	mux.Handle("/sign_in", h.Authenticate(http.HandlerFunc(h.SignInHandler)))
 
 	mux.Handle("/signin_google", Authenticate(http.HandlerFunc(SignInGoogleHandler)))
 	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
@@ -25,7 +26,6 @@ func Run() {
 	mux.Handle("/users/", Authenticate(http.HandlerFunc(UserHandler)))
 	mux.Handle("/categories/", Authenticate(http.HandlerFunc(CategoryHandler)))
 	mux.Handle("/posts/new", Authenticate(http.HandlerFunc(PostCreateHandler)))
-	mux.Handle("/sign_in", Authenticate(http.HandlerFunc(h.SignInHandler)))
 
 	mux.Handle("/sign_out", Authenticate(http.HandlerFunc(SignOutHandler)))
 	mux.Handle("/comments/new", Authenticate(http.HandlerFunc(CommentCreateHandler)))
@@ -35,7 +35,7 @@ func Run() {
 		Addr:    "localhost:8082",
 		Handler: mux,
 	}
-
+	infoLog.Println("Listening on localhost:8082")
 	err := srv.ListenAndServe()
 	log.Fatal(err)
 }

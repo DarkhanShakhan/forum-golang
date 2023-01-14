@@ -24,7 +24,7 @@ func getResponse(response io.ReadCloser) (entity.Response, error) {
 	return result, err
 }
 
-func getSession(response io.ReadCloser) (entity.Session, error) {
+func getSession(response io.ReadCloser) (entity.Session, error) { // FIXME: change to SessionRes
 	temp := entity.Response{}
 	err := json.NewDecoder(response).Decode(&temp)
 	if err != nil {
@@ -37,4 +37,21 @@ func getSession(response io.ReadCloser) (entity.Session, error) {
 	session := entity.Session{}
 	err = json.Unmarshal(jsonSession, &session)
 	return session, err
+}
+
+func getAuthStatus(response io.ReadCloser) entity.AuthStatusResult {
+	temp, err := getResponse(response)
+	if err != nil {
+		return entity.AuthStatusResult{Err: err}
+	}
+	jsonAuthStatus, err := json.Marshal(temp.Body)
+	if err != nil {
+		return entity.AuthStatusResult{Err: err}
+	}
+	authStatus := entity.AuthStatusResult{}
+	err = json.Unmarshal(jsonAuthStatus, &authStatus)
+	if err != nil {
+		return entity.AuthStatusResult{Err: err}
+	}
+	return authStatus
 }

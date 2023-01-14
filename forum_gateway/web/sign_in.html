@@ -15,6 +15,7 @@
         <input type="password" name="password"><br>
         <input type="submit" value="Submit">
     </form>
+    {{if .ErrorMessage}} {{.ErrorMessage}} {{else}} {{end}}
     <br>
     <a href="/signin_google">Sign in with Google</a>
 </body>
