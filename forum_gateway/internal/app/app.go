@@ -13,22 +13,25 @@ func Run() {
 	infoLog, errLog, file := getLogs("log.txt")
 	defer file.Close()
 	auUcase := usecase.NewAuthUsecase(errLog, infoLog)
-	h := NewHandler(errLog, infoLog, auUcase)
+	forumUcase := usecase.NewForumUsecase(errLog)
+	h := NewHandler(errLog, infoLog, auUcase, forumUcase)
 	// auth
 	mux.Handle("/sign_up", h.Authenticate(http.HandlerFunc(h.SignUpHandler)))
 	mux.Handle("/sign_in", h.Authenticate(http.HandlerFunc(h.SignInHandler)))
+	mux.Handle("/sign_out", h.Authenticate(http.HandlerFunc(h.SignOutHandler)))
 
-	mux.Handle("/signin_google", Authenticate(http.HandlerFunc(SignInGoogleHandler)))
+	mux.Handle("/signin_google", h.Authenticate(http.HandlerFunc(SignInGoogleHandler)))
 	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
-	mux.Handle("/posts", Authenticate(http.HandlerFunc(PostsHandler)))
-	// mux.Handle("/posts/", Authenticate(http.HandlerFunc(PostHandler)))
-	mux.Handle("/users", Authenticate(http.HandlerFunc(UsersHandler)))
-	mux.Handle("/users/", Authenticate(http.HandlerFunc(UserHandler)))
-	mux.Handle("/categories/", Authenticate(http.HandlerFunc(CategoryHandler)))
-	mux.Handle("/posts/new", Authenticate(http.HandlerFunc(PostCreateHandler)))
 
-	mux.Handle("/sign_out", Authenticate(http.HandlerFunc(SignOutHandler)))
-	mux.Handle("/comments/new", Authenticate(http.HandlerFunc(CommentCreateHandler)))
+	// forum
+	mux.Handle("/posts", h.Authenticate(http.HandlerFunc(h.PostsHandler))) // FIXME: change to "/""
+	// mux.Handle("/posts/", Authenticate(http.HandlerFunc(PostHandler)))
+	mux.Handle("/users", h.Authenticate(http.HandlerFunc(UsersHandler)))
+	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(UserHandler)))
+	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(CategoryHandler)))
+	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(PostCreateHandler)))
+
+	mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(CommentCreateHandler)))
 
 	// handler := Authenticate(mux)
 	srv := &http.Server{

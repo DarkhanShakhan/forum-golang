@@ -10,13 +10,14 @@ import (
 const duration = 10 * time.Second
 
 type Handler struct {
-	errLog  *log.Logger
-	infoLog *log.Logger
-	auUcase AuthUsecase
+	errLog     *log.Logger
+	infoLog    *log.Logger
+	auUcase    AuthUsecase
+	forumUcase ForumUsecase
 }
 
-func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase) *Handler {
-	return &Handler{errLog, infoLog, auUcase}
+func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase, forumUcase ForumUsecase) *Handler {
+	return &Handler{errLog, infoLog, auUcase, forumUcase}
 }
 
 func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {
@@ -29,5 +30,11 @@ func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {
 type AuthUsecase interface {
 	SignUp(context.Context, entity.Credentials, chan error)
 	SignIn(context.Context, entity.Credentials, chan entity.SessionResult)
+	SignOut(context.Context, entity.Session, chan error)
 	Authenticate(context.Context, string, chan entity.AuthStatusResult)
+}
+
+type ForumUsecase interface {
+	FetchPosts(context.Context, chan entity.Response)
+	// FetchPost(context.Context, int, chan entity.PostResult)
 }

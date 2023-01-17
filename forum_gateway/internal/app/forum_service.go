@@ -11,31 +11,35 @@ import (
 	"text/template"
 )
 
-func PostsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) PostsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusBadRequest)
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "web/error.html")
 		return
 	}
-	// FIXME: check authorised
-	url := "http://localhost:8080/posts"
-	client := http.Client{}
-	response, err := client.Get(url)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	response := entity.Response{}
+	responseChan := make(chan entity.Response)
+	go h.forumUcase.FetchPosts(ctx, responseChan)
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
 		return
+	case response = <-responseChan:
+		err := response.Err
+		switch err {
+		case entity.ErrInternalServer:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+		case entity.ErrRequestTimeout:
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		case nil:
+			var auth interface{} = r.Context().Value("authorised")
+			response.AuthStatus, _ = auth.(bool)
+			h.APIResponse(w, http.StatusOK, response, "web/posts.html")
+		}
 	}
-	defer response.Body.Close()
-	var target interface{}
-	err = json.NewDecoder(response.Body).Decode(&target)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	templ, err := template.New("posts").Parse(`<html>{{range.}} Title: {{.title}}, Categories: {{.categories}}<br> {{end}}</html>`)
-	if err != nil {
-		fmt.Println(err)
-	}
-	templ.ExecuteTemplate(w, "posts", target)
 }
 
 func (h *Handler) PostHandler(w http.ResponseWriter, r *http.Request) {

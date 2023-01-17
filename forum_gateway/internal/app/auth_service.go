@@ -14,7 +14,6 @@ var oauthStateString = "pseudo-random"
 
 // SIGN UP
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Context().Value("authorised"))
 	if r.Context().Value("authorised") == true {
 
 		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
@@ -74,7 +73,6 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 
 // SIGN IN
 func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Context().Value("authorised"))
 	if r.Context().Value("authorised") == true {
 		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
 		return
@@ -134,7 +132,6 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	fmt.Println(sessionRes)
 	if sessionRes.Session.Token != "" {
 		cookie := http.Cookie{
 			Name:    "token",
@@ -143,21 +140,50 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 			Path:    "/",
 		}
 		http.SetCookie(w, &cookie)
-		http.Redirect(w, r, "/posts", 304)
+		http.Redirect(w, r, "/posts", 302)
 		return
 	}
 	h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 }
 
-func SignOutHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		w.WriteHeader(http.StatusBadRequest)
+func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Context().Value("authorised"))
+	if r.Context().Value("authorised") == false {
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
 		return
 	}
-	// if cookie, err := r.Cookie("token"); err == nil {
-	// 	token := cookie.Value
-	// 	session := Session{Token: token}
-	// }
+	if r.Method != http.MethodDelete {
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad request"}, "web/error.html")
+		return
+	}
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
+		return
+	}
+	token := cookie.Value
+	session := entity.Session{Token: token}
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	errChan := make(chan error)
+	go h.auUcase.SignOut(ctx, session, errChan)
+	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		return
+	case err = <-errChan:
+		switch err {
+		case entity.ErrRequestTimeout:
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
+		case nil:
+			http.Redirect(w, r, "/posts", 302) // FIXME: set cookie to empty session
+		default:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.go")
+		}
+	}
 }
 
 func SignInGoogleHandler(w http.ResponseWriter, r *http.Request) {

@@ -18,36 +18,38 @@ func NewAuthUsecase(errLog, infoLog *log.Logger) *AuthUsecase {
 	return &AuthUsecase{errLog: errLog, infoLog: infoLog}
 }
 
-func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credentials, errRes chan error) {
+func (au *AuthUsecase) SignUp(ctx context.Context, credentials entity.Credentials, errChan chan error) {
 	requestBody, err := json.Marshal(credentials)
 	if err != nil {
-		errRes <- entity.ErrInternalServer
+		errChan <- entity.ErrInternalServer
 		return
 	}
 	response, err := getAPIResponse(ctx, http.MethodPost, "http://localhost:8081/sign_up", requestBody)
 	if err != nil {
-		errRes <- entity.ErrInternalServer
+		errChan <- entity.ErrInternalServer
+		return
 	}
 	switch response.StatusCode {
 	case 405, 500:
-		errRes <- entity.ErrInternalServer
+		errChan <- entity.ErrInternalServer
 		return
 	case 408:
-		errRes <- entity.ErrRequestTimeout
+		errChan <- entity.ErrRequestTimeout
+		return
 	case 400:
 		r, err := getResponse(response.Body)
 		if err != nil {
-			errRes <- entity.ErrInternalServer
+			errChan <- entity.ErrInternalServer
 			return
 		}
 		if r.ErrorMessage == "User with a given email already exists" {
-			errRes <- entity.ErrEmailExists
+			errChan <- entity.ErrEmailExists
 			return
 		}
-		errRes <- entity.ErrInternalServer
+		errChan <- entity.ErrInternalServer
 		return
 	}
-	errRes <- nil
+	errChan <- nil
 }
 
 func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credentials, sessionChan chan entity.SessionResult) {
@@ -103,5 +105,29 @@ func (au *AuthUsecase) Authenticate(ctx context.Context, token string, authChan 
 		authChan <- getAuthStatus(response.Body)
 	default:
 		authChan <- entity.AuthStatusResult{Err: entity.ErrInternalServer}
+	}
+}
+
+func (au *AuthUsecase) SignOut(ctx context.Context, session entity.Session, errChan chan error) {
+	requestBody, err := json.Marshal(session)
+	if err != nil {
+		errChan <- entity.ErrInternalServer
+		return
+	}
+	response, err := getAPIResponse(ctx, http.MethodDelete, "http://localhost:8081/sign_out", requestBody)
+	if err != nil {
+		errChan <- entity.ErrInternalServer
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		errChan <- entity.ErrRequestTimeout
+		return
+	case 204:
+		errChan <- nil
+		return
+	default: // FIXME: 400??
+		errChan <- entity.ErrInternalServer
+		return
 	}
 }

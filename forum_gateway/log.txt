@@ -53,3 +53,29 @@ ERROR	2023/01/14 17:21:24 /home/student/forum-golang/forum_gateway/internal/app/
 INFO	2023/01/14 17:54:32 Listening on localhost:8082
 ERROR	2023/01/14 17:55:17 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:43: Invalid name format
 Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/17 16:08:45 Listening on localhost:8082
+ERROR	2023/01/17 16:09:28 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:55: Email already exists
+INFO	2023/01/17 16:40:22 Listening on localhost:8082
+ERROR	2023/01/17 16:40:37 /home/student/forum-golang/forum_gateway/internal/app/middleware.go:37: <nil>
+ERROR	2023/01/17 16:40:51 /home/student/forum-golang/forum_gateway/internal/app/middleware.go:37: <nil>
+ERROR	2023/01/17 16:43:45 /home/student/forum-golang/forum_gateway/internal/app/middleware.go:37: <nil>
+ERROR	2023/01/17 16:44:01 /home/student/forum-golang/forum_gateway/internal/app/middleware.go:37: <nil>
+INFO	2023/01/17 16:44:49 Listening on localhost:8082
+ERROR	2023/01/17 16:50:14 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:42: Invalid name format
+Name should be at least 5 symbols long and shouldn't contain empty space
+INFO	2023/01/17 16:55:10 Listening on localhost:8082
+INFO	2023/01/17 16:55:56 Listening on localhost:8082
+INFO	2023/01/17 16:58:29 Listening on localhost:8082
+INFO	2023/01/17 16:59:57 Listening on localhost:8082
+INFO	2023/01/17 17:04:16 Listening on localhost:8082
+INFO	2023/01/17 17:09:31 Listening on localhost:8082
+ERROR	2023/01/17 17:09:40 /home/student/forum-golang/forum_gateway/internal/app/response.go:12: open web/error.go: no such file or directory
+INFO	2023/01/17 17:09:56 Listening on localhost:8082
+INFO	2023/01/17 17:45:00 Listening on localhost:8082
+INFO	2023/01/17 17:46:12 Listening on localhost:8082
+INFO	2023/01/17 17:46:42 Listening on localhost:8082
+INFO	2023/01/17 17:50:16 Listening on localhost:8082
+INFO	2023/01/17 17:50:26 Listening on localhost:8082
+INFO	2023/01/17 17:51:53 Listening on localhost:8082
+INFO	2023/01/17 17:52:45 Listening on localhost:8082
+INFO	2023/01/17 17:53:08 Listening on localhost:8082
