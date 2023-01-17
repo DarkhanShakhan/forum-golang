@@ -1,7 +1,7 @@
 package entity
 
 type User struct {
-	Id                   int               `json:"id,omitempty"`
+	Id                   int64             `json:"id,omitempty"`
 	Name                 string            `json:"name,omitempty"`
 	Email                string            `json:"email,omitempty"`
 	Password             string            `json:"password,omitempty"`
@@ -30,7 +30,7 @@ func (u *User) CountTotals() {
 }
 
 type Result struct {
-	Id  int64
+	Id  int
 	Err error
 }
 

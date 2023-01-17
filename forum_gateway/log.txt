@@ -79,3 +79,22 @@ INFO	2023/01/17 17:50:26 Listening on localhost:8082
 INFO	2023/01/17 17:51:53 Listening on localhost:8082
 INFO	2023/01/17 17:52:45 Listening on localhost:8082
 INFO	2023/01/17 17:53:08 Listening on localhost:8082
+INFO	2023/01/18 00:16:50 Listening on localhost:8082
+INFO	2023/01/18 00:20:18 Listening on localhost:8082
+ERROR	2023/01/18 00:20:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:52: Not Found
+INFO	2023/01/18 00:20:59 Listening on localhost:8082
+INFO	2023/01/18 00:21:24 Listening on localhost:8082
+ERROR	2023/01/18 00:21:25 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:16: unexpected {{end}}
+INFO	2023/01/18 00:21:37 Listening on localhost:8082
+INFO	2023/01/18 00:22:10 Listening on localhost:8082
+ERROR	2023/01/18 00:24:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:121: Not Found
+INFO	2023/01/18 00:38:58 Listening on localhost:8082
+INFO	2023/01/18 00:41:49 Listening on localhost:8082
+INFO	2023/01/18 00:53:50 Listening on localhost:8082
+INFO	2023/01/18 00:57:53 Listening on localhost:8082
+INFO	2023/01/18 01:28:31 Listening on localhost:8082
+INFO	2023/01/18 01:30:23 Listening on localhost:8082
+INFO	2023/01/18 01:34:33 Listening on localhost:8082
+INFO	2023/01/18 02:11:28 Listening on localhost:8082
+INFO	2023/01/18 02:14:25 Listening on localhost:8082
+INFO	2023/01/18 02:31:41 Listening on localhost:8082

@@ -134,3 +134,7 @@ INFO	2023/01/13 18:50:58 Listening on localhost:8080
 INFO	2023/01/13 19:47:57 Listening on localhost:8080
 ERROR	2023/01/13 19:49:50 /home/student/forum-golang/forum_app/internal/user/repository/users_repository.go:125: UNIQUE constraint failed: users.email
 ERROR	2023/01/13 19:49:50 /home/student/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+INFO	2023/01/17 23:54:40 Listening on localhost:8080
+ERROR	2023/01/18 00:24:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/18 00:24:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
+INFO	2023/01/18 02:17:23 Listening on localhost:8080

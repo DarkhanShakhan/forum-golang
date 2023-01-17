@@ -7,9 +7,10 @@
     <title>Post Create</title>
 </head>
 <body>
-    <form action="/post/new" method="POST"> 
+    {{.ErrorMessage}}
+    <form action="/posts/new" method="POST"> 
         Enter a title for your post<br>
-        <textarea class="title" type="text" name="title"></textarea>
+        <textarea class="title" type="text" name="title"></textarea> <br>
         
         <div class="categories">
             Choose a category
@@ -17,6 +18,9 @@
             <input name ="category"  id="2" type="checkbox" value="2"> <label for="2">Category 2</label>
             <input name ="category" id="3" type="checkbox" value="3"> <label for="3">Category 3</label>
         </div>
+        <br>
+        Write<br>
+        <textarea class="content" type="text" name="content"></textarea>
         <input type="submit" value="Submit">
     </form>
 </body>

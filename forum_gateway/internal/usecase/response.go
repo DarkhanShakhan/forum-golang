@@ -25,8 +25,7 @@ func getResponse(response io.ReadCloser) (entity.Response, error) {
 }
 
 func getSession(response io.ReadCloser) (entity.Session, error) { // FIXME: change to SessionRes
-	temp := entity.Response{}
-	err := json.NewDecoder(response).Decode(&temp)
+	temp, err := getResponse(response)
 	if err != nil {
 		return entity.Session{}, err
 	}
@@ -37,6 +36,20 @@ func getSession(response io.ReadCloser) (entity.Session, error) { // FIXME: chan
 	session := entity.Session{}
 	err = json.Unmarshal(jsonSession, &session)
 	return session, err
+}
+
+func getPost(response io.ReadCloser) entity.PostResult {
+	temp, err := getResponse(response)
+	if err != nil {
+		return entity.PostResult{Err: err}
+	}
+	jsonPost, err := json.Marshal(temp.Body)
+	if err != nil {
+		return entity.PostResult{Err: err}
+	}
+	post := entity.Post{}
+	err = json.Unmarshal(jsonPost, &post)
+	return entity.PostResult{Err: err, Post: post}
 }
 
 func getAuthStatus(response io.ReadCloser) entity.AuthStatusResult {

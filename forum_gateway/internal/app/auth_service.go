@@ -147,7 +147,6 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Context().Value("authorised"))
 	if r.Context().Value("authorised") == false {
 		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
 		return

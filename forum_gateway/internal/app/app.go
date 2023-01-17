@@ -25,13 +25,14 @@ func Run() {
 
 	// forum
 	mux.Handle("/posts", h.Authenticate(http.HandlerFunc(h.PostsHandler))) // FIXME: change to "/""
-	// mux.Handle("/posts/", Authenticate(http.HandlerFunc(PostHandler)))
-	mux.Handle("/users", h.Authenticate(http.HandlerFunc(UsersHandler)))
-	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(UserHandler)))
-	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(CategoryHandler)))
-	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(PostCreateHandler)))
+	mux.Handle("/posts/", h.Authenticate(http.HandlerFunc(h.PostHandler)))
+	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(h.CreatePostHandler)))
+	mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(h.CreateCommentHandler)))
+	// mux.Handle("/users", h.Authenticate(http.HandlerFunc(UsersHandler)))
+	// mux.Handle("/users/", h.Authenticate(http.HandlerFunc(UserHandler)))
+	// mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(CategoryHandler)))
 
-	mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(CommentCreateHandler)))
+	// mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(CommentCreateHandler)))
 
 	// handler := Authenticate(mux)
 	srv := &http.Server{

@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"forum_gateway/internal/entity"
 	"log"
 	"net/http"
@@ -36,7 +38,54 @@ func (f *ForumUsecase) FetchPosts(ctx context.Context, responseChan chan entity.
 	}
 }
 
-func (f *ForumUsecase) FetchPost(id int, response chan entity.Response) {
+func (f *ForumUsecase) FetchPost(ctx context.Context, id int, responseChan chan entity.Response) {
+	response, err := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/post?id=%d", id), []byte{})
+	if err != nil {
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		responseChan <- entity.Response{Err: entity.ErrRequestTimeout}
+	case 200:
+		result, err := getResponse(response.Body)
+		if err != nil {
+			responseChan <- entity.Response{Err: entity.ErrInternalServer}
+			return
+		}
+		responseChan <- result
+	default:
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+	}
+}
+
+func (f *ForumUsecase) StorePost(ctx context.Context, post entity.Post, resChan chan entity.Result) {
+	body, err := json.Marshal(post)
+	if err != nil {
+		resChan <- entity.Result{Err: entity.ErrInternalServer}
+		return
+	}
+	response, err := getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/post/save", body)
+	if err != nil {
+		resChan <- entity.Result{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		resChan <- entity.Result{Err: entity.ErrRequestTimeout}
+	case 400:
+		resChan <- entity.Result{Err: entity.ErrBadRequest}
+	case 201:
+		resPost := getPost(response.Body)
+		if resPost.Err != nil {
+			f.errLog.Println(resPost.Err)
+			resChan <- entity.Result{Err: entity.ErrInternalServer}
+			return
+		}
+		resChan <- entity.Result{Id: resPost.Post.Id}
+	default:
+		resChan <- entity.Result{Err: entity.ErrInternalServer}
+	}
 }
 
 func (f *ForumUsecase) FetchUsers(response chan entity.Response) {

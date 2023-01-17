@@ -36,5 +36,6 @@ type AuthUsecase interface {
 
 type ForumUsecase interface {
 	FetchPosts(context.Context, chan entity.Response)
-	// FetchPost(context.Context, int, chan entity.PostResult)
+	FetchPost(context.Context, int, chan entity.Response)
+	StorePost(context.Context, entity.Post, chan entity.Result)
 }

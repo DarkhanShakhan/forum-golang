@@ -64,6 +64,8 @@ func New() (*sql.DB, error) {
 		return nil, err
 	}
 	db.Exec(`INSERT INTO categories(title) VALUES("golang")`)
+	db.Exec(`INSERT INTO categories(title) VALUES("python")`)
+	db.Exec(`INSERT INTO categories(title) VALUES("rust")`)
 	// FIXME: add categories
 	postCategories := `
 	CREATE TABLE IF NOT EXISTS post_categories (
