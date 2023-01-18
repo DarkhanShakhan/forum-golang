@@ -146,16 +146,12 @@ func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int, catRes ch
 		catRes <- entity.CatResult{Err: entity.ErrCategoryNotFound}
 		return
 	}
-	for ix, post := range category.Posts {
-		category.Posts[ix], err = u.postsRepo.FetchById(ctx, post.Id)
-		if err != nil {
-			u.errorLog.Println(err)
-		}
-		category.Posts[ix].User, err = u.usersRepo.FetchById(ctx, category.Posts[ix].User.Id)
-		if err != nil {
-			u.errorLog.Println(err)
-		}
-
+	for ix := range category.Posts {
+		category.Posts[ix], err = u.postsRepo.FetchById(ctx, category.Posts[ix].Id)
+		u.fetchPostDetails(ctx, &category.Posts[ix])
+		category.Posts[ix].Comments = nil
+		category.Posts[ix].Likes = nil
+		category.Posts[ix].Dislikes = nil
 	}
 	category.CountTotals()
 	catRes <- entity.CatResult{Cat: category}
