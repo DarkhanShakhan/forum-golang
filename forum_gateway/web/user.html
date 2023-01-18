@@ -7,13 +7,13 @@
     <title>User</title>
 </head>
 <body>
-    Name: {{.name}} <br>
-    Email: {{.email}} <br>
-    Total post likes: {{.total_post_likes}} <br>
-    Total post dislikes: {{.total_post_dislikes}} <br>
-    Total posts: {{.total_posts}} <br>
-    Posts: {{range.posts}} <br> 
-    Post title: <a href="/post/{{.id}}">{{.title}}</a> <br>
+    Name: {{.Body.name}} <br>
+    Email: {{.Body.email}} <br>
+    Total post likes: {{if .Body.total_post_likes}}{{.Body.total_post_likes}} {{else}} 0 {{end}}<br>
+    Total post dislikes: {{.Body.total_post_dislikes}} <br>
+    Total posts: {{.Body.total_posts}} <br>
+    Posts: {{range .Body.posts}} <br> 
+    Post title: <a href="/posts/{{.id}}">{{.title}}</a> <br>
     Post content: {{.content}} <br>
     Post date: {{.date}} <br>
     {{end}} <br>

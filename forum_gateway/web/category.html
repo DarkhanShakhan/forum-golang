@@ -7,12 +7,21 @@
     <title>Category</title>
 </head>
 <body>
-    ID: {{.id}} <br>
-    Title: {{.title}}<br>
-    Posts: <br>{{range.posts}}
-    Title - <a href="/post/{{.id}}">{{.title}}</a><br>
-    User - <a href="/user/{{.user.id}}">{{.user.name}}</a><br>
-    {{end}}<br>
+    {{.AuthStatus}} <br>
+    {{.Body.title}} <br>
+    {{.Body.total_posts}} <br><br>
+
+   {{range .Body.posts}}
+   <!-- {{.}} -->
+   <a href="/posts/{{.id}}">{{.title}}</a> <br>
+   {{if .content}}  {{.content}} <br>{{else}} {{end}}
+   {{range.categories}} 
+    <a href="/categories/{{.id}}">{{.title}}</a>
+   {{end}} 
+   {{.date}} <br>
+   <a href="/users/{{.user.id}}">{{.user.name}}</a> <br>
+   <br>
+   {{end}}
     <br>
 </body>
 </html>

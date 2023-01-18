@@ -119,11 +119,69 @@ func (f *ForumUsecase) StoreComment(ctx context.Context, comment entity.Comment,
 	}
 }
 
-func (f *ForumUsecase) FetchUsers(response chan entity.Response) {
+func (f *ForumUsecase) FetchUsers(ctx context.Context, responseChan chan entity.Response) {
+	response, err := getAPIResponse(ctx, http.MethodGet, "http://localhost:8080/users", []byte{})
+	if err != nil {
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		responseChan <- entity.Response{Err: entity.ErrRequestTimeout}
+	case 200:
+		result, err := getResponse(response.Body)
+		if err != nil {
+			responseChan <- entity.Response{Err: entity.ErrInternalServer}
+			return
+		}
+		responseChan <- result
+	default:
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+	}
 }
 
-func (f *ForumUsecase) FetchUser(id int, response chan entity.Response) {
+func (f *ForumUsecase) FetchUser(ctx context.Context, id int, responseChan chan entity.Response) {
+	response, err := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/user?id=%d", id), []byte{})
+	if err != nil {
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		responseChan <- entity.Response{Err: entity.ErrRequestTimeout}
+	case 200:
+		result, err := getResponse(response.Body)
+		if err != nil {
+			responseChan <- entity.Response{Err: entity.ErrInternalServer}
+			return
+		}
+		responseChan <- result
+	case 404:
+		responseChan <- entity.Response{Err: entity.ErrNotFound}
+	default:
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+	}
 }
 
-func (f *ForumUsecase) FetchCategory(response chan entity.Response) {
+func (f *ForumUsecase) FetchCategory(ctx context.Context, id int, responseChan chan entity.Response) {
+	response, err := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/category?id=%d", id), []byte{})
+	if err != nil {
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		responseChan <- entity.Response{Err: entity.ErrRequestTimeout}
+	case 200:
+		result, err := getResponse(response.Body)
+		if err != nil {
+			responseChan <- entity.Response{Err: entity.ErrInternalServer}
+			return
+		}
+		responseChan <- result
+	case 404:
+		responseChan <- entity.Response{Err: entity.ErrNotFound}
+	default:
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+	}
 }

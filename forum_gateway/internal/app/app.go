@@ -28,11 +28,9 @@ func Run() {
 	mux.Handle("/posts/", h.Authenticate(http.HandlerFunc(h.PostHandler)))
 	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(h.CreatePostHandler)))
 	mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(h.CreateCommentHandler)))
-	// mux.Handle("/users", h.Authenticate(http.HandlerFunc(UsersHandler)))
-	// mux.Handle("/users/", h.Authenticate(http.HandlerFunc(UserHandler)))
-	// mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(CategoryHandler)))
-
-	// mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(CommentCreateHandler)))
+	mux.Handle("/users", h.Authenticate(http.HandlerFunc(h.UsersHandler)))
+	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(h.UserHandler)))
+	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(h.CategoryHandler)))
 
 	// handler := Authenticate(mux)
 	srv := &http.Server{
