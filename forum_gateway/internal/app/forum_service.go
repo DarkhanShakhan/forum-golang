@@ -69,6 +69,8 @@ func (h *Handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 		case entity.ErrRequestTimeout:
 			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		case entity.ErrNotFound:
+			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "web/error.html")
 		case nil:
 			var auth interface{} = r.Context().Value("authorised")
 			response.AuthStatus, _ = auth.(bool)
@@ -103,7 +105,8 @@ func (h *Handler) postCreatePost(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusOK, entity.Response{ErrorMessage: err.Error()}, "web/post_create.html")
 		return
 	}
-	post.User.Id = r.Context().Value("user_id").(int64)
+	var id interface{} = r.Context().Value("user_id")
+	post.User.Id = id.(int64)
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	resChan := make(chan entity.Result)
@@ -136,7 +139,43 @@ func (h *Handler) CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method != http.MethodPost {
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad request"}, "web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "web/error.html")
+		return
+	}
+	r.ParseForm()
+	commentRes := entity.GetComment(r)
+	if commentRes.Err != nil {
+		h.errLog.Println(commentRes.Err)
+		if commentRes.Err == entity.ErrEmptyComment {
+			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Empty comment"}, "web/error.html")
+		} else {
+			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "web/error.html")
+		}
+		return
+	}
+
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	resChan := make(chan entity.Result)
+	var res entity.Result
+	go h.forumUcase.StoreComment(ctx, commentRes.Comment, resChan)
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		return
+	case res = <-resChan:
+		switch res.Err {
+		case entity.ErrBadRequest:
+			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "web/error.html")
+		case nil:
+			http.Redirect(w, r, fmt.Sprintf("/posts/%d", commentRes.Comment.Post.Id), 302)
+		case entity.ErrRequestTimeout:
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		default:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+		}
 	}
 }
 

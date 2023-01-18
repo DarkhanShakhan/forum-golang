@@ -9,4 +9,5 @@ var (
 	ErrInvalidPassword = errors.New("Invalid password")
 	ErrEmailExists     = errors.New("Email already exists")
 	ErrBadRequest      = errors.New("Bad Request")
+	ErrEmptyComment    = errors.New("Empty comment")
 )

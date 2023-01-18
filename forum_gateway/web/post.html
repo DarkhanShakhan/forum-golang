@@ -8,9 +8,30 @@
 </head>
 <body>
     AuthStatus: {{.AuthStatus}}<br>
-    {{.Body.id}} <br>
+    {{.Body.title}} <br>
     {{.Body.date}} <br>
-    {{.Body.categories}} <br>
-    {{.}} <br>
+    {{range .Body.categories}} 
+        <a href="/categories/{{.id}}">{{.title}} </a>
+    {{end}}
+    <br>
+    <br>
+    Comments: <br> <br>
+    {{range .Body.comments}}
+        {{.comment_content}} <br>
+        {{.comment_date}} <br>
+        <a href="/users/{{.user.id}}">{{.user.name}} </a><br><br>
+    {{end}}
+    {{if .AuthStatus}}
+    <form action="/comments/new" method="POST">
+        Write your comment <br>
+        <textarea class="content" type="text" name="content" required></textarea><br>
+        <input class ="post_id" type="hidden" name="post_id" value="{{.Body.id}}"/>
+        <input type="submit" value="Submit">
+        
+    </form>
+    {{else}}
+    {{end}}
 </body>
+
+
 </html>

@@ -54,6 +54,8 @@ func (f *ForumUsecase) FetchPost(ctx context.Context, id int, responseChan chan 
 			return
 		}
 		responseChan <- result
+	case 404:
+		responseChan <- entity.Response{Err: entity.ErrNotFound}
 	default:
 		responseChan <- entity.Response{Err: entity.ErrInternalServer}
 	}
@@ -83,6 +85,35 @@ func (f *ForumUsecase) StorePost(ctx context.Context, post entity.Post, resChan 
 			return
 		}
 		resChan <- entity.Result{Id: resPost.Post.Id}
+	default:
+		resChan <- entity.Result{Err: entity.ErrInternalServer}
+	}
+}
+
+func (f *ForumUsecase) StoreComment(ctx context.Context, comment entity.Comment, resChan chan entity.Result) {
+	body, err := json.Marshal(comment)
+	if err != nil {
+		resChan <- entity.Result{Err: entity.ErrInternalServer}
+		return
+	}
+	response, err := getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/comment/save", body)
+	if err != nil {
+		resChan <- entity.Result{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		resChan <- entity.Result{Err: entity.ErrRequestTimeout}
+	case 400:
+		resChan <- entity.Result{Err: entity.ErrBadRequest}
+	case 201:
+		resComment := getComment(response.Body)
+		if resComment.Err != nil {
+			f.errLog.Println(resComment.Err)
+			resChan <- entity.Result{Err: entity.ErrInternalServer}
+			return
+		}
+		resChan <- entity.Result{Id: resComment.Comment.Id}
 	default:
 		resChan <- entity.Result{Err: entity.ErrInternalServer}
 	}

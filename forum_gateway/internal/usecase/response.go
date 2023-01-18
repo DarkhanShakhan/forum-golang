@@ -68,3 +68,17 @@ func getAuthStatus(response io.ReadCloser) entity.AuthStatusResult {
 	}
 	return authStatus
 }
+
+func getComment(response io.ReadCloser) entity.CommentResult {
+	temp, err := getResponse(response)
+	if err != nil {
+		return entity.CommentResult{Err: err}
+	}
+	jsonComment, err := json.Marshal(temp.Body)
+	if err != nil {
+		return entity.CommentResult{Err: err}
+	}
+	comment := entity.Comment{}
+	err = json.Unmarshal(jsonComment, &comment)
+	return entity.CommentResult{Err: err, Comment: comment}
+}
