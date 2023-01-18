@@ -30,7 +30,7 @@ func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getSignUp(w http.ResponseWriter, r *http.Request) {
-	h.APIResponse(w, http.StatusOK, entity.Response{}, "web/sign_up.html")
+	h.APIResponse(w, http.StatusOK, entity.Response{}, "templates/registration.html")
 }
 
 func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 	ok, message := credentials.ValidateSignUp(confirm_password)
 	if !ok {
 		h.errLog.Println(message)
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "web/sign_up.html")
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "templates/registration.html")
 		return
 	}
 	ctx, cancel := getTimeout(r.Context())
@@ -54,7 +54,7 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 			h.errLog.Println(err)
 			switch err {
 			case entity.ErrEmailExists:
-				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "user with a given email already exists"}, "web/sign_up.html")
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "user with a given email already exists"}, "templates/registration.html")
 				return
 			case entity.ErrRequestTimeout:
 				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
@@ -88,7 +88,7 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getSignIn(w http.ResponseWriter, r *http.Request) {
-	h.APIResponse(w, http.StatusOK, entity.Response{}, "web/sign_in.html")
+	h.APIResponse(w, http.StatusOK, entity.Response{}, "templates/login.html")
 }
 
 func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +98,7 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 	ok, message := credentials.ValidateSignIn()
 	if !ok {
 		h.errLog.Println(message)
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "web/sign_in.html")
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: message}, "templates/login.html")
 		return
 	}
 	// FIXME: validate credentials
@@ -121,9 +121,9 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 			h.errLog.Println(err)
 			switch err {
 			case entity.ErrNotFound:
-				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "User with a given email doesn't exist"}, "web/sign_in.html")
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "User with a given email doesn't exist"}, "templates/login.html")
 			case entity.ErrInvalidPassword:
-				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Invalid password"}, "web/sign_in.html")
+				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Invalid password"}, "templates/login.html")
 			case entity.ErrRequestTimeout:
 				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
 			default:

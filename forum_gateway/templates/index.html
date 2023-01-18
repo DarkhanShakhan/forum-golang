@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/templates/css/style.css" rel="stylesheet" type="text/css" />
+    <title>Forum</title>
+</head>
+
+<body>
+    <div id="wrapper" style="width: 98%">
+        <div id="header">
+            <div class="frame">
+                <div id="top_section">
+                    {{if .Unauthorized}}
+                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
+                            href="signup_page">зарегистрируйтесь</a>.
+                    </div>
+                    {{end}}
+                </div>
+                <div id="upper_section" class="middletext">
+                    <div class="forumtitle clear">
+                        <h1 class="forumtitle">
+                            <a href="/">Форум школы Алем</a>
+                        </h1>
+                    </div>
+                </div>
+                <div id="main_menu">
+                    <ul class="dropmenu" id="menu_nav">
+                        <li id="button_home">
+                            <a class="active firstlevel" href="/">
+                                <span class="last firstlevel"><img src="/templates/img/buttons/home.png" />Начало</span>
+                            </a>
+                        </li>
+                        <li id="button_home">
+                            <a class="firstlevel" href="/all_users_page/">
+                                <span class="last firstlevel"><img
+                                        src="/templates/img/icons/members.png" />Пользователи</span>
+                            </a>
+                        </li>
+                        <li id="button_search">
+                            <a class="firstlevel" href="/search_page/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
+                            </a>
+                        </li>
+                        {{if .Admin}}
+                        <li id="button_add_category">
+                            <a class="firstlevel" href="/create_category_page/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/calendar.png" />Добавить
+                                    тему</span>
+                            </a>
+                        </li>
+                        {{end}}
+                        {{if .Unauthorized}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/signin_page/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
+                            </a>
+                        </li>
+                        <li id="button_register">
+                            <a class="firstlevel" href="/signup_page/">
+                                <span class="last firstlevel"><img
+                                        src="/templates/img/buttons/register.png" />Регистрация</span>
+                            </a>
+                        </li>
+                        {{end}}
+                        {{if .Authorized}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/create_post_page/">
+                                <span class="firstlevel"><img src="/templates/img/icons/last_post.gif" />Написать
+                                    пост</span>
+                            </a>
+                        </li>
+                        <li id="button_login">
+                            <a class="firstlevel" href="/users/{{.User.Id}}">
+                                <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
+                            </a>
+                        </li>
+                        <li id="button_login">
+                            <a class="firstlevel" href="/signout/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            </a>
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="content_section">
+            <div class="frame">
+                <div id="main_content_section">
+                    <a id="top"></a>
+                    <div class="tborder topic_table" id="messageindex">
+                        <table class="table_grid" cellspacing="0">
+                            <thead>
+                                <tr class="catbg3">
+                                    <th scope="col" class="first_th" width="6%" colspan="2">&nbsp;</th>
+                                    <th scope="col" class="lefttext">
+                                        Пост/Автор</th>
+                                    <th scope="col" width="7%">
+                                        Комментариев
+                                    </th>
+                                    <th scope="col" class="smalltext center" width="7%">
+                                        Лайков/Дизлайков</th>
+                                    <th scope="col" class="smalltext center" width="12%">
+                                        Последний ответ</th>
+                                </tr>
+                            </thead>
+                            {{if .Authorized}}
+                            {{range .Posts}}
+                            <tr>
+                                <td class="icon1 windowbg">
+                                    <img src="/templates/img/topic/veryhot_post_sticky.gif">
+                                </td>
+                                <td class="icon2 windowbg">
+                                    <img src="/templates/img/post/xx.gif" />
+                                </td>
+                                <td class="subject stickybg2">
+                                    <div class="post_title">
+                                        <strong>
+                                            <span>
+                                                <a href="/posts/{{.Id}}">{{.Title}}</a> <br>
+                                                Темы: {{range .Categories}}
+                                                <a href="/categories/{{.}}">{{.}}</a>
+                                                {{end}}
+                                            </span>
+                                        </strong>
+                                        <p>Автор: <a href="/users/{{.User.Id}}">{{.User.Name}}</a>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="stats windowbg">
+                                    <a href="/posts/{{.Id}}">{{.TotalComments}}</a>
+                                </td>
+                                <td class="stats windowbg">
+                                    <a href="/find_reacted_users/post/liked/{{.Id}}">{{.TotalLikes}}</a> / <a
+                                        href="/find_reacted_users/post/disliked/{{.Id}}">{{.TotalDislikes}}</a>
+                                </td>
+                                <td class="lastpost windowbg2">
+                                    {{if .LastCommentExist}}
+                                    <a href="/posts/{{.Id}}#{{.LastComment.Id}}"><img
+                                            src="/templates/img/icons/last_post.gif" alt="Последний ответ"
+                                            title="Последний комментарий"></a>
+                                    {{.LastComment.Date}}<br>
+                                    от <a href="/users/{{.LastComment.User.Id}}">{{.LastComment.User.Name}}</a>
+                                    {{end}}
+                                </td>
+                            </tr>
+                            {{end}}
+                            {{end}}
+                            {{if .Unauthorized}}
+                            {{range .Posts}}
+                            <tr>
+                                <td class="icon1 windowbg">
+                                    <img src="/templates/img/topic/veryhot_post_sticky.gif">
+                                </td>
+                                <td class="icon2 windowbg">
+                                    <img src="/templates/img/post/xx.gif" />
+                                </td>
+                                <td class="subject stickybg2">
+                                    <div class="post_title">
+                                        <strong>
+                                            <span>
+                                                <a href="/posts/{{.Id}}">{{.Title}}</a> <br>
+                                                Темы: {{range .Categories}}
+                                                <a href="/categories/{{.}}">{{.}}</a>
+                                                {{end}}
+                                            </span>
+                                        </strong>
+                                        <p>Автор: <a href="/users/{{.User.Id}}">{{.User.Name}}</a>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="stats windowbg">
+                                    <a href="/posts/{{.Id}}">{{.TotalComments}}</a>
+                                </td>
+                                <td class="stats windowbg">
+                                    {{.TotalLikes}} / {{.TotalDislikes}}
+                                </td>
+                                <td class="lastpost windowbg2">
+                                    {{if .LastCommentExist}}
+                                    <a href="/posts/{{.Id}}#{{.LastComment.Id}}"><img
+                                            src="/templates/img/icons/last_post.gif" alt="Последний ответ"
+                                            title="Последний комментарий"></a>
+                                    {{.LastComment.Date}}<br>
+                                    от <a href="/users/{{.LastComment.User.Id}}">{{.LastComment.User.Name}}</a>
+                                    {{end}}
+                                </td>
+                            </tr>
+                            {{end}}
+                            {{end}}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footer_section">
+            <div class="frame">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

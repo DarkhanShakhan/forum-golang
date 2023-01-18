@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/templates/css/style.css" rel="stylesheet" type="text/css" />
+    <title>Forum</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<body>
+
+    <div id="wrapper" style="width: 98%">
+        <div id="header">
+            <div class="frame">
+                <div id="top_section">
+                    {{if .Unauthorized}}
+                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
+                            href="signup_page">зарегистрируйтесь</a>.
+                    </div>
+                    {{end}}
+                </div>
+                <div id="upper_section" class="middletext">
+                    <div class="forumtitle clear">
+                        <h1 class="forumtitle">
+                            <a href="/">Форум школы Алем</a>
+                        </h1>
+                    </div>
+                </div>
+                <div id="main_menu">
+                    <ul class="dropmenu" id="menu_nav">
+                        <li id="button_home">
+                            <a class="active firstlevel" href="/">
+                                <span class="last firstlevel"><img src="/templates/img/buttons/home.png" />Начало</span>
+                            </a>
+                        </li>
+                        {{if .Admin}}
+                        <li id="button_add_category">
+                            <a class="firstlevel" href="/create_category_page/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/calendar.png" />Добавить
+                                    тему</span>
+                            </a>
+                        </li>
+                        {{end}}
+                        {{if .Unauthorized}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/signin_page/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
+                            </a>
+                        </li>
+                        <li id="button_register">
+                            <a class="firstlevel" href="/signup_page/">
+                                <span class="last firstlevel"><img
+                                        src="/templates/img/buttons/register.png" />Регистрация</span>
+                            </a>
+                        </li>
+                        {{end}}
+                        {{if .Authorized}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/create_post_page/">
+                                <span class="firstlevel"><img src="/templates/img/icons/last_post.gif" />Написать
+                                    пост</span>
+                            </a>
+                        </li>
+                        <li id="button_login">
+                            <a class="firstlevel" href="/users/{{.User.Id}}">
+                                <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
+                            </a>
+                        </li>
+                        <li id="button_login">
+                            <a class="firstlevel" href="/signout/">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            </a>
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="content_section">
+            <div class="frame">
+                <div id="main_content_section">
+                    <div class="navigate_section">
+                        <ul>
+                            <li><img src="/templates/img/icons/folder_open.png">
+                            </li>
+                            <li>
+                                <a href="/"><span>Форум школы Алем</span></a> »
+                            </li>
+                            <li class="last">
+                                <a href="/edit_profile_page/{{.User.Id}}"><span>Редактировать профайл</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <form action="/edit_profile/{{.User.Id}}" name="frmLogin" id="frmLogin" method="post">
+                        <div class="tborder login">
+                            <div class="cat_bar">
+                                <h3 class="catbg">
+                                    <span class="ie6_header floatleft"><img src="/templates/img/icons/login_sm.gif"
+                                            class="icon"> Редактировать профайл</span>
+                                </h3>
+                            </div>
+                            <span class="upperframe"><span></span></span>
+                            <div class="roundframe"><br class="clear">
+                                <dl>
+                                    {{if .Admin}}
+                                    <dt>Id ползователя:</dt>
+                                    <dd><input type="text" name="id" size="20" class="input_text">
+                                    </dd>
+                                    {{end}}
+                                    <dt>Город:</dt>
+                                    <dd><input type="text" name="city" size="20" class="input_text">
+                                    </dd>
+                                    <dt>Дата рождения:</dt>
+                                    <dd><input name="date_of_birth" type="date" size="20" class="input_text">
+                                    </dd>
+                                    <dt>Пол:</dt>
+                                    <dd><input type="radio" name="gender" value="Male"> М
+                                        <input type="radio" name="gender" value="Female"> Ж
+                                    </dd>
+                                    <dt>Подпись:</dt>
+                                    <dd><input name="sign" type="text" size="20" class="input_text">
+                                    </dd>
+                                    {{if .Admin}}
+                                    <dt>Роль:</dt>
+                                    <dd><input name="role" type="text" size="20" class="input_text">
+                                    </dd>
+                                    {{end}}
+                                </dl>
+                                <p><input type="submit" value="Отправить" class="button_submit"></p>
+                            </div>
+                            <span class="lowerframe"><span></span></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="footer_section">
+            <div class="frame">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

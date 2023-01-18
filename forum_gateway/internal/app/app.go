@@ -32,6 +32,9 @@ func Run() {
 	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(h.UserHandler)))
 	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(h.CategoryHandler)))
 
+	mux.Handle("/templates/css/", http.StripPrefix("/templates/css/", http.FileServer(http.Dir("templates/css"))))
+	mux.Handle("/templates/img/", http.StripPrefix("/templates/img/", http.FileServer(http.Dir("templates/img"))))
+
 	// handler := Authenticate(mux)
 	srv := &http.Server{
 		Addr:    "localhost:8082",

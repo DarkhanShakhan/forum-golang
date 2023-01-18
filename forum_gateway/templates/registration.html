@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/templates/css/style.css" rel="stylesheet" type="text/css" />
+    <title>Forum</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<body>
+
+    <div id="wrapper" style="width: 98%">
+        <div id="header">
+            <div class="frame">
+                <div id="top_section">
+                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
+                            href="signup_page">зарегистрируйтесь</a>.
+                    </div>
+                </div>
+                <div id="upper_section" class="middletext">
+                    <div class="forumtitle clear">
+                        <h1 class="forumtitle">
+                            <a href="/">Форум школы Алем</a>
+                        </h1>
+                    </div>
+                </div>
+                <div id="main_menu">
+                    <ul class="dropmenu" id="menu_nav">
+                        <li id="button_home">
+                            <a class="active firstlevel" href="/">
+                                <span class="last firstlevel"><img src="/templates/img/buttons/home.png" />Начало</span>
+                            </a>
+                        </li>
+                        <li id="button_login">
+                            <a class="firstlevel" href="/sign_in">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
+                            </a>
+                        </li>
+                        <li id="button_register">
+                            <a class="firstlevel" href="/sign_up">
+                                <span class="last firstlevel"><img
+                                        src="/templates/img/buttons/register.png" />Регистрация</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="content_section">
+            <div class="frame">
+                <div id="main_content_section">
+                    <div class="navigate_section">
+                        <ul>
+                            <li><img src="/templates/img/icons/folder_open.png">
+                            </li>
+                            <li>
+                                <a href="/"><span>Форум школы Алем</span></a> »
+                            </li>
+                            <li class="last">
+                                <a href="/signin_page"><span>Вход</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <form action="/sign_up" name="frmLogin" id="frmLogin" method="post">
+                        <div class="tborder login">
+                            <div class="cat_bar">
+                                <h3 class="catbg">
+                                    <span class="ie6_header floatleft"><img src="/templates/img/icons/login_sm.gif"
+                                            class="icon"> Вход</span>
+                                </h3>
+                            </div>
+                            <span class="upperframe"><span></span></span>
+                            <div class="roundframe"><br class="clear">
+                                <p class="error">{{.ErrorMessage}}</p>
+                                <dl>
+                                    <dt>Имя пользователя:</dt>
+                                    <dd><input type="text" name="name" size="20" class="input_text" required="required">
+                                    </dd>
+                                    <dt>Почта:</dt>
+                                    <dd><input type="text" name="email" size="20" class="input_text" required="required">
+                                    </dd>
+                                    <dt>Пароль:</dt>
+                                    <dd><input name="password" id="password" type="password" minlength="5"
+                                            maxlength="14" size="20" class="input_text" required="required">
+                                    </dd>
+                                    <dt>Подтверждение пароля:</dt>
+                                    <dd><input name="confirm_password" id="confirm_password" type="password"
+                                            minlength="5" maxlength="14" size="20" class="input_text"
+                                            required="required">
+                                    </dd>
+                                </dl>
+                                <p><input type="submit" value="Создать" class="button_submit"></p>
+                            </div>
+                            <span class="lowerframe"><span></span></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="footer_section">
+            <div class="frame">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
