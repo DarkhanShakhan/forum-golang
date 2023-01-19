@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  app:
+    build: forum_app
+    restart: on-failure
+    network_mode: "host"
+  auth:
+    build: forum_auth
+    restart: on-failure
+    network_mode: "host"
+  gateway:
+    build: forum_gateway
+    restart: on-failure
+    network_mode: "host"
