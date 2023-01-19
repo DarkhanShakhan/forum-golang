@@ -37,7 +37,7 @@ func Run() {
 
 	// handler := Authenticate(mux)
 	srv := &http.Server{
-		Addr:    "localhost:8082",
+		Addr:    ":8082",
 		Handler: mux,
 	}
 	infoLog.Println("Listening on localhost:8082")

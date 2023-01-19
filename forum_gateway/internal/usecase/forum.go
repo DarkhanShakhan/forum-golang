@@ -20,6 +20,7 @@ func NewForumUsecase(errLog *log.Logger) *ForumUsecase {
 func (f *ForumUsecase) FetchPosts(ctx context.Context, responseChan chan entity.Response) {
 	response, err := getAPIResponse(ctx, http.MethodGet, "http://localhost:8080/posts", []byte{})
 	if err != nil {
+		fmt.Println("here")
 		responseChan <- entity.Response{Err: entity.ErrInternalServer}
 		return
 	}

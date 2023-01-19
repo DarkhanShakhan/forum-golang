@@ -45,7 +45,7 @@ func Run() {
 	// delete
 	mux.HandleFunc("/post_reaction/delete", h.DeletePostReactionHandler)
 	srv := &http.Server{
-		Addr:     "localhost:8080",
+		Addr:     ":8080",
 		ErrorLog: errLog,
 		Handler:  mux,
 	}
