@@ -230,3 +230,28 @@ ERROR	2023/01/25 01:57:00 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/25 01:57:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:121: Not Found
 ERROR	2023/01/25 01:58:37 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:50: Not Found
 INFO	2023/01/25 03:18:21 Listening on localhost:8082
+INFO	2023/01/25 23:39:47 Listening on localhost:8082
+ERROR	2023/01/25 23:45:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:104: function "Body" not defined
+ERROR	2023/01/25 23:45:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:104: function "Body" not defined
+ERROR	2023/01/25 23:59:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:219: unexpected {{end}}
+ERROR	2023/01/25 23:59:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:219: unexpected {{end}}
+ERROR	2023/01/26 00:09:44 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:217: unexpected {{end}}
+ERROR	2023/01/26 00:10:34 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:216: unexpected {{end}}
+ERROR	2023/01/26 00:10:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:209: unexpected {{end}}
+ERROR	2023/01/26 00:11:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:173: unexpected {{else}}
+ERROR	2023/01/26 00:11:11 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:173: unexpected {{else}}
+ERROR	2023/01/26 00:12:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:224: unexpected EOF
+ERROR	2023/01/26 00:12:16 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:224: unexpected EOF
+ERROR	2023/01/26 00:22:22 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:217: unexpected "}" in operand
+ERROR	2023/01/26 00:22:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:100: Invalid password format
+Password should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols
+INFO	2023/01/26 00:41:45 Listening on localhost:8082
+INFO	2023/01/26 00:45:16 Listening on localhost:8082
+INFO	2023/01/26 00:50:31 Listening on localhost:8082
+INFO	2023/01/26 00:50:59 Listening on localhost:8082
+INFO	2023/01/26 00:53:00 Listening on localhost:8082
+ERROR	2023/01/26 01:03:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: post.html:43: unexpected "}" in operand
+INFO	2023/01/26 01:07:31 Listening on localhost:8082
+INFO	2023/01/26 01:12:29 Listening on localhost:8082
+ERROR	2023/01/26 01:14:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: user.html:79: unexpected . after term "."
+INFO	2023/01/26 01:51:09 Listening on localhost:8082

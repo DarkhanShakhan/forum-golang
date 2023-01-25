@@ -76,7 +76,6 @@
                             <li>
                                 <a href="/"><span>Форум школы Алем</span></a> »
                             </li>
-                            {{.Body.title}}
                             <li class="last">
                                 <a href="/posts/{{.Body.id}}"><span>{{.Body.title}}</span></a>
                             </li>
@@ -98,28 +97,12 @@
                                 <div class="post_wrapper">
                                     <div class="poster">
                                         <h4>
-                                            <a href="/users/{{.Post.User.Id}}"
-                                                title="Просмотр профиля {{.Post.User.Name}}">{{.Post.User.Name}}</a>
+                                            <a href="/users/{{.Body.user.id}}"
+                                                title="Просмотр профиля {{.Body.user.name}}">{{.Body.user.name}}</a>
                                         </h4>
                                         <ul class="reset smalltext">
-                                            <li class="postgroup">{{.Post.User.Role}}</li>
-                                            {{if .Post.User.Male}}
-                                            <li class="postcount">Пол: <img src="/templates/img/Male.gif"
-                                                    title="Мужской"></li>
-                                            {{end}}
-                                            {{if .Post.User.Female}}
-                                            <li class="postcount">Пол: <img src="/templates/img/Female.gif"
-                                                    title="Женский"></li>
-                                            {{end}}
-                                            <li class="avatar">
-                                                <!-- <a href="/users/{{.Post.User.Id}}">
-                                                    <img class="avatar"
-                                                        src="avatars/Musicians/Bob_Marley.jpg"
-                                                        alt="">
-                                                </a> -->
-                                            </li>
-                                            <li class="postcount">Постов: {{.Post.User.Posts}}</li>
-                                            <li class="postcount">Комментариев: {{.Post.User.Comments}}</li>
+                                            <li class="postcount">Постов: {{if .Body.user.total_posts}} {{.Body.user.total_posts}}{{else}}0{{end}}</li>
+                                            <li class="postcount">Комментариев: {{if .Body.user.total_comments}} {{.Body.user.total_comments}}{{else}}0{{end}}</li>
                                             <li class="profile">
                                                 <ul>
                                                 </ul>
@@ -133,185 +116,126 @@
                                                     <img src="/templates/img/post/xx.gif">
                                                 </div>
                                                 <h5>
-                                                    {{.Post.Title}}
+                                                    {{.Body.title}}
                                                 </h5>
-                                                <div class="smalltext"><strong></strong> {{.Post.Date}}
+                                                <div class="smalltext"><strong></strong> {{.Body.date}}
                                                 </div>
                                                 <div></div>
                                             </div>
                                             <div class="reactions">
-                                                {{if .Authorized}}
-                                                <div class="reaction"> <a href="/put_post_like/{{.Post.Id}}"><img
+                                                {{if .AuthStatus}}
+                                                <div class="reaction"> <a href="/put_post_like/{{.Body.id}}"><img
                                                             src="/templates/img/post/like.png"></a> <a
-                                                        href="/find_reacted_users/post/liked/{{.Post.Id}}">{{.Post.TotalLikes}}</a>
-                                                    <a href="/put_post_dislike/{{.Post.Id}}"><img
+                                                        href="/find_reacted_users/post/liked/{{.Body.id}}"> {{if .Body.total_likes}}{{.Body.total_likes}}{{else}}0{{end}}</a>
+                                                    <a href="/put_post_dislike/{{.Body.Id}}"><img
                                                             src="/templates/img/post/dislike.png"></a> <a
-                                                        href="/find_reacted_users/post/disliked/{{.Post.Id}}">{{.Post.TotalDislikes}}</a>
+                                                        href="/find_reacted_users/post/disliked/{{.Body.id}}">{{if .Body.total_dislikes}}{{.Body.total_dislikes}}{{else}}0{{end}}</a>
                                                 </div>
-                                                {{end}}
-                                                {{if .Unauthorized}}
+                                                {{else}}
                                                 <div class="reaction"><img src="/templates/img/post/like.png">
-                                                    {{.Post.TotalLikes}} <img
-                                                        src="/templates/img/post/dislike.png">{{.Post.TotalDislikes}}
+                                                    {{if .Body.total_likes}}{{.Body.total_likes}}{{else}}0{{end}}
+                                                    <img src="/templates/img/post/dislike.png">{{if .Body.total_dislikes}}{{.Body.total_dislikes}}{{else}}0{{end}}
                                                 </div>
                                                 {{end}}
                                             </div>
                                         </div>
                                         <div class="post">
                                             <div class="inner">
-                                                {{range .Post.ContentWeb}}
-                                                {{.}} <br>
+                                                {{if .Body.content}}
+                                                {{.Body.content}}
+                                                {{else}}
                                                 {{end}}
                                             </div>
 
                                         </div>
-                                    </div>
-                                    <div class="moderatorbar">
-                                        <div class="signature"><em>{{.Post.User.Sign}}</em></div>
                                     </div>
                                 </div>
                                 <span class="botslice"><span></span></span>
                             </div>
                             <hr class="post_separator">
                             <a></a>
-                            {{if .Authorized}}
-                            {{range .Post.Comments}}
+                            {{range .Body.comments}}
+
                             <div class="windowbg2">
                                 <span class="topslice"><span></span></span>
                                 <div class="post_wrapper">
                                     <div class="poster">
                                         <h4>
-                                            <a href="/users/{{.User.Id}}"
-                                                title="Просмотр профиля {{.User.Name}}">{{.User.Name}}</a>
+                                            <a href="/users/{{.user.id}}"
+                                                title="Просмотр профиля {{.user.name}}">{{.user.name}}</a>
                                         </h4>
                                         <ul class="reset smalltext">
-                                            <li class="postgroup">{{.User.Role}}</li>
-                                            {{if .User.Male}}
-                                            <li class="postcount">Пол: <img src="/templates/img/Male.gif"
-                                                    title="Мужской"></li>
-                                            {{end}}
-                                            {{if .User.Female}}
-                                            <li class="postcount">Пол: <img src="/templates/img/Female.gif"
-                                                    title="Женский"></li>
-                                            {{end}}
-                                            <li class="avatar">
+                                            <li class="postcount">Постов: {{if .user.total_posts}}
+                                                {{.user.total_posts}}{{else}}0{{end}}</li>
+                                            <li class="postcount">Комментариев: {{if .user.total_comments}}
+                                                {{.user.total_comments}}{{else}}0{{end}}
                                             </li>
-                                            <li class="postcount">Постов: {{.User.Posts}}</li>
-                                            <li class="postcount">Комментариев: {{.User.Comments}}</li>
                                             <li class="profile">
                                                 <ul>
                                                 </ul>
                                             </li>
                                         </ul>
                                     </div>
+                                   
                                     <div class="postarea">
                                         <div class="flow_hidden">
                                             <div class="keyinfo">
                                                 <div class="messageicon">
                                                     <img src="/templates/img/post/xx.gif">
                                                 </div>
-                                                <h5 id="{{.Id}}">
+                                                <h5 id="{{.id}}">
                                                 </h5>
                                                 <div class="smalltext number"><strong></strong>
-                                                    {{.Date}}
+                                                    {{.date}}
                                                 </div>
                                                 <div></div>
                                             </div>
                                             <div class="reactions">
-                                                <div class="reaction"> <a href="/put_comment_like/{{.Id}}"><img
+                                                <div class="reaction"> <a href="/put_comment_like/{{.id}}"><img
                                                             src="/templates/img/post/comment-like.png"></a> <a
-                                                        href="/find_reacted_users/comment/liked/{{.Id}}">{{.TotalLikes}}</a>
-                                                    <a href="/put_comment_dislike/{{.Id}}"><img
+                                                        href="/find_reacted_users/comment/liked/{{.id}}">{{if .total_likes}}{{.total_likes}}{{else}}0{{end}}</a>
+                                                    <a href="/put_comment_dislike/{{.id}}"><img
                                                             src="/templates/img/post/comment-dislike.png"></a> <a
-                                                        href="/find_reacted_users/comment/disliked/{{.Id}}">{{.TotalDislikes}}</a>
+                                                        href="/find_reacted_users/comment/disliked/{{.id}}">{{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}</a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="post">
                                             <div class="inner">
-                                                {{range .ContentWeb}}
-                                                {{.}} <br>
-                                                {{end}}
+                                                {{.comment_content}}
                                             </div>
+    
                                         </div>
-                                    </div>
-                                    <div class="moderatorbar">
-                                        <div class="signature"><em>{{.User.Sign}}</em></div>
                                     </div>
                                 </div>
                                 <span class="botslice"><span></span></span>
                             </div>
+                            {{end}}
                             <hr class="post_separator">
-                            {{end}}
-                            {{end}}
-                            {{if .Unauthorized}}
-                            {{range .Post.Comments}}
-                            <div class="windowbg2">
-                                <span class="topslice"><span></span></span>
-                                <div class="post_wrapper">
-                                    <div class="poster">
-                                        <h4>
-                                            <a href="/users/{{.User.Id}}"
-                                                title="Просмотр профиля {{.User.Name}}">{{.User.Name}}</a>
-                                        </h4>
-                                        <ul class="reset smalltext">
-                                            <li class="postgroup">{{.User.Role}}</li>
-                                            {{if .User.Male}}
-                                            <li class="postcount">Пол: <img src="/templates/img/Male.gif"
-                                                    title="Мужской"></li>
-                                            {{end}}
-                                            {{if .User.Female}}
-                                            <li class="postcount">Пол: <img src="/templates/img/Female.gif"
-                                                    title="Женский"></li>
-                                            {{end}}
-                                            <li class="avatar">
-                                            </li>
-                                            <li class="postcount">Постов: {{.User.Posts}}</li>
-                                            <li class="postcount">Комментариев: {{.User.Comments}}</li>
-                                            <li class="profile">
-                                                <ul>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="postarea">
-                                        <div class="flow_hidden">
-                                            <div class="keyinfo">
-                                                <div class="messageicon">
-                                                    <img src="/templates/img/post/xx.gif">
-                                                </div>
-                                                <h5 id="{{.Id}}">
-                                                </h5>
-                                                <div class="smalltext number"><strong></strong>
-                                                    {{.Date}}
-                                                </div>
-                                                <div></div>
-                                            </div>
-                                            <div class="reactions">
-                                                <div class="reaction"><img src="/templates/img/post/comment-like.png">
-                                                    {{.TotalLikes}} <img
-                                                        src="/templates/img/post/comment-dislike.png">{{.TotalDislikes}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="post">
-                                            <div class="inner">
-                                                {{range .ContentWeb}}
-                                                {{.}} <br>
-                                                {{end}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="moderatorbar">
-                                        <div class="signature"><em>{{.User.Sign}}</em></div>
-                                    </div>
-                                </div>
-                                <span class="botslice"><span></span></span>
-                            </div>
-                            <hr class="post_separator">
-                            {{end}}
-                            {{end}}
+                           
                         </form>
+                        {{if .AuthStatus}}
+                        <form action="/comments/new" name="frmLogin" id="frmLogin" method="POST">
+                            <div>
+                                <div class="cat_bar">
+                                    <h3 class="catbg">
+                                        <span class="ie6_header floatleft"><img src="/templates/img/topic/hot_post.gif"
+                                                class="icon">Новый комментарий</span>
+                                    </h3>
+                                </div>
+                                <span class="upperframe"><span></span></span>
+                                <div class="roundframe"><br class="clear">
+                                    <dl>
+                                        <dt>Содержание:</dt>
+                                        <textarea name="content" class="input_post" required="required"></textarea>
+                                    </dl>
+                                    <input class ="post_id" type="hidden" name="post_id" value="{{.Body.id}}"/>
+                                    <p><input type="submit" value="Создать" class="button_submit"></p>
+                                </div>
+                                <span class="lowerframe"><span></span></span>
+                            </div>
+                        </form>
+                        {{end}}
                     </div>
                 </div>
             </div>

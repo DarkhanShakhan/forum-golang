@@ -13,11 +13,6 @@
         <div id="header">
             <div class="frame">
                 <div id="top_section">
-                    {{if .Unauthorized}}
-                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
-                            href="signup_page">зарегистрируйтесь</a>.
-                    </div>
-                    {{end}}
                 </div>
                 <div id="upper_section" class="middletext">
                     <div class="forumtitle clear">
@@ -38,36 +33,27 @@
                                 <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
                             </a>
                         </li>
-                        {{if .Admin}}
-                        <li id="button_add_category">
-                            <a class="firstlevel" href="/create_category_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/calendar.png" />Добавить
-                                    тему</span>
-                            </a>
-                        </li>
-                        {{end}}
-                        {{if .Unauthorized}}
+                        {{if .AuthStatus}}
                         <li id="button_login">
-                            <a class="firstlevel" href="/signin_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
-                            </a>
-                        </li>
-                        <li id="button_register">
-                            <a class="firstlevel" href="/signup_page/">
-                                <span class="last firstlevel"><img
-                                        src="/templates/img/buttons/register.png" />Регистрация</span>
-                            </a>
-                        </li>
-                        {{end}}
-                        {{if .Authorized}}
-                        <li id="button_login">
-                            <a class="firstlevel" href="/users/{{.OwnerId}}">
+                            <a class="firstlevel" href="/users/{{.UserId}}">
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
                         <li id="button_login">
-                            <a class="firstlevel" href="/signout/">
+                            <a class="firstlevel" href="/sign_out">
                                 <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            </a>
+                        </li>
+                        {{else}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/sign_in">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
+                            </a>
+                        </li>
+                        <li id="button_register">
+                            <a class="firstlevel" href="/sign_up">
+                                <span class="last firstlevel"><img
+                                        src="/templates/img/buttons/register.png" />Регистрация</span>
                             </a>
                         </li>
                         {{end}}
@@ -88,78 +74,53 @@
                             <li class="last">
                                 <a href="/all_users_page/"><span>Пользователи</span></a> »
                             </li>
+                            {{.Body}}
                             <li class="last">
-                                <a href="/users/{{.User.Id}}"><span>{{.User.Name}}</span></a>
+                                <a href="/users/{{.Body.id}}"><span>{{.Body.name}}</span></a>
                             </li>
                         </ul>
                     </div>
                     <div class="user_page">
-                        {{if .User.Owner}}
-                        <a class="firstlevel" href="/edit_profile_page/{{.User.Id}}">
-                            <span class="firstlevel"><img src="/templates/img/icons/info.gif"> Редактировать
-                                профиль</span>
-                        </a> <br>
-                        {{end}}
-                        <br>
                         <h4>
-                            <a href="/users/{{.User.Id}}" title="Просмотр профиля {{.User.Name}}">{{.User.Name}}</a>
+                            <a href="/users/{{.Body.id}}" title="Просмотр профиля {{.Body.name}}">{{.Body.name}}</a>
                         </h4>
                         <ul class="reset smalltext">
-                            <li class="postgroup">{{.User.Role}}</li>
-                            {{if .User.Owner}}
-                            <li class="postgroup">Почта: {{.User.Email}}</li>
+                            <li class="postgroup">Почта: {{.Body.email}}</li>
+                            <li class="postgroup">Дата регистрации: {{.Body.registration_date}}</li>
+                            <li class="postcount">Постов: {{if .Body.total_posts}}{{.Body.total_posts}}{{else}}0{{end}}</li>
+                            {{if .Body.total_posts}}
+                            <ol>
+                            {{range .Body.posts}}
+                            <li><a href="/posts/{{.id}}">{{.title}}</a></li>
                             {{end}}
-                            <li class="avatar">
-                                <!-- <a href="/users/2">
-                                    <img class="avatar"
-                                        src="avatars/Musicians/Bob_Marley.jpg"
-                                        alt="">
-                                </a> -->
-                            </li>
-                            <li class="postcount">Город: {{.User.City}}</li>
-                            <li class="postcount">Дата рождения: {{.User.DateOfBirth}}</li>
-                            {{if .User.Male}}
-                            <li class="postcount">Пол: <img src="/templates/img/Male.gif" title="Мужской"></li>
+                            </ol>
                             {{end}}
-                            {{if .User.Female}}
-                            <li class="postcount">Пол: <img src="/templates/img/Female.gif" title="Женский"></li>
+                            <li class="postcount">Комментариев: {{if .Body.total_comments}}{{.Body.total_comments}}{{else}}{{end}}</li>
+                            {{if .Body.total_comments}}
+                            <ol>
+                            {{range .Body.comments}}
+                            <li><a href="/posts/{{.post.id}}">{{.comment_content}}</a></li>
                             {{end}}
-                            <li class="postcount">Дата регистрации: {{.User.RegDate}}</li>
-                            {{if .Authorized}}
-                            <li class="postcount">Постов: <a href="/find_posts/author/{{.User.Id}}">{{.User.Posts}}</a>
-                            </li>
+                            </ol>
                             {{end}}
-                            {{if .Unauthorized}}
-                            <li class="postcount">Постов: {{.User.Posts}}</li>
+                            <li class="postcount">Лайков к постам: {{if .Body.total_post_likes}}{{.Body.total_post_likes}}{{else}}0{{end}}</li>
+                            {{if .Body.total_post_likes}}
+                            <ol>
+                            {{range .Body.post_likes}}
+                            <li><a href="/posts/{{.post.id}}">{{.post.title}}</a></li>
                             {{end}}
-                            {{if .Authorized}}
-                            <li class="postcount">Комментариев: <a
-                                    href="/find_posts/commented/{{.User.Id}}">{{.User.Comments}}</a></li>
+                            </ol>
                             {{end}}
-                            {{if .Unauthorized}}
-                            <li class="postcount">Комментариев: {{.User.Comments}}</li>
+                            <li class="postcount">Дизлайков к постам: {{if .Body.total_post_dislikes}}{{.Body.total_post_dislikes}}{{else}}0{{end}}</li>
+                            {{if .Body.total_post_dislikes}}
+                            <ol>
+                            {{range .Body.post_dislikes}}
+                            <li><a href="/posts/{{.post.id}}">{{.post.title}}</a></li>
                             {{end}}
-                            {{if .Authorized}}
-                            <li class="postcount">Лайков к постам: <a
-                                    href="/find_posts/liked/{{.User.Id}}">{{.User.PostLikes}}</a></li>
+                            </ol>
                             {{end}}
-                            {{if .Unauthorized}}
-                            <li class="postcount">Лайков к постам: {{.User.PostLikes}}</li>
-                            {{end}}
-                            {{if .Authorized}}
-                            <li class="postcount">Дизлайков к постам: <a
-                                    href="/find_posts/disliked/{{.User.Id}}">{{.User.PostDislikes}}</a></li>
-                            {{end}}
-                            {{if .Unauthorized}}
-                            <li class="postcount">Дизлайков к постам: {{.User.PostDislikes}}</li>
-                            {{end}}
-                            <li class="postcount">Лайков к комментариям: {{.User.CommentLikes}}</li>
-                            <li class="postcount">Дизлайков к комментариям: {{.User.CommentDislikes}}</li>
-                            <li class="postcount">Подпись: {{.User.Sign}}</li>
-                            <li class="profile">
-                                <ul>
-                                </ul>
-                            </li>
+                            <li class="postcount">Лайков к комментариям: {{if .Body.total_comment_likes}}{{.Body.total_comment_likes}}{{else}}0{{end}}</li>
+                            <li class="postcount">Дизлайков к комментариям: {{if .Body.total_comment_dislikes}}{{.Body.total_comment_dislikes}}{{else}}0{{end}}</li>
                         </ul>
                     </div>
                 </div>
