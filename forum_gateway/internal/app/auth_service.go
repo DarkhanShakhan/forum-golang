@@ -140,7 +140,7 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 			Path:    "/",
 		}
 		http.SetCookie(w, &cookie)
-		http.Redirect(w, r, "/posts", 302)
+		http.Redirect(w, r, "/posts", 303)
 		return
 	}
 	h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")

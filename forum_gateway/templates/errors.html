@@ -22,7 +22,7 @@
                   <div id="main_menu">
                      <ul class="dropmenu" id="menu_nav">
                         <li id="button_home">
-                           <a class="active firstlevel" href="/">
+                           <a class="active firstlevel" href="/posts">
                               <span class="last firstlevel"><img src="/templates/img/buttons/home.png" />Начало</span>
                            </a>
                         </li>
@@ -34,11 +34,8 @@
       </div>
       <div id="content_section">
          <div class="error_page">
-            <div class="error_code">
-               {{.Code}}
-            </div>
             <div class="error_message">
-               {{.Message}}
+               {{.ErrorMessage}}
             </div>
          </div>
       </div>

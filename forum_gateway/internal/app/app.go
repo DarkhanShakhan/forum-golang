@@ -24,6 +24,7 @@ func Run() {
 	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
 
 	// forum
+	mux.Handle("/", h.Authenticate(http.HandlerFunc(h.PostsHandler)))      //FIXME: check for "/"
 	mux.Handle("/posts", h.Authenticate(http.HandlerFunc(h.PostsHandler))) // FIXME: change to "/""
 	mux.Handle("/posts/", h.Authenticate(http.HandlerFunc(h.PostHandler)))
 	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(h.CreatePostHandler)))

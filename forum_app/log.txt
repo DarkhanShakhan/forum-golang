@@ -153,3 +153,8 @@ INFO	2023/01/19 20:04:24 Listening on localhost:8080
 INFO	2023/01/19 20:05:38 Listening on localhost:8080
 INFO	2023/01/19 20:06:23 Listening on localhost:8080
 INFO	2023/01/19 20:08:47 Listening on localhost:8080
+INFO	2023/01/24 23:41:58 Listening on localhost:8080
+ERROR	2023/01/25 01:57:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/25 01:57:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
+ERROR	2023/01/25 01:57:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/01/25 01:57:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist

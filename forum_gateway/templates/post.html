@@ -13,9 +13,9 @@
         <div id="header">
             <div class="frame">
                 <div id="top_section">
-                    {{if .Unauthorized}}
-                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
-                            href="signup_page">зарегистрируйтесь</a>.
+                    {{if .AuthStatus}}{{else}}
+                    <div class="user"><br /><br />Пожалуйста, <a href="/sign_in">войдите</a> или <a
+                            href="sign_up">зарегистрируйтесь</a>.
                     </div>
                     {{end}}
                 </div>
@@ -34,46 +34,31 @@
                             </a>
                         </li>
                         <li id="button_search">
-                            <a class="firstlevel" href="/search_page/">
+                            <a class="firstlevel" href="/search">
                                 <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
                             </a>
                         </li>
-                        {{if .Admin}}
-                        <li id="button_add_category">
-                            <a class="firstlevel" href="/create_category_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/calendar.png" />Добавить
-                                    тему</span>
-                            </a>
-                        </li>
-                        {{end}}
-                        {{if .Unauthorized}}
+                        {{if .AuthStatus}}
                         <li id="button_login">
-                            <a class="firstlevel" href="/signin_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
-                            </a>
-                        </li>
-                        <li id="button_register">
-                            <a class="firstlevel" href="/signup_page/">
-                                <span class="last firstlevel"><img
-                                        src="/templates/img/buttons/register.png" />Регистрация</span>
-                            </a>
-                        </li>
-                        {{end}}
-                        {{if .Authorized}}
-                        <li id="button_login">
-                            <a class="firstlevel" href="/create_comment_page/{{.Post.Id}}">
-                                <span class="firstlevel"><img src="/templates/img/icons/last_post.gif">Написать
-                                    комментарий</span>
-                            </a>
-                        </li>
-                        <li id="button_login">
-                            <a class="firstlevel" href="/users/{{.User.Id}}">
+                            <a class="firstlevel" href="/users/{{.UserId}}">
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
                         <li id="button_login">
-                            <a class="firstlevel" href="/signout/">
+                            <a class="firstlevel" href="/sign_out">
                                 <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            </a>
+                        </li>
+                        {{else}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/sign_in">
+                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
+                            </a>
+                        </li>
+                        <li id="button_register">
+                            <a class="firstlevel" href="/sign_up">
+                                <span class="last firstlevel"><img
+                                        src="/templates/img/buttons/register.png" />Регистрация</span>
                             </a>
                         </li>
                         {{end}}
@@ -91,8 +76,9 @@
                             <li>
                                 <a href="/"><span>Форум школы Алем</span></a> »
                             </li>
+                            {{.Body.title}}
                             <li class="last">
-                                <a href="/posts/{{.Post.Id}}"><span>{{.Post.Title}}</span></a>
+                                <a href="/posts/{{.Body.id}}"><span>{{.Body.title}}</span></a>
                             </li>
                         </ul>
                     </div>
@@ -101,7 +87,7 @@
                             <h3 class="catbg">
                                 <img src="/templates/img/topic/veryhot_post.gif">
                                 <span id="author">Автор</span>
-                                Пост: {{.Post.Title}}
+                                Пост: {{.Body.title}}
                             </h3>
                         </div>
                         <p id="whoisviewing" class="smalltext"></p>

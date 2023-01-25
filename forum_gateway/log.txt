@@ -205,3 +205,28 @@ INFO	2023/01/19 20:04:59 Listening on localhost:8082
 INFO	2023/01/19 20:05:59 Listening on localhost:8082
 INFO	2023/01/19 20:07:53 Listening on localhost:8082
 INFO	2023/01/19 20:09:51 Listening on localhost:8082
+INFO	2023/01/24 23:24:25 Listening on localhost:8082
+INFO	2023/01/24 23:26:00 Listening on localhost:8082
+ERROR	2023/01/24 23:26:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:100: Invalid email format
+INFO	2023/01/24 23:27:01 Listening on localhost:8082
+INFO	2023/01/24 23:28:34 Listening on localhost:8082
+INFO	2023/01/24 23:28:51 Listening on localhost:8082
+ERROR	2023/01/24 23:28:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: login.html:16: unexpected "!" in if
+INFO	2023/01/24 23:29:14 Listening on localhost:8082
+INFO	2023/01/24 23:29:43 Listening on localhost:8082
+INFO	2023/01/24 23:33:07 Listening on localhost:8082
+INFO	2023/01/24 23:34:11 Listening on localhost:8082
+INFO	2023/01/24 23:34:33 Listening on localhost:8082
+INFO	2023/01/24 23:38:20 Listening on localhost:8082
+INFO	2023/01/25 01:38:44 Listening on localhost:8082
+INFO	2023/01/25 01:42:31 Listening on localhost:8082
+INFO	2023/01/25 01:43:51 Listening on localhost:8082
+ERROR	2023/01/25 01:44:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: index.html:141: unexpected {{end}}
+ERROR	2023/01/25 01:44:16 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: index.html:141: unexpected {{end}}
+ERROR	2023/01/25 01:46:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: index.html:154: unexpected EOF
+INFO	2023/01/25 01:52:04 Listening on localhost:8082
+INFO	2023/01/25 01:53:06 Listening on localhost:8082
+ERROR	2023/01/25 01:57:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:121: Not Found
+ERROR	2023/01/25 01:57:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:121: Not Found
+ERROR	2023/01/25 01:58:37 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:50: Not Found
+INFO	2023/01/25 03:18:21 Listening on localhost:8082

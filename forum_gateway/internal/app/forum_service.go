@@ -11,7 +11,7 @@ import (
 
 func (h *Handler) PostsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/errors.html")
 		return
 	}
 	ctx, cancel := getTimeout(r.Context())
@@ -23,19 +23,19 @@ func (h *Handler) PostsHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err := ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case response = <-responseChan:
 		err := response.Err
 		switch err {
 		case entity.ErrInternalServer:
-			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
 		case entity.ErrRequestTimeout:
-			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		case nil:
 			var auth interface{} = r.Context().Value("authorised")
 			response.AuthStatus, _ = auth.(bool)
-			h.APIResponse(w, http.StatusOK, response, "web/posts.html")
+			h.APIResponse(w, http.StatusOK, response, "templates/index.html")
 		}
 	}
 }
@@ -74,7 +74,7 @@ func (h *Handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 		case nil:
 			var auth interface{} = r.Context().Value("authorised")
 			response.AuthStatus, _ = auth.(bool)
-			h.APIResponse(w, http.StatusOK, response, "web/post.html")
+			h.APIResponse(w, http.StatusOK, response, "templates/post.html")
 		}
 	}
 }
