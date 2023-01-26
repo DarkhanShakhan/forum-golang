@@ -82,3 +82,14 @@ func getComment(response io.ReadCloser) entity.CommentResult {
 	err = json.Unmarshal(jsonComment, &comment)
 	return entity.CommentResult{Err: err, Comment: comment}
 }
+
+func getReactions(response io.ReadCloser) entity.ReactionsResult {
+	temp, err := getResponse(response)
+	if err != nil {
+		return entity.ReactionsResult{Err: err}
+	}
+	jsonReactions, err := json.Marshal(temp.Body)
+	reactions := []entity.Reaction{}
+	err = json.Unmarshal(jsonReactions, &reactions)
+	return entity.ReactionsResult{Err: err, Reactions: reactions}
+}

@@ -49,3 +49,8 @@ type CommentReaction struct {
 	Reaction `json:"reaction,omitempty"`
 	Comment  `json:"comment,omitempty"`
 }
+
+type ReactionsResult struct {
+	Reactions []Reaction
+	Err       error
+}

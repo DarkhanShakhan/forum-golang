@@ -187,4 +187,12 @@ func (f *ForumUsecase) FetchCategory(ctx context.Context, id int, responseChan c
 }
 
 func (f *ForumUsecase) PostReaction(ctx context.Context, reaction entity.PostReaction, errorChan chan error) {
+	response, _ := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/post_reactions?id=%d", reaction.Post.Id), nil)
+	res := getReactions(response.Body)
+	for _, i := range res.Reactions {
+		if i.User.Id == reaction.Reaction.User.Id {
+			fmt.Println("here")
+		}
+	}
+	errorChan <- nil
 }

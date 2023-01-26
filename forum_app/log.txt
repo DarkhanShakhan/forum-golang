@@ -164,3 +164,7 @@ ERROR	2023/01/26 16:45:38 /home/student/forum-golang/forum_app/internal/user/use
 ERROR	2023/01/26 16:45:38 /home/student/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
 ERROR	2023/01/26 16:47:41 /home/student/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
 ERROR	2023/01/26 16:47:41 /home/student/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
+INFO	2023/01/26 20:01:05 Listening on localhost:8080
+ERROR	2023/01/26 20:01:16 /home/student/forum-golang/forum_app/internal/app/post_service.go:233: strconv.Atoi: parsing "": invalid syntax
+INFO	2023/01/26 20:03:55 Listening on localhost:8080
+ERROR	2023/01/26 20:04:00 /home/student/forum-golang/forum_app/internal/app/post_service.go:233: strconv.Atoi: parsing "": invalid syntax

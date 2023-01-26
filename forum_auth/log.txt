@@ -203,3 +203,8 @@ ERROR	2023/01/26 17:47:19 /home/student/forum-golang/forum_auth/internal/reposit
 ERROR	2023/01/26 17:47:19 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
 ERROR	2023/01/26 17:47:20 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
 ERROR	2023/01/26 17:47:20 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 20:00:21 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session expired
+ERROR	2023/01/26 20:00:29 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 20:00:29 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 20:00:30 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 20:00:30 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
