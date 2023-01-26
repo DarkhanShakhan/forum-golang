@@ -29,6 +29,7 @@ func Run() {
 	mux.HandleFunc("/user/email", h.UserByEmailHandler)
 	mux.HandleFunc("/post", h.PostDetailsHandler)
 	mux.HandleFunc("/posts", h.PostsAllHandler)
+	mux.HandleFunc("/post_reactions", h.PostReactionsHandler)
 	mux.HandleFunc("/category", h.CategoryPostsHandler)
 
 	// post

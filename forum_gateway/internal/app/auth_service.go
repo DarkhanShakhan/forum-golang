@@ -148,17 +148,17 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Context().Value("authorised") == false {
-		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "templates/errors.html")
 		return
 	}
-	if r.Method != http.MethodDelete {
-		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid Method"}, "web/error.html")
+	if r.Method != http.MethodPost {
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid Method"}, "templates/errors.html")
 		return
 	}
 
 	cookie, err := r.Cookie("token")
 	if err != nil {
-		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "templates/errors.html")
 		return
 	}
 	token := cookie.Value
@@ -171,16 +171,16 @@ func (h *Handler) SignOutHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case err = <-errChan:
 		switch err {
 		case entity.ErrRequestTimeout:
-			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.go")
 		case nil:
-			http.Redirect(w, r, "/posts", 302) // FIXME: set cookie to empty session
+			http.Redirect(w, r, "/posts", 303) // FIXME: set cookie to empty session
 		default:
-			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.go")
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.go")
 		}
 	}
 }

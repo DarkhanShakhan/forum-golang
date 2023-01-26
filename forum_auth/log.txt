@@ -175,3 +175,31 @@ ERROR	2023/01/25 03:18:58 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/25 03:18:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
 ERROR	2023/01/25 03:20:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
 ERROR	2023/01/25 03:20:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 16:45:38 /home/student/forum-golang/forum_auth/internal/app/service.go:62: Not Found
+ERROR	2023/01/26 17:12:13 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:12:13 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:12:21 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:12:21 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:12:24 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:12:24 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:13:53 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:13:53 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:13:55 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:13:55 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:13:57 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:13:57 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:43:52 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session expired
+ERROR	2023/01/26 17:44:24 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:44:24 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:46:12 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:46:12 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:46:22 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:46:22 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:46:27 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:46:27 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:47:06 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:47:06 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:47:19 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:47:19 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/01/26 17:47:20 /home/student/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/01/26 17:47:20 /home/student/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist

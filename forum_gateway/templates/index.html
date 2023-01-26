@@ -51,10 +51,15 @@
                                     пост</span>
                             </a>
                         </li>
+                        <form action="/sign_out" method="POST" hidden="true">
+                            <input type="submit" id="submit" hidden="true">
+                        </form>
                         <li id="button_login">
-                            <a class="firstlevel" href="/sign_out">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            <a class="firstlevel">
+                                <label for="submit"><span class="firstlevel"><img src="/templates/img/buttons/login.png"/>Выйти</span></label>
                             </a>
+                            
+                            
                         </li>
                         {{else}}
                         <li id="button_login">

@@ -38,10 +38,15 @@
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
+                        <form action="/sign_out" method="POST" hidden="true">
+                            <input type="submit" id="submit" hidden="true">
+                        </form>
                         <li id="button_login">
-                            <a class="firstlevel" href="/signout/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            <a class="firstlevel">
+                                <label for="submit"><span class="firstlevel"><img src="/templates/img/buttons/login.png"/>Выйти</span></label>
                             </a>
+                            
+                            
                         </li>
                     </ul>
                 </div>

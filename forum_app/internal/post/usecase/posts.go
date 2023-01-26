@@ -130,6 +130,20 @@ func (u *PostsUsecase) fetchDislikes(ctx context.Context, id int, dislikes chan 
 	errDislikes <- err
 }
 
+func (u *PostsUsecase) FetchReactions(ctx context.Context, id int, reactionsChan chan entity.ReactionsResult) {
+	likes, err := u.postReactionsRepo.FetchByPostId(ctx, id, true)
+	if err != nil {
+		reactionsChan <- entity.ReactionsResult{Err: err}
+		return
+	}
+	dislikes, err := u.postReactionsRepo.FetchByPostId(ctx, id, false)
+	if err != nil {
+		reactionsChan <- entity.ReactionsResult{Err: err}
+		return
+	}
+	reactionsChan <- entity.ReactionsResult{Reactions: append(likes, dislikes...)}
+}
+
 func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int, catRes chan entity.CatResult) {
 	var err error
 	category, err := u.categoriesRepo.FetchById(ctx, id)

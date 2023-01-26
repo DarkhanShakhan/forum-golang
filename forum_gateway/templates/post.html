@@ -44,10 +44,15 @@
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
+                        <form action="/sign_out" method="POST" hidden="true">
+                            <input type="submit" id="submit" hidden="true">
+                        </form>
                         <li id="button_login">
-                            <a class="firstlevel" href="/sign_out">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            <a class="firstlevel">
+                                <label for="submit"><span class="firstlevel"><img src="/templates/img/buttons/login.png"/>Выйти</span></label>
                             </a>
+                            
+                            
                         </li>
                         {{else}}
                         <li id="button_login">
@@ -90,8 +95,6 @@
                             </h3>
                         </div>
                         <p id="whoisviewing" class="smalltext"></p>
-                        <form action="/create_post/" method="POST" name="quickModForm" id="quickModForm"
-                            style="margin: 0;">
                             <div class="windowbg">
                                 <span class="topslice"><span></span></span>
                                 <div class="post_wrapper">
@@ -124,16 +127,25 @@
                                             </div>
                                             <div class="reactions">
                                                 {{if .AuthStatus}}
-                                                <div class="reaction"> <a href="/put_post_like/{{.Body.id}}"><img
-                                                            src="/templates/img/post/like.png"></a> <a
-                                                        href="/find_reacted_users/post/liked/{{.Body.id}}"> {{if .Body.total_likes}}{{.Body.total_likes}}{{else}}0{{end}}</a>
-                                                    <a href="/put_post_dislike/{{.Body.Id}}"><img
-                                                            src="/templates/img/post/dislike.png"></a> <a
-                                                        href="/find_reacted_users/post/disliked/{{.Body.id}}">{{if .Body.total_dislikes}}{{.Body.total_dislikes}}{{else}}0{{end}}</a>
+                                                <form action="/post-reactions/new" method="post">
+                                                    <input type="submit" id="like-post"  hidden="true">
+                                                    <input type="hidden" name="reaction" value="true">
+                                                    <input class ="post_id" type="hidden" name="post_id" value="{{.Body.id}}"/>
+                                                </form>
+                                                <form action="/post-reactions/new" method="post">
+                                                    <input type="submit" id="dislike-post"  hidden="true">
+                                                    <input type="hidden" name="reaction" value="false">
+                                                    <input class ="post_id" type="hidden" name="post_id" value="{{.Body.id}}"/>
+                                                </form>
+                                                <div class="reaction"> 
+                                                    <label for="like-post"><img src="/templates/img/post/like.png"></label> 
+                                                    {{if .Body.total_likes}}{{.Body.total_likes}}{{else}}0{{end}}
+                                                    <label for="dislike-post"><img src="/templates/img/post/like.png"></label> 
+                                                    {{if .Body.total_dislikes}}{{.Body.total_dislikes}}{{else}}0{{end}}</a>
                                                 </div>
                                                 {{else}}
-                                                <div class="reaction"><img src="/templates/img/post/like.png">
-                                                    {{if .Body.total_likes}}{{.Body.total_likes}}{{else}}0{{end}}
+                                                <div class="reaction">
+                                                    <img src="/templates/img/post/like.png"> {{if .Body.total_likes}}{{.Body.total_likes}}{{else}}0{{end}}
                                                     <img src="/templates/img/post/dislike.png">{{if .Body.total_dislikes}}{{.Body.total_dislikes}}{{else}}0{{end}}
                                                 </div>
                                                 {{end}}
@@ -213,7 +225,6 @@
                             {{end}}
                             <hr class="post_separator">
                            
-                        </form>
                         {{if .AuthStatus}}
                         <form action="/comments/new" name="frmLogin" id="frmLogin" method="POST">
                             <div>

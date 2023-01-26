@@ -60,8 +60,10 @@ func (h *Handler) PostsAllHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	postsChan := make(chan entity.PostsResult)
-	var postsRes entity.PostsResult
-	var err error
+	var (
+		postsRes entity.PostsResult
+		err      error
+	)
 	go h.pcase.FetchAll(ctx, postsChan)
 	select {
 	case <-ctx.Done():
@@ -210,6 +212,45 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 		}
 	}
 	h.APIResponse(w, http.StatusNoContent, entity.Response{})
+}
+
+// TODO: fetch post reactions
+func (h *Handler) PostReactionsHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	if r.Method != http.MethodGet {
+		h.errLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
+		return
+	}
+	if err := r.ParseForm(); err != nil {
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+		return
+	}
+	id, err := strconv.Atoi(r.Form.Get("id"))
+	if err != nil {
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+		return
+	}
+	reactionsChan := make(chan entity.ReactionsResult)
+	var reactionsRes entity.ReactionsResult
+	go h.pcase.FetchReactions(ctx, id, reactionsChan)
+	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
+		return
+	case reactionsRes = <-reactionsChan:
+		if err = reactionsRes.Err; err != nil {
+			h.errLog.Println(err)
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
+	}
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: reactionsRes.Reactions})
 }
 
 func validatePostReactionData(reaction entity.PostReaction) bool {

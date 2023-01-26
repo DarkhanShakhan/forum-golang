@@ -185,3 +185,6 @@ func (f *ForumUsecase) FetchCategory(ctx context.Context, id int, responseChan c
 		responseChan <- entity.Response{Err: entity.ErrInternalServer}
 	}
 }
+
+func (f *ForumUsecase) PostReaction(ctx context.Context, reaction entity.PostReaction, errorChan chan error) {
+}

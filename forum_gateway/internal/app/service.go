@@ -42,4 +42,5 @@ type ForumUsecase interface {
 	FetchCategory(context.Context, int, chan entity.Response)
 	StorePost(context.Context, entity.Post, chan entity.Result)
 	StoreComment(context.Context, entity.Comment, chan entity.Result)
+	PostReaction(context.Context, entity.PostReaction, chan error)
 }

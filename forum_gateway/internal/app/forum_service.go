@@ -33,8 +33,15 @@ func (h *Handler) PostsHandler(w http.ResponseWriter, r *http.Request) {
 		case entity.ErrRequestTimeout:
 			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		case nil:
-			var auth interface{} = r.Context().Value("authorised")
+			var (
+				auth interface{} = r.Context().Value("authorised")
+				id   interface{} = r.Context().Value("user_id")
+			)
 			response.AuthStatus, _ = auth.(bool)
+			user_id, ok := id.(int64)
+			if ok {
+				response.UserId = user_id
+			}
 			h.APIResponse(w, http.StatusOK, response, "templates/index.html")
 		}
 	}
@@ -103,7 +110,7 @@ func (h *Handler) CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) getCreatePost(w http.ResponseWriter, r *http.Request) {
 	var id interface{} = r.Context().Value("user_id")
-	response := entity.Response{UserId: id.(int64)} //FIXME: check for invalid id with ok
+	response := entity.Response{UserId: id.(int64)} // FIXME: check for invalid id with ok
 	h.APIResponse(w, http.StatusOK, response, "templates/create_post.html")
 }
 
@@ -212,8 +219,15 @@ func (h *Handler) UsersHandler(w http.ResponseWriter, r *http.Request) {
 		case entity.ErrRequestTimeout:
 			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "template/errors.html")
 		case nil:
-			var auth interface{} = r.Context().Value("authorised")
+			var (
+				auth interface{} = r.Context().Value("authorised")
+				id   interface{} = r.Context().Value("user_id")
+			)
 			response.AuthStatus, _ = auth.(bool)
+			user_id, ok := id.(int64)
+			if ok {
+				response.UserId = user_id
+			}
 			h.APIResponse(w, http.StatusOK, response, "templates/users.html")
 		}
 	}
@@ -251,8 +265,15 @@ func (h *Handler) UserHandler(w http.ResponseWriter, r *http.Request) {
 		case entity.ErrNotFound:
 			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "templates/errors.html")
 		case nil:
-			var auth interface{} = r.Context().Value("authorised")
+			var (
+				auth interface{} = r.Context().Value("authorised")
+				id   interface{} = r.Context().Value("user_id")
+			)
 			response.AuthStatus, _ = auth.(bool)
+			user_id, ok := id.(int64)
+			if ok {
+				response.UserId = user_id
+			}
 			h.APIResponse(w, http.StatusOK, response, "templates/user.html")
 		}
 	}
@@ -290,8 +311,15 @@ func (h *Handler) CategoryHandler(w http.ResponseWriter, r *http.Request) {
 		case entity.ErrNotFound:
 			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "templates/error.html")
 		case nil:
-			var auth interface{} = r.Context().Value("authorised")
+			var (
+				auth interface{} = r.Context().Value("authorised")
+				id   interface{} = r.Context().Value("user_id")
+			)
 			response.AuthStatus, _ = auth.(bool)
+			user_id, ok := id.(int64)
+			if ok {
+				response.UserId = user_id
+			}
 			h.APIResponse(w, http.StatusOK, response, "web/category.html")
 		}
 	}
@@ -307,4 +335,30 @@ func getID(urlPath, endpoint string) (int, error) {
 		return 0, errors.New("Not Found")
 	}
 	return id, nil
+}
+
+func (h *Handler) PostReactionHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("authorised") == false {
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "templates/errors.html")
+		return
+	}
+	r.ParseForm()
+	postReaction, err := entity.GetPostReaction(r)
+	if err != nil {
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{}, "templates/errors.go")
+		return
+	}
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	errChan := make(chan error)
+	go h.forumUcase.PostReaction(ctx, postReaction, errChan)
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/error.html")
+		return
+	case err = <-errChan:
+	}
 }

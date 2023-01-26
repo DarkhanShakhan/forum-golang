@@ -28,21 +28,21 @@
                                 <span class="last firstlevel"><img src="/templates/img/buttons/home.png" />Начало</span>
                             </a>
                         </li>
-                        <li id="button_search">
-                            <a class="firstlevel" href="/search_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
-                            </a>
-                        </li>
                         {{if .AuthStatus}}
                         <li id="button_login">
                             <a class="firstlevel" href="/users/{{.UserId}}">
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
+                        <form action="/sign_out" method="POST" hidden="true">
+                            <input type="submit" id="submit" hidden="true">
+                        </form>
                         <li id="button_login">
-                            <a class="firstlevel" href="/sign_out">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
+                            <a class="firstlevel">
+                                <label for="submit"><span class="firstlevel"><img src="/templates/img/buttons/login.png"/>Выйти</span></label>
                             </a>
+                            
+                            
                         </li>
                         {{else}}
                         <li id="button_login">
@@ -74,7 +74,6 @@
                             <li class="last">
                                 <a href="/all_users_page/"><span>Пользователи</span></a> »
                             </li>
-                            {{.Body}}
                             <li class="last">
                                 <a href="/users/{{.Body.id}}"><span>{{.Body.name}}</span></a>
                             </li>

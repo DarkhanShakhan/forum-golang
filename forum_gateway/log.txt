@@ -255,3 +255,10 @@ INFO	2023/01/26 01:07:31 Listening on localhost:8082
 INFO	2023/01/26 01:12:29 Listening on localhost:8082
 ERROR	2023/01/26 01:14:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: user.html:79: unexpected . after term "."
 INFO	2023/01/26 01:51:09 Listening on localhost:8082
+INFO	2023/01/26 16:43:25 Listening on localhost:8082
+ERROR	2023/01/26 16:45:38 /home/student/forum-golang/forum_gateway/internal/app/auth_service.go:121: Not Found
+INFO	2023/01/26 16:49:36 Listening on localhost:8082
+INFO	2023/01/26 17:09:32 Listening on localhost:8082
+INFO	2023/01/26 17:12:07 Listening on localhost:8082
+INFO	2023/01/26 17:21:13 Listening on localhost:8082
+INFO	2023/01/26 17:53:07 Listening on localhost:8082

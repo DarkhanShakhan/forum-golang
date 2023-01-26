@@ -11,6 +11,11 @@ type PostReaction struct {
 	Post     `json:"post,omitempty"`
 }
 
+type ReactionsResult struct {
+	Reactions []Reaction
+	Err       error
+}
+
 type CommentReaction struct {
 	Reaction `json:"reaction,omitempty"`
 	Comment  `json:"comment,omitempty"`

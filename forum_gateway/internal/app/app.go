@@ -24,7 +24,7 @@ func Run() {
 	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
 
 	// forum
-	mux.Handle("/", h.Authenticate(http.HandlerFunc(h.PostsHandler)))      //FIXME: check for "/"
+	mux.Handle("/", h.Authenticate(http.HandlerFunc(h.PostsHandler)))      // FIXME: check for "/"
 	mux.Handle("/posts", h.Authenticate(http.HandlerFunc(h.PostsHandler))) // FIXME: change to "/""
 	mux.Handle("/posts/", h.Authenticate(http.HandlerFunc(h.PostHandler)))
 	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(h.CreatePostHandler)))
@@ -32,6 +32,7 @@ func Run() {
 	mux.Handle("/users", h.Authenticate(http.HandlerFunc(h.UsersHandler)))
 	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(h.UserHandler)))
 	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(h.CategoryHandler)))
+	mux.Handle("/post-reactions/new", h.Authenticate(http.HandlerFunc(h.PostReactionHandler)))
 
 	mux.Handle("/templates/css/", http.StripPrefix("/templates/css/", http.FileServer(http.Dir("templates/css"))))
 	mux.Handle("/templates/img/", http.StripPrefix("/templates/img/", http.FileServer(http.Dir("templates/img"))))
