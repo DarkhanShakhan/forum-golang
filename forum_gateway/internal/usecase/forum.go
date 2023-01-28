@@ -164,7 +164,7 @@ func (f *ForumUsecase) FetchUser(ctx context.Context, id int, responseChan chan 
 }
 
 func (f *ForumUsecase) FetchCategory(ctx context.Context, id int, responseChan chan entity.Response) {
-	response, err := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/category?id=%d", id), []byte{})
+	response, err := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/category?id=%d", id), nil)
 	if err != nil {
 		responseChan <- entity.Response{Err: entity.ErrInternalServer}
 		return
@@ -186,13 +186,88 @@ func (f *ForumUsecase) FetchCategory(ctx context.Context, id int, responseChan c
 	}
 }
 
+//TODO: store address as variable
+
 func (f *ForumUsecase) PostReaction(ctx context.Context, reaction entity.PostReaction, errorChan chan error) {
 	response, _ := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/post_reactions?id=%d", reaction.Post.Id), nil)
 	res := getReactions(response.Body)
+	body, err := json.Marshal(reaction)
+	if err != nil {
+		errorChan <- entity.ErrInternalServer
+		return
+	}
 	for _, i := range res.Reactions {
 		if i.User.Id == reaction.Reaction.User.Id {
-			fmt.Println("here")
+			if i.Like == reaction.Reaction.Like {
+				response, _ = getAPIResponse(ctx, http.MethodDelete, "http://localhost:8080/post_reactions/delete", body)
+
+			} else {
+				response, err = getAPIResponse(ctx, http.MethodPut, "http://localhost:8080/post_reactions/update", body)
+			}
+			switch response.StatusCode {
+			case 408:
+				errorChan <- entity.ErrRequestTimeout
+			case 400:
+				errorChan <- entity.ErrBadRequest
+			case 204:
+				errorChan <- nil
+			default:
+				errorChan <- entity.ErrInternalServer
+			}
+			return
 		}
 	}
-	errorChan <- nil
+	response, _ = getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/post_reactions/save", body)
+	switch response.StatusCode {
+	case 408:
+		errorChan <- entity.ErrRequestTimeout
+	case 400:
+		errorChan <- entity.ErrBadRequest
+	case 204:
+		errorChan <- nil
+	default:
+		errorChan <- entity.ErrInternalServer
+	}
+}
+
+func (f *ForumUsecase) CommentReaction(ctx context.Context, reaction entity.CommentReaction, errorChan chan error) {
+	response, _ := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/comment_reactions?id=%d", reaction.Post.Id), nil)
+	res := getReactions(response.Body)
+	body, err := json.Marshal(reaction)
+	if err != nil {
+		errorChan <- entity.ErrInternalServer
+		return
+	}
+	for _, i := range res.Reactions {
+		if i.User.Id == reaction.Reaction.User.Id {
+			if i.Like == reaction.Reaction.Like {
+				response, _ = getAPIResponse(ctx, http.MethodDelete, "http://localhost:8080/comment_reactions/delete", body)
+
+			} else {
+				response, err = getAPIResponse(ctx, http.MethodPut, "http://localhost:8080/comment_reactions/update", body)
+			}
+			switch response.StatusCode {
+			case 408:
+				errorChan <- entity.ErrRequestTimeout
+			case 400:
+				errorChan <- entity.ErrBadRequest
+			case 204:
+				errorChan <- nil
+			default:
+				errorChan <- entity.ErrInternalServer
+			}
+			return
+		}
+	}
+	response, _ = getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/comment_reactions/save", body)
+	switch response.StatusCode {
+	case 408:
+		errorChan <- entity.ErrRequestTimeout
+	case 400:
+		errorChan <- entity.ErrBadRequest
+	case 204:
+		errorChan <- nil
+	default:
+		errorChan <- entity.ErrInternalServer
+	}
 }

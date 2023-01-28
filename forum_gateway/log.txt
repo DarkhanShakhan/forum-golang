@@ -276,3 +276,18 @@ INFO	2023/01/26 20:12:27 Listening on localhost:8082
 INFO	2023/01/26 20:15:35 Listening on localhost:8082
 INFO	2023/01/26 20:16:04 Listening on localhost:8082
 INFO	2023/01/26 20:17:16 Listening on localhost:8082
+INFO	2023/01/29 03:03:59 Listening on localhost:8082
+INFO	2023/01/29 03:18:57 Listening on localhost:8082
+ERROR	2023/01/29 03:20:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:359: context deadline exceeded
+INFO	2023/01/29 03:21:11 Listening on localhost:8082
+ERROR	2023/01/29 03:21:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:359: context deadline exceeded
+INFO	2023/01/29 03:22:40 Listening on localhost:8082
+INFO	2023/01/29 03:24:04 Listening on localhost:8082
+ERROR	2023/01/29 03:24:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:359: context deadline exceeded
+INFO	2023/01/29 03:27:32 Listening on localhost:8082
+ERROR	2023/01/29 03:31:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: open templates/errors.go: no such file or directory
+ERROR	2023/01/29 03:33:37 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: open templates/errors.go: no such file or directory
+ERROR	2023/01/29 03:34:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: open templates/errors.go: no such file or directory
+INFO	2023/01/29 04:24:39 Listening on localhost:8082
+INFO	2023/01/29 04:34:25 Listening on localhost:8082
+INFO	2023/01/29 04:36:32 Listening on localhost:8082

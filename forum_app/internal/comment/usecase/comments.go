@@ -92,6 +92,20 @@ func (cu *CommentsUsecase) fetchReaction(ctx context.Context, id int, like bool,
 	errReactions <- err
 }
 
+func (u *CommentsUsecase) FetchReactions(ctx context.Context, id int, reactionsChan chan entity.ReactionsResult) {
+	likes, err := u.commentReactionsRepo.FetchByCommentId(ctx, id, true)
+	if err != nil {
+		reactionsChan <- entity.ReactionsResult{Err: err}
+		return
+	}
+	dislikes, err := u.commentReactionsRepo.FetchByCommentId(ctx, id, false)
+	if err != nil {
+		reactionsChan <- entity.ReactionsResult{Err: err}
+		return
+	}
+	reactionsChan <- entity.ReactionsResult{Reactions: append(likes, dislikes...)}
+}
+
 func (cu *CommentsUsecase) Store(ctx context.Context, comment entity.Comment, res chan entity.Result) {
 	id, err := cu.commentsRepo.Store(ctx, comment)
 	if err != nil {

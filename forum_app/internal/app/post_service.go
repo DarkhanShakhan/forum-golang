@@ -254,7 +254,7 @@ func (h *Handler) PostReactionsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func validatePostReactionData(reaction entity.PostReaction) bool {
-	return reaction.Post.Id != 0 || reaction.Reaction.User.Id != 0
+	return reaction.Post.Id != 0 && reaction.Reaction.User.Id != 0
 }
 
 func isConstraintError(err error) bool {
@@ -271,7 +271,8 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	}
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
-	if err != nil || validatePostReactionData(post_reaction) {
+	if err != nil || !validatePostReactionData(post_reaction) {
+		fmt.Println(err)
 		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return

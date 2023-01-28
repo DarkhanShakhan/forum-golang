@@ -360,5 +360,44 @@ func (h *Handler) PostReactionHandler(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case err = <-errChan:
+		switch err {
+		case nil:
+			http.Redirect(w, r, fmt.Sprintf("/posts/%d", postReaction.Post.Id), 303)
+
+		default:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: err.Error()}, "templates/errors.html")
+		}
+	}
+}
+
+func (h *Handler) CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Context().Value("authorised") == false {
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "templates/errors.html")
+		return
+	}
+	r.ParseForm()
+	commentReaction, err := entity.GetCommentReaction(r)
+	if err != nil {
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{}, "templates/errors.go")
+		return
+	}
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	errChan := make(chan error)
+	go h.forumUcase.CommentReaction(ctx, commentReaction, errChan)
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
+		return
+	case err = <-errChan:
+		switch err {
+		case nil:
+			http.Redirect(w, r, fmt.Sprintf("/posts/%d", commentReaction.Post.Id), 303)
+		default:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: err.Error()}, "templates/errors.html")
+		}
 	}
 }

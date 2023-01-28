@@ -43,4 +43,5 @@ type ForumUsecase interface {
 	StorePost(context.Context, entity.Post, chan entity.Result)
 	StoreComment(context.Context, entity.Comment, chan entity.Result)
 	PostReaction(context.Context, entity.PostReaction, chan error)
+	CommentReaction(context.Context, entity.CommentReaction, chan error)
 }

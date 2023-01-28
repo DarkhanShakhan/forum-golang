@@ -134,6 +134,11 @@ func (u *UsersUsecase) fetchComments(ctx context.Context, id int, comments chan 
 
 func (u *UsersUsecase) fetchPostReactions(ctx context.Context, id int, like bool, postReactions chan []entity.PostReaction, errPostReactions chan error) {
 	tempPostReactions, err := u.postReactionsRepo.FetchByUserId(ctx, id, like)
+	var er error
+	for i := 0; i < len(tempPostReactions); i++ {
+		tempPostReactions[i].Post, er = u.postRepo.FetchById(ctx, tempPostReactions[i].Post.Id) //FIXME: deal with error
+		u.errorLog.Println(er)
+	}
 	postReactions <- tempPostReactions
 	errPostReactions <- err
 }

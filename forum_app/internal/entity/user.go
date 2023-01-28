@@ -11,7 +11,7 @@ type User struct {
 	Comments             []Comment         `json:"comments,omitempty"`
 	TotalComments        int               `json:"total_comments,omitempty"`
 	PostLikes            []PostReaction    `json:"post_likes,omitempty"`
-	TotalPostLikes       int               `json:"total_post_reactions,omitempty"`
+	TotalPostLikes       int               `json:"total_post_likes,omitempty"`
 	PostDislikes         []PostReaction    `json:"post_dislikes,omitempty"`
 	TotalPostDislikes    int               `json:"total_post_dislikes,omitempty"`
 	CommentLikes         []CommentReaction `json:"comment_likes,omitempty"`

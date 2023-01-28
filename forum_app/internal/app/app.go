@@ -30,21 +30,22 @@ func Run() {
 	mux.HandleFunc("/post", h.PostDetailsHandler)
 	mux.HandleFunc("/posts", h.PostsAllHandler)
 	mux.HandleFunc("/post_reactions", h.PostReactionsHandler)
+	mux.HandleFunc("/comment_reactions", h.CommentReactionHandler)
 	mux.HandleFunc("/category", h.CategoryPostsHandler)
 
 	// post
 	mux.HandleFunc("/user/save", h.StoreUserHandler)
 	mux.HandleFunc("/post/save", h.StorePostHandler)
-	mux.HandleFunc("/post_reaction/save", h.StorePostReactionHandler)
-	mux.HandleFunc("/comment/save", h.StoreCommentHandler)
-	mux.HandleFunc("/comment_reaction/save", h.StoreCommentReactionHandler)
+	mux.HandleFunc("/post_reactions/save", h.StorePostReactionHandler)
+	mux.HandleFunc("/comments/save", h.StoreCommentHandler)
+	mux.HandleFunc("/comment_reactions/save", h.StoreCommentReactionHandler)
 
 	// put
-	mux.HandleFunc("/post_reaction/update", h.UpdatePostReactionHandler)
-	mux.HandleFunc("/comment_reaction/update", h.UpdateCommentReactionHandler)
+	mux.HandleFunc("/post_reactions/update", h.UpdatePostReactionHandler)
+	mux.HandleFunc("/comment_reactions/update", h.UpdateCommentReactionHandler)
 
 	// delete
-	mux.HandleFunc("/post_reaction/delete", h.DeletePostReactionHandler)
+	mux.HandleFunc("/post_reactions/delete", h.DeletePostReactionHandler)
 	srv := &http.Server{
 		Addr:     ":8080",
 		ErrorLog: errLog,

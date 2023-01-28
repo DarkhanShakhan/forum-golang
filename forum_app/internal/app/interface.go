@@ -25,6 +25,7 @@ type PostUsecase interface {
 
 type CommentUsecase interface {
 	// FetchById(context.Context, int, chan entity.CommentResult)
+	FetchReactions(context.Context, int, chan entity.ReactionsResult)
 	Store(context.Context, entity.Comment, chan entity.Result)
 	StoreCommentReaction(context.Context, entity.CommentReaction, chan error)
 	UpdateCommentReaction(context.Context, entity.CommentReaction, chan error)

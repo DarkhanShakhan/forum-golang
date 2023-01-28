@@ -16,6 +16,7 @@ type UsersRepository interface {
 
 type PostsRepository interface {
 	FetchByUserId(context.Context, int) ([]entity.Post, error)
+	FetchById(context.Context, int) (entity.Post, error)
 }
 
 type PostReactionsRepository interface {

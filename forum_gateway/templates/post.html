@@ -167,7 +167,7 @@
                             <hr class="post_separator">
                             <a></a>
                             {{range .Body.comments}}
-
+                            {{.}}
                             <div class="windowbg2">
                                 <span class="topslice"><span></span></span>
                                 <div class="post_wrapper">
@@ -198,18 +198,36 @@
                                                 <h5 id="{{.id}}">
                                                 </h5>
                                                 <div class="smalltext number"><strong></strong>
-                                                    {{.date}}
+                                                    {{.comment_date}}
                                                 </div>
                                                 <div></div>
                                             </div>
                                             <div class="reactions">
-                                                <div class="reaction"> <a href="/put_comment_like/{{.id}}"><img
-                                                            src="/templates/img/post/comment-like.png"></a> <a
-                                                        href="/find_reacted_users/comment/liked/{{.id}}">{{if .total_likes}}{{.total_likes}}{{else}}0{{end}}</a>
-                                                    <a href="/put_comment_dislike/{{.id}}"><img
-                                                            src="/templates/img/post/comment-dislike.png"></a> <a
-                                                        href="/find_reacted_users/comment/disliked/{{.id}}">{{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}</a>
+                                                {{if .AuthStatus}}
+                                                <form action="/comment-reactions/new" method="post">
+                                                    <input type="submit" id="like-comment"  hidden="true">
+                                                    <input type="hidden" name="reaction" value="true">
+                                                    <input class ="post_id" type="hidden" name="post_id" value="{{if .post.id}}{{.post.id}}{{else}}0{{end}}"/>
+                                                    <input class="comment_id" type="hidden" name="comment_id" value=".id">
+                                                </form>
+                                                <form action="/comment-reactions/new" method="post">
+                                                    <input type="submit" id="dislike-comment"  hidden="true">
+                                                    <input type="hidden" name="reaction" value="false">
+                                                    <input class ="post_id" type="hidden" name="post_id" value="{{if .post.id}}{{.post.id}}{{else}}0{{end}}"/>
+                                                    <input class="comment_id" type="hidden" name="comment_id" value=".id">
+                                                </form>
+                                                <div class="reaction"> 
+                                                    <label for="like-comment"><img src="/templates/img/post/comment-like.png"></label> 
+                                                    {{if .total_likes}}{{.total_likes}}{{else}}0{{end}}
+                                                    <label for="dislike-comment"><img src="/templates/img/post/comment-dislike.png"></label> 
+                                                    {{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}</a>
                                                 </div>
+                                                {{else}}
+                                                <div class="reaction">
+                                                    <img src="/templates/img/post/comment-like.png"> {{if .total_likes}}{{.total_likes}}{{else}}0{{end}}
+                                                    <img src="/templates/img/post/comment-dislike.png">{{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}
+                                                </div>
+                                                {{end}}
                                             </div>
                                         </div>
                                         <div class="post">

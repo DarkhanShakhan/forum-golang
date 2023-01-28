@@ -33,6 +33,7 @@ func Run() {
 	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(h.UserHandler)))
 	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(h.CategoryHandler)))
 	mux.Handle("/post-reactions/new", h.Authenticate(http.HandlerFunc(h.PostReactionHandler)))
+	mux.Handle("/comment-reactions/new", h.Authenticate(http.HandlerFunc(h.CommentReactionHandler)))
 
 	mux.Handle("/templates/css/", http.StripPrefix("/templates/css/", http.FileServer(http.Dir("templates/css"))))
 	mux.Handle("/templates/img/", http.StripPrefix("/templates/img/", http.FileServer(http.Dir("templates/img"))))

@@ -168,3 +168,33 @@ INFO	2023/01/26 20:01:05 Listening on localhost:8080
 ERROR	2023/01/26 20:01:16 /home/student/forum-golang/forum_app/internal/app/post_service.go:233: strconv.Atoi: parsing "": invalid syntax
 INFO	2023/01/26 20:03:55 Listening on localhost:8080
 ERROR	2023/01/26 20:04:00 /home/student/forum-golang/forum_app/internal/app/post_service.go:233: strconv.Atoi: parsing "": invalid syntax
+INFO	2023/01/29 02:44:14 Listening on localhost:8080
+INFO	2023/01/29 03:03:27 Listening on localhost:8080
+ERROR	2023/01/29 03:10:36 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:184: invalid method: PUT
+ERROR	2023/01/29 03:11:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:184: invalid method: PUT
+INFO	2023/01/29 03:31:02 Listening on localhost:8080
+ERROR	2023/01/29 03:31:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:276: bad request
+INFO	2023/01/29 03:33:30 Listening on localhost:8080
+ERROR	2023/01/29 03:33:37 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:276: bad request
+INFO	2023/01/29 03:34:55 Listening on localhost:8080
+ERROR	2023/01/29 03:34:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/post_service.go:276: bad request
+INFO	2023/01/29 03:37:00 Listening on localhost:8080
+INFO	2023/01/29 03:52:56 Listening on localhost:8080
+INFO	2023/01/29 03:59:42 Listening on localhost:8080
+ERROR	2023/01/29 03:59:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 03:59:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 03:59:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:03 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:14 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+ERROR	2023/01/29 04:00:34 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:112: context deadline exceeded
+INFO	2023/01/29 04:01:06 Listening on localhost:8080
+ERROR	2023/01/29 04:01:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/29 04:01:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/29 04:01:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/29 04:01:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/01/29 04:13:33 Listening on localhost:8080
+INFO	2023/01/29 04:24:35 Listening on localhost:8080

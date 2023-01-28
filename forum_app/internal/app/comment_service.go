@@ -2,8 +2,10 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"forum_app/internal/entity"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) StoreCommentHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +52,7 @@ func validateCommentData(comment entity.Comment) bool {
 }
 
 func validateCommentReactionData(reaction entity.CommentReaction) bool {
-	return reaction.Comment.Id != 0 || reaction.Reaction.User.Id != 0
+	return reaction.Comment.Id != 0 && reaction.Reaction.User.Id != 0
 }
 
 func (h *Handler) StoreCommentReactionHandler(w http.ResponseWriter, r *http.Request) {
@@ -164,4 +166,42 @@ func (h *Handler) DeleteCommentReactionHandler(w http.ResponseWriter, r *http.Re
 		}
 	}
 	h.APIResponse(w, http.StatusNoContent, entity.Response{})
+}
+
+func (h *Handler) CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	if r.Method != http.MethodGet {
+		h.errLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
+		return
+	}
+	if err := r.ParseForm(); err != nil {
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+		return
+	}
+	id, err := strconv.Atoi(r.Form.Get("id"))
+	if err != nil {
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
+		return
+	}
+	reactionsChan := make(chan entity.ReactionsResult)
+	var reactionsRes entity.ReactionsResult
+	go h.ccase.FetchReactions(ctx, id, reactionsChan)
+	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
+		return
+	case reactionsRes = <-reactionsChan:
+		if err = reactionsRes.Err; err != nil {
+			h.errLog.Println(err)
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
+	}
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: reactionsRes.Reactions})
 }
