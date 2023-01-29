@@ -7,22 +7,29 @@ import (
 )
 
 type PostsUsecase struct {
-	postsRepo         PostsRepository
-	postReactionsRepo PostReactionsRepository
-	commentsRepo      CommentsRepository
-	categoriesRepo    CategoriesRepository
-	usersRepo         UsersRepository
-	errorLog          *log.Logger
+	postsRepo            PostsRepository
+	postReactionsRepo    PostReactionsRepository
+	commentsRepo         CommentsRepository
+	commentReactionsRepo CommentReactionsRepository
+	categoriesRepo       CategoriesRepository
+	usersRepo            UsersRepository
+	errorLog             *log.Logger
 }
 
-func NewPostsUsecase(postsRepo PostsRepository, postReactionsRepo PostReactionsRepository, commentsRepo CommentsRepository, categoriesRepo CategoriesRepository, usersRepo UsersRepository, errorLog *log.Logger) *PostsUsecase {
+func NewPostsUsecase(postsRepo PostsRepository,
+	postReactionsRepo PostReactionsRepository,
+	commentsRepo CommentsRepository,
+	commentReactionRepo CommentReactionsRepository,
+	categoriesRepo CategoriesRepository,
+	usersRepo UsersRepository, errorLog *log.Logger) *PostsUsecase {
 	return &PostsUsecase{
-		postsRepo:         postsRepo,
-		postReactionsRepo: postReactionsRepo,
-		commentsRepo:      commentsRepo,
-		categoriesRepo:    categoriesRepo,
-		usersRepo:         usersRepo,
-		errorLog:          errorLog,
+		postsRepo:            postsRepo,
+		postReactionsRepo:    postReactionsRepo,
+		commentsRepo:         commentsRepo,
+		commentReactionsRepo: commentReactionRepo,
+		categoriesRepo:       categoriesRepo,
+		usersRepo:            usersRepo,
+		errorLog:             errorLog,
 	}
 }
 
@@ -108,8 +115,18 @@ func (u *PostsUsecase) fetchUser(ctx context.Context, id int, user chan entity.U
 
 func (u *PostsUsecase) fetchComments(ctx context.Context, id int, comments chan []entity.Comment, errComments chan error) {
 	tempComments, err := u.commentsRepo.FetchByPostId(ctx, id)
+	for i := 0; i < len(tempComments); i++ {
+		tempComments[i].Post.Id = id
+		tempComments[i].Likes, _ = u.fetchCommentReactions(ctx, tempComments[i].Id, true) //FIXME: deal with errors
+		tempComments[i].Dislikes, _ = u.fetchCommentReactions(ctx, tempComments[i].Id, false)
+		tempComments[i].CountTotals()
+	}
 	comments <- tempComments
 	errComments <- err
+}
+
+func (u *PostsUsecase) fetchCommentReactions(ctx context.Context, id int, like bool) ([]entity.Reaction, error) {
+	return u.commentReactionsRepo.FetchByCommentId(ctx, id, like)
 }
 
 func (u *PostsUsecase) fetchCategories(ctx context.Context, id int, categories chan []entity.Category, errCategories chan error) {

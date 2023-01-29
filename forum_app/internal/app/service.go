@@ -33,7 +33,7 @@ func NewHandler(errLog, infoLog *log.Logger) *Handler {
 	commentsRepo := cr.NewCommentsRepository(db, errLog)
 	cReactionsRepo := cr.NewCommentReactionsRepository(db, errLog)
 	ucase := uUcse.NewUsersUsecase(usersRepo, postsRepo, pReactionsRepo, commentsRepo, cReactionsRepo, errLog)
-	pcase := pUcse.NewPostsUsecase(postsRepo, pReactionsRepo, commentsRepo, categoriesRepo, usersRepo, errLog)
+	pcase := pUcse.NewPostsUsecase(postsRepo, pReactionsRepo, commentsRepo, cReactionsRepo, categoriesRepo, usersRepo, errLog)
 	ccase := cUcse.NewCommentsUsecase(commentsRepo, cReactionsRepo, postsRepo, usersRepo, errLog)
 	return &Handler{errLog, infoLog, ucase, pcase, ccase}
 }

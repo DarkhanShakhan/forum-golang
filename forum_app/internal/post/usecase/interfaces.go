@@ -29,6 +29,10 @@ type CommentsRepository interface {
 	FetchByPostId(context.Context, int) ([]entity.Comment, error)
 }
 
+type CommentReactionsRepository interface {
+	FetchByCommentId(context.Context, int, bool) ([]entity.Reaction, error)
+}
+
 type CategoriesRepository interface {
 	FetchById(context.Context, int) (entity.Category, error)
 	FetchByPostId(context.Context, int) ([]entity.Category, error)

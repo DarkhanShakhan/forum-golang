@@ -45,6 +45,7 @@ func Run() {
 	mux.HandleFunc("/comment_reactions/update", h.UpdateCommentReactionHandler)
 
 	// delete
+	mux.HandleFunc("/comment_reactions/delete", h.DeleteCommentReactionHandler)
 	mux.HandleFunc("/post_reactions/delete", h.DeletePostReactionHandler)
 	srv := &http.Server{
 		Addr:     ":8080",

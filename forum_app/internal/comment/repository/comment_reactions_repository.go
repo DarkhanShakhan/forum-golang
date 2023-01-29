@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"forum_app/internal/entity"
 	"log"
 	"time"
@@ -75,6 +76,7 @@ func (crr *CommentReactionsRepository) StoreReaction(ctx context.Context, commen
 }
 
 func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
+	fmt.Println(commentReaction)
 	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		crr.errorLog.Println(err)
@@ -87,7 +89,7 @@ func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, comme
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, commentReaction.Like, time.Now().Format("2006-01-02"), commentReaction.Post.Id, commentReaction.Reaction.User.Id)
+	res, err := stmt.ExecContext(ctx, commentReaction.Like, time.Now().Format("2006-01-02"), commentReaction.Comment.Id, commentReaction.Reaction.User.Id)
 	if err != nil {
 		crr.errorLog.Println(err)
 		return err
@@ -112,6 +114,7 @@ func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, comme
 }
 
 func (crr *CommentReactionsRepository) DeleteReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
+	fmt.Println(commentReaction)
 	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		crr.errorLog.Println(err)
@@ -124,7 +127,7 @@ func (crr *CommentReactionsRepository) DeleteReaction(ctx context.Context, comme
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.ExecContext(ctx, commentReaction.Post.Id, commentReaction.Reaction.User.Id)
+	res, err := stmt.ExecContext(ctx, commentReaction.Comment.Id, commentReaction.Reaction.User.Id)
 	if err != nil {
 		crr.errorLog.Println(err)
 		return err

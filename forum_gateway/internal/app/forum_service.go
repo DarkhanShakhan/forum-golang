@@ -379,7 +379,7 @@ func (h *Handler) CommentReactionHandler(w http.ResponseWriter, r *http.Request)
 	commentReaction, err := entity.GetCommentReaction(r)
 	if err != nil {
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{}, "templates/errors.go")
+		h.APIResponse(w, http.StatusBadRequest, entity.Response{}, "templates/errors.html")
 		return
 	}
 	ctx, cancel := getTimeout(r.Context())
@@ -397,6 +397,7 @@ func (h *Handler) CommentReactionHandler(w http.ResponseWriter, r *http.Request)
 		case nil:
 			http.Redirect(w, r, fmt.Sprintf("/posts/%d", commentReaction.Post.Id), 303)
 		default:
+			h.errLog.Println(err)
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: err.Error()}, "templates/errors.html")
 		}
 	}

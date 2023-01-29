@@ -165,7 +165,7 @@
                                 <span class="botslice"><span></span></span>
                             </div>
                             <hr class="post_separator">
-                            <a></a>
+                            {{if .AuthStatus}}
                             {{range .Body.comments}}
                             {{.}}
                             <div class="windowbg2">
@@ -203,31 +203,24 @@
                                                 <div></div>
                                             </div>
                                             <div class="reactions">
-                                                {{if .AuthStatus}}
                                                 <form action="/comment-reactions/new" method="post">
-                                                    <input type="submit" id="like-comment"  hidden="true">
+                                                    <input type="submit" id="like-comment{{.id}}"  hidden="true">
                                                     <input type="hidden" name="reaction" value="true">
                                                     <input class ="post_id" type="hidden" name="post_id" value="{{if .post.id}}{{.post.id}}{{else}}0{{end}}"/>
-                                                    <input class="comment_id" type="hidden" name="comment_id" value=".id">
+                                                    <input class="comment_id" type="hidden" name="comment_id" value="{{.id}}">
                                                 </form>
                                                 <form action="/comment-reactions/new" method="post">
-                                                    <input type="submit" id="dislike-comment"  hidden="true">
+                                                    <input type="submit" id="dislike-comment{{.id}}"  hidden="true">
                                                     <input type="hidden" name="reaction" value="false">
                                                     <input class ="post_id" type="hidden" name="post_id" value="{{if .post.id}}{{.post.id}}{{else}}0{{end}}"/>
-                                                    <input class="comment_id" type="hidden" name="comment_id" value=".id">
+                                                    <input class="comment_id" type="hidden" name="comment_id" value="{{.id}}">
                                                 </form>
                                                 <div class="reaction"> 
-                                                    <label for="like-comment"><img src="/templates/img/post/comment-like.png"></label> 
+                                                    <label for="like-comment{{.id}}"><img src="/templates/img/post/comment-like.png"></label> 
                                                     {{if .total_likes}}{{.total_likes}}{{else}}0{{end}}
-                                                    <label for="dislike-comment"><img src="/templates/img/post/comment-dislike.png"></label> 
+                                                    <label for="dislike-comment{{.id}}"><img src="/templates/img/post/comment-dislike.png"></label> 
                                                     {{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}</a>
                                                 </div>
-                                                {{else}}
-                                                <div class="reaction">
-                                                    <img src="/templates/img/post/comment-like.png"> {{if .total_likes}}{{.total_likes}}{{else}}0{{end}}
-                                                    <img src="/templates/img/post/comment-dislike.png">{{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}
-                                                </div>
-                                                {{end}}
                                             </div>
                                         </div>
                                         <div class="post">
@@ -240,6 +233,61 @@
                                 </div>
                                 <span class="botslice"><span></span></span>
                             </div>
+                            {{end}}
+                            {{else}}
+                            {{range .Body.comments}}
+                            <div class="windowbg2">
+                                <span class="topslice"><span></span></span>
+                                <div class="post_wrapper">
+                                    <div class="poster">
+                                        <h4>
+                                            <a href="/users/{{.user.id}}"
+                                                title="Просмотр профиля {{.user.name}}">{{.user.name}}</a>
+                                        </h4>
+                                        <ul class="reset smalltext">
+                                            <li class="postcount">Постов: {{if .user.total_posts}}
+                                                {{.user.total_posts}}{{else}}0{{end}}</li>
+                                            <li class="postcount">Комментариев: {{if .user.total_comments}}
+                                                {{.user.total_comments}}{{else}}0{{end}}
+                                            </li>
+                                            <li class="profile">
+                                                <ul>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                   
+                                    <div class="postarea">
+                                        <div class="flow_hidden">
+                                            <div class="keyinfo">
+                                                <div class="messageicon">
+                                                    <img src="/templates/img/post/xx.gif">
+                                                </div>
+                                                <h5 id="{{.id}}">
+                                                </h5>
+                                                <div class="smalltext number"><strong></strong>
+                                                    {{.comment_date}}
+                                                </div>
+                                                <div></div>
+                                            </div>
+                                            <div class="reactions">
+                                                <div class="reaction">
+                                                    <img src="/templates/img/post/comment-like.png"> {{if .total_likes}}{{.total_likes}}{{else}}0{{end}}
+                                                    <img src="/templates/img/post/comment-dislike.png">{{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="post">
+                                            <div class="inner">
+                                                {{.comment_content}}
+                                            </div>
+    
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="botslice"><span></span></span>
+                            </div>
+                            {{end}}
                             {{end}}
                             <hr class="post_separator">
                            

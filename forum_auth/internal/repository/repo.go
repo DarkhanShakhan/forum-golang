@@ -96,7 +96,7 @@ func (sr *SessionsRepository) Store(ctx context.Context, session entity.Session)
 		return entity.Session{}, err
 	}
 	defer tx.Rollback()
-	stmt, err := tx.PrepareContext(ctx, "INSERT INTO sessions(user_id, token, expiry_date) VALUES (?, ?, ?);")
+	stmt, err := tx.PrepareContext(ctx, "INSERT OR REPLACE INTO sessions(user_id, token, expiry_date) VALUES (?, ?, ?);")
 	if err != nil {
 		sr.errorLog.Println(err)
 		return entity.Session{}, err

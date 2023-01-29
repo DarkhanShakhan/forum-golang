@@ -104,7 +104,9 @@ func (h *Handler) UpdateCommentReactionHandler(w http.ResponseWriter, r *http.Re
 	}
 	var comment_reaction entity.CommentReaction
 	err := json.NewDecoder(r.Body).Decode(&comment_reaction)
-	if err != nil || validateCommentReactionData(comment_reaction) {
+	if err != nil || !validateCommentReactionData(comment_reaction) {
+		fmt.Println(err)
+		fmt.Println(comment_reaction)
 		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
