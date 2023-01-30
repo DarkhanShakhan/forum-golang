@@ -96,7 +96,7 @@ func (f *ForumUsecase) StoreComment(ctx context.Context, comment entity.Comment,
 		resChan <- entity.Result{Err: entity.ErrInternalServer}
 		return
 	}
-	response, err := getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/comment/save", body)
+	response, err := getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/comments/save", body)
 	if err != nil {
 		resChan <- entity.Result{Err: entity.ErrInternalServer}
 		return
@@ -158,6 +158,27 @@ func (f *ForumUsecase) FetchUser(ctx context.Context, id int, responseChan chan 
 		responseChan <- result
 	case 404:
 		responseChan <- entity.Response{Err: entity.ErrNotFound}
+	default:
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+	}
+}
+
+func (f *ForumUsecase) FetchCategories(ctx context.Context, responseChan chan entity.Response) {
+	response, err := getAPIResponse(ctx, http.MethodGet, "http://localhost:8080/categories", []byte{})
+	if err != nil {
+		responseChan <- entity.Response{Err: entity.ErrInternalServer}
+		return
+	}
+	switch response.StatusCode {
+	case 408:
+		responseChan <- entity.Response{Err: entity.ErrRequestTimeout}
+	case 200:
+		result, err := getResponse(response.Body)
+		if err != nil {
+			responseChan <- entity.Response{Err: entity.ErrInternalServer}
+			return
+		}
+		responseChan <- result
 	default:
 		responseChan <- entity.Response{Err: entity.ErrInternalServer}
 	}

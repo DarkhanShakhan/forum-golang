@@ -15,3 +15,8 @@ type CatResult struct {
 	Cat Category
 	Err error
 }
+
+type CategoriesResult struct {
+	Categories []Category
+	Error      error
+}

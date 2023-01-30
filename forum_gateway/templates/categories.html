@@ -7,13 +7,15 @@
     <link href="/templates/css/style.css" rel="stylesheet" type="text/css" />
     <title>Forum</title>
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <body>
+
     <div id="wrapper" style="width: 98%">
         <div id="header">
             <div class="frame">
                 <div id="top_section">
-                    {{if .Unauthorized}}
+                    {{if .AuthStatus}}{{else}}
                     <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
                             href="signup_page">зарегистрируйтесь</a>.
                     </div>
@@ -33,41 +35,38 @@
                                 <span class="last firstlevel"><img src="/templates/img/buttons/home.png" />Начало</span>
                             </a>
                         </li>
-                        <li id="button_search">
-                            <a class="firstlevel" href="/search_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
-                            </a>
-                        </li>
-                        {{if .Admin}}
-                        <li id="button_add_category">
-                            <a class="firstlevel" href="/create_category_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/calendar.png" />Добавить
-                                    тему</span>
-                            </a>
-                        </li>
-                        {{end}}
-                        {{if .Unauthorized}}
+                        {{if .AuthStatus}}
                         <li id="button_login">
-                            <a class="firstlevel" href="/signin_page/">
+                            <a class="firstlevel" href="/posts/new">
+                                <span class="firstlevel"><img src="/templates/img/icons/last_post.gif" />Написать
+                                    пост</span>
+                            </a>
+                        </li>
+                        <li id="button_login">
+                            <a class="firstlevel" href="/users/{{.UserId}}">
+                                <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
+                            </a>
+                        </li>
+                        <form action="/sign_out" method="POST" hidden="true">
+                            <input type="submit" id="submit" hidden="true">
+                        </form>
+                        <li id="button_login">
+                            <a class="firstlevel">
+                                <label for="submit"><span class="firstlevel"><img src="/templates/img/buttons/login.png"/>Выйти</span></label>
+                            </a>
+                            
+                            
+                        </li>
+                        {{else}}
+                        <li id="button_login">
+                            <a class="firstlevel" href="/sign_in">
                                 <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
                             </a>
                         </li>
                         <li id="button_register">
-                            <a class="firstlevel" href="/signup_page/">
+                            <a class="firstlevel" href="/sign_up">
                                 <span class="last firstlevel"><img
                                         src="/templates/img/buttons/register.png" />Регистрация</span>
-                            </a>
-                        </li>
-                        {{end}}
-                        {{if .Authorized}}
-                        <li id="button_login">
-                            <a class="firstlevel" href="/users/{{.User.Id}}">
-                                <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
-                            </a>
-                        </li>
-                        <li id="button_login">
-                            <a class="firstlevel" href="/signout/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Выйти</span>
                             </a>
                         </li>
                         {{end}}
@@ -86,29 +85,29 @@
                                 <a href="/"><span>Форум школы Алем</span></a> »
                             </li>
                             <li class="last">
-                                <a href="/search_page/"><span>Поиск</span></a>
+                                <a href="/categories"><span>Категории</span></a>
                             </li>
                         </ul>
                     </div>
-                    <form action="/search/" method="POST" id="searchform">
-                        <div class="cat_bar">
-                            <h3 class="catbg">
-                                <span class="ie6_header floatleft"><img src="/temlates/img/buttons/search.png"
-                                        class="icon">Параметры поиска</span>
-                            </h3>
-                        </div>
-                        <fieldset id="simple_search">
-                            <div class="roundframe">
-                                <div id="search_term_input">
-                                    <strong>Искать:</strong>
-                                    <input type="text" name="search" value="" maxlength="100" size="40"
-                                        class="input_text" required="required">
-                                    &nbsp;<input type="submit" value="Поиск" class="button_submit">
-                                </div>
-                                <p class="smalltext"><em>Поиск по: </em> теме, заголовку поста, содержанию</p>
+                        <div class="tborder login">
+                            <div class="cat_bar">
+                                <h3 class="catbg">
+                                    <span class="ie6_header floatleft"><img src="/templates/img/icons/login_sm.gif"
+                                            class="icon"> Все категории</span>
+                                </h3>
                             </div>
-                        </fieldset>
-                    </form>
+                            <span class="upperframe"><span></span></span>
+                            <div class="roundframe"><br class="clear">
+                                <dl>
+                                    {{range .Body}}
+                                    <div class="user_number">
+                                        <a href="/categories/{{.id}}">{{.title}}</a>
+                                    </div>
+                                    {{end}}
+                                </dl>
+                            </div>
+                            <span class="lowerframe"><span></span></span>
+                        </div>
                 </div>
             </div>
         </div>

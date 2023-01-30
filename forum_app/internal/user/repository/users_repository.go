@@ -40,6 +40,35 @@ func (ur *UsersRepository) FetchById(ctx context.Context, id int) (entity.User, 
 	if rows.Next() {
 		rows.Scan(&user.Id, &user.Name, &user.Email, &user.RegDate)
 	}
+	stmt1, err := tx.PrepareContext(ctx, "SELECT count(id) FROM posts WHERE user_id = ?;")
+	if err != nil {
+		ur.errorLog.Println(err)
+		return user, err
+	}
+	defer stmt1.Close()
+	rows1, err := stmt1.QueryContext(ctx, id)
+	if err != nil {
+		ur.errorLog.Println(err)
+		return user, err
+	}
+	if rows1.Next() {
+		rows1.Scan(&user.TotalPosts)
+	}
+	stmt2, err := tx.PrepareContext(ctx, "SELECT count(id) FROM comments WHERE user_id = ?;")
+	if err != nil {
+		ur.errorLog.Println(err)
+		return user, err
+	}
+	defer stmt2.Close()
+	rows2, err := stmt2.QueryContext(ctx, id)
+	if err != nil {
+		ur.errorLog.Println(err)
+		return user, err
+	}
+	if rows2.Next() {
+		rows2.Scan(&user.TotalComments)
+	}
+
 	if err = tx.Commit(); err != nil {
 		ur.errorLog.Println(err)
 		return entity.User{}, err

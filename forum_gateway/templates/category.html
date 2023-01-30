@@ -14,8 +14,8 @@
             <div class="frame">
                 <div id="top_section">
                     {{if .AuthStatus}}{{else}}
-                    <div class="user"><br /><br />Пожалуйста, <a href="/sign_in">войдите</a> или <a
-                            href="sign_up">зарегистрируйтесь</a>.
+                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
+                            href="signup_page">зарегистрируйтесь</a>.
                     </div>
                     {{end}}
                 </div>
@@ -86,6 +86,21 @@
         <div id="content_section">
             <div class="frame">
                 <div id="main_content_section">
+                    <div class="navigate_section">
+                        <ul>
+                            <li><img src="/templates/img/icons/folder_open.png">
+                            </li>
+                            <li>
+                                <a href="/"><span>Форум школы Алем</span></a> »
+                            </li>
+                            <li class="last">
+                                <a href="/categories"><span>Категории</span></a> » 
+                            </li>
+                            <li class="last">
+                                <a href="/categories/{{.Body.id}}"><span>{{.Body.title}}</span></a>
+                            </li>
+                        </ul>
+                    </div>
                     <a id="top"></a>
                     <div class="tborder topic_table" id="messageindex">
                         <table class="table_grid" cellspacing="0">
@@ -103,7 +118,7 @@
                                         Последний ответ</th>
                                 </tr>
                             </thead>
-                            {{range.Body}}
+                            {{range .Body.posts}}
                             <tr>
                                 <td class="icon1 windowbg">
                                     <img src="/templates/img/topic/veryhot_post_sticky.gif">
@@ -132,14 +147,12 @@
                                     {{if .total_likes}}{{.total_likes}}{{else}}0{{end}} / {{if .total_dislikes}}{{.total_dislikes}}{{else}}0{{end}}
                                 </td>
                                 <td class="lastpost windowbg2">
-                                    {{if .comments}}
-                                    {{range .comments}}
-                                    <a href="/posts/{{.post.id}}#{{.id}}"><img
+                                    {{if .LastCommentExist}}
+                                    <a href="/posts/{{.Id}}#{{.LastComment.Id}}"><img
                                             src="/templates/img/icons/last_post.gif" alt="Последний ответ"
                                             title="Последний комментарий"></a>
-                                    {{.comment_date}}<br>
-                                    от <a href="/users/{{.user.id}}">{{.user.name}}</a>
-                                    {{end}}
+                                    {{.LastComment.Date}}<br>
+                                    от <a href="/users/{{.LastComment.User.Id}}">{{.LastComment.User.Name}}</a>
                                     {{end}}
                                 </td>
                             </tr>

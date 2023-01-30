@@ -102,7 +102,10 @@ func (u *PostsUsecase) FetchAll(ctx context.Context, postsRes chan entity.PostsR
 	}
 	for ix := range posts {
 		u.fetchPostDetails(ctx, &posts[ix])
-		posts[ix].Comments, posts[ix].Likes, posts[ix].Dislikes = nil, nil, nil
+		if len(posts[ix].Comments) > 0 {
+			posts[ix].Comments = posts[ix].Comments[len(posts[ix].Comments)-1:]
+		}
+		posts[ix].Likes, posts[ix].Dislikes = nil, nil
 	}
 	postsRes <- entity.PostsResult{Posts: posts}
 }
@@ -116,6 +119,7 @@ func (u *PostsUsecase) fetchUser(ctx context.Context, id int, user chan entity.U
 func (u *PostsUsecase) fetchComments(ctx context.Context, id int, comments chan []entity.Comment, errComments chan error) {
 	tempComments, err := u.commentsRepo.FetchByPostId(ctx, id)
 	for i := 0; i < len(tempComments); i++ {
+		tempComments[i].User, _ = u.usersRepo.FetchById(ctx, tempComments[i].User.Id)
 		tempComments[i].Post.Id = id
 		tempComments[i].Likes, _ = u.fetchCommentReactions(ctx, tempComments[i].Id, true) //FIXME: deal with errors
 		tempComments[i].Dislikes, _ = u.fetchCommentReactions(ctx, tempComments[i].Id, false)
@@ -180,7 +184,9 @@ func (u *PostsUsecase) FetchCategoryPosts(ctx context.Context, id int, catRes ch
 	for ix := range category.Posts {
 		category.Posts[ix], err = u.postsRepo.FetchById(ctx, category.Posts[ix].Id)
 		u.fetchPostDetails(ctx, &category.Posts[ix])
-		category.Posts[ix].Comments = nil
+		if len(category.Posts[ix].Comments) > 0 {
+			category.Posts[ix].Comments = category.Posts[ix].Comments[len(category.Posts[ix].Comments)-1:]
+		}
 		category.Posts[ix].Likes = nil
 		category.Posts[ix].Dislikes = nil
 	}
@@ -206,4 +212,9 @@ func (u *PostsUsecase) UpdatePostReaction(ctx context.Context, postReaction enti
 
 func (u *PostsUsecase) DeletePostReaction(ctx context.Context, postReaction entity.PostReaction, err chan error) {
 	err <- u.postReactionsRepo.DeleteReaction(ctx, postReaction)
+}
+
+func (u *PostsUsecase) FetchCategories(ctx context.Context, catsChan chan entity.CategoriesResult) {
+	cats, err := u.categoriesRepo.FetchAllCategories(ctx)
+	catsChan <- entity.CategoriesResult{Categories: cats, Error: err}
 }

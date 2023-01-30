@@ -340,3 +340,33 @@ func (h *Handler) DeletePostReactionHandler(w http.ResponseWriter, r *http.Reque
 func isNoRowAffectedError(err error) bool {
 	return strings.Contains(err.Error(), "no row has been affected")
 }
+
+func (h *Handler) CategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	if r.Method != http.MethodGet {
+		h.errLog.Println(fmt.Sprintf("method not allowed: %s", r.Method))
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{})
+		return
+	}
+	catsChan := make(chan entity.CategoriesResult)
+	var (
+		catsRes entity.CategoriesResult
+		err     error
+	)
+	go h.pcase.FetchCategories(ctx, catsChan)
+	select {
+	case <-ctx.Done():
+		err = ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"})
+		return
+	case catsRes = <-catsChan:
+		if err = catsRes.Error; err != nil {
+			h.errLog.Println(err)
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
+			return
+		}
+	}
+	h.APIResponse(w, http.StatusOK, entity.Response{Body: catsRes.Categories})
+}

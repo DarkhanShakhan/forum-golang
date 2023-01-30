@@ -100,7 +100,7 @@ func (h *Handler) CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case http.MethodGet:
-		h.getCreatePost(w, r)
+		h.getCreatePost(w, r, "")
 	case http.MethodPost:
 		h.postCreatePost(w, r)
 	default:
@@ -108,17 +108,48 @@ func (h *Handler) CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *Handler) getCreatePost(w http.ResponseWriter, r *http.Request) {
-	var id interface{} = r.Context().Value("user_id")
-	response := entity.Response{UserId: id.(int64)} // FIXME: check for invalid id with ok
-	h.APIResponse(w, http.StatusOK, response, "templates/create_post.html")
+func (h *Handler) getCreatePost(w http.ResponseWriter, r *http.Request, errMessage string) {
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	response := entity.Response{}
+	responseChan := make(chan entity.Response)
+	go h.forumUcase.FetchCategories(ctx, responseChan)
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
+		return
+	case response = <-responseChan:
+		err := response.Err
+		switch err {
+		case entity.ErrInternalServer:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
+		case entity.ErrRequestTimeout:
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "template/errors.html")
+		case nil:
+			var (
+				auth interface{} = r.Context().Value("authorised")
+				id   interface{} = r.Context().Value("user_id")
+			)
+			response.AuthStatus, _ = auth.(bool)
+			user_id, ok := id.(int64)
+			if ok {
+				response.UserId = user_id
+			}
+			if errMessage != "" {
+				response.ErrorMessage = errMessage
+			}
+			h.APIResponse(w, http.StatusOK, response, "templates/create_post.html")
+		}
+	}
 }
 
 func (h *Handler) postCreatePost(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	post, err := entity.GetPost(r)
 	if err != nil {
-		h.APIResponse(w, http.StatusOK, entity.Response{ErrorMessage: err.Error()}, "templates/create_post.html")
+		h.getCreatePost(w, r, err.Error())
 		return
 	}
 	var id interface{} = r.Context().Value("user_id")
@@ -279,6 +310,44 @@ func (h *Handler) UserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h *Handler) CategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/errors.html")
+		return
+	}
+	ctx, cancel := getTimeout(r.Context())
+	defer cancel()
+	response := entity.Response{}
+	responseChan := make(chan entity.Response)
+	go h.forumUcase.FetchCategories(ctx, responseChan)
+	select {
+	case <-ctx.Done():
+		err := ctx.Err()
+		h.errLog.Println(err)
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
+		return
+	case response = <-responseChan:
+		err := response.Err
+		switch err {
+		case entity.ErrInternalServer:
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
+		case entity.ErrRequestTimeout:
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "template/errors.html")
+		case nil:
+			var (
+				auth interface{} = r.Context().Value("authorised")
+				id   interface{} = r.Context().Value("user_id")
+			)
+			response.AuthStatus, _ = auth.(bool)
+			user_id, ok := id.(int64)
+			if ok {
+				response.UserId = user_id
+			}
+			h.APIResponse(w, http.StatusOK, response, "templates/categories.html")
+		}
+	}
+}
+
 func (h *Handler) CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/error.html")
@@ -287,7 +356,7 @@ func (h *Handler) CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	category_id, err := getID(r.URL.String(), "categories")
 	if err != nil {
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: err.Error()}, "templates/error.html")
+		h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: err.Error()}, "templates/errors.html")
 		return
 	}
 	ctx, cancel := getTimeout(r.Context())
@@ -320,7 +389,7 @@ func (h *Handler) CategoryHandler(w http.ResponseWriter, r *http.Request) {
 			if ok {
 				response.UserId = user_id
 			}
-			h.APIResponse(w, http.StatusOK, response, "web/category.html")
+			h.APIResponse(w, http.StatusOK, response, "templates/category.html")
 		}
 	}
 }

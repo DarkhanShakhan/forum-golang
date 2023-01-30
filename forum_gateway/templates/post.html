@@ -34,8 +34,8 @@
                             </a>
                         </li>
                         <li id="button_search">
-                            <a class="firstlevel" href="/search">
-                                <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
+                            <a class="firstlevel" href="/categories">
+                                <span class="firstlevel"><img src="/templates/img/buttons/search.png"/>Категории</span>
                             </a>
                         </li>
                         {{if .AuthStatus}}
@@ -167,7 +167,6 @@
                             <hr class="post_separator">
                             {{if .AuthStatus}}
                             {{range .Body.comments}}
-                            {{.}}
                             <div class="windowbg2">
                                 <span class="topslice"><span></span></span>
                                 <div class="post_wrapper">

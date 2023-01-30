@@ -31,6 +31,7 @@ func Run() {
 	mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(h.CreateCommentHandler)))
 	mux.Handle("/users", h.Authenticate(http.HandlerFunc(h.UsersHandler)))
 	mux.Handle("/users/", h.Authenticate(http.HandlerFunc(h.UserHandler)))
+	mux.Handle("/categories", h.Authenticate(http.HandlerFunc(h.CategoriesHandler)))
 	mux.Handle("/categories/", h.Authenticate(http.HandlerFunc(h.CategoryHandler)))
 	mux.Handle("/post-reactions/new", h.Authenticate(http.HandlerFunc(h.PostReactionHandler)))
 	mux.Handle("/comment-reactions/new", h.Authenticate(http.HandlerFunc(h.CommentReactionHandler)))

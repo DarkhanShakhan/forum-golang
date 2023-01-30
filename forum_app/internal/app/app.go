@@ -32,6 +32,7 @@ func Run() {
 	mux.HandleFunc("/post_reactions", h.PostReactionsHandler)
 	mux.HandleFunc("/comment_reactions", h.CommentReactionHandler)
 	mux.HandleFunc("/category", h.CategoryPostsHandler)
+	mux.HandleFunc("/categories", h.CategoriesHandler)
 
 	// post
 	mux.HandleFunc("/user/save", h.StoreUserHandler)

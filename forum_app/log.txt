@@ -237,3 +237,35 @@ ERROR	2023/01/29 19:47:32 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/29 19:47:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
 ERROR	2023/01/29 19:47:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
 ERROR	2023/01/29 19:47:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/01/30 13:56:42 Listening on localhost:8080
+ERROR	2023/01/30 14:04:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:04:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:04:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:04:00 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:17:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:17:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:17:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:17:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:17:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:17:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:26:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/01/30 14:32:03 Listening on localhost:8080
+INFO	2023/01/30 14:32:51 Listening on localhost:8080
+INFO	2023/01/30 14:33:38 Listening on localhost:8080
+ERROR	2023/01/30 14:49:14 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:51:36 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:52:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/01/30 14:54:52 Listening on localhost:8080
+ERROR	2023/01/30 14:54:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:55:16 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/01/30 14:55:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/01/30 15:00:36 Listening on localhost:8080
+INFO	2023/01/30 15:02:43 Listening on localhost:8080
+INFO	2023/01/30 15:05:02 Listening on localhost:8080
+INFO	2023/01/30 15:05:52 Listening on localhost:8080
+INFO	2023/01/30 15:06:50 Listening on localhost:8080
+INFO	2023/01/30 15:07:54 Listening on localhost:8080
+INFO	2023/01/30 15:09:08 Listening on localhost:8080
+INFO	2023/01/30 15:09:49 Listening on localhost:8080
+INFO	2023/01/30 15:13:35 Listening on localhost:8080
+INFO	2023/01/30 15:15:05 Listening on localhost:8080

@@ -36,4 +36,5 @@ type CommentReactionsRepository interface {
 type CategoriesRepository interface {
 	FetchById(context.Context, int) (entity.Category, error)
 	FetchByPostId(context.Context, int) ([]entity.Category, error)
+	FetchAllCategories(context.Context) ([]entity.Category, error)
 }

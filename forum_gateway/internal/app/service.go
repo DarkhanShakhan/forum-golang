@@ -39,6 +39,7 @@ type ForumUsecase interface {
 	FetchUsers(context.Context, chan entity.Response)
 	FetchPost(context.Context, int, chan entity.Response)
 	FetchUser(context.Context, int, chan entity.Response)
+	FetchCategories(context.Context, chan entity.Response)
 	FetchCategory(context.Context, int, chan entity.Response)
 	StorePost(context.Context, entity.Post, chan entity.Result)
 	StoreComment(context.Context, entity.Comment, chan entity.Result)

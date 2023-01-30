@@ -13,6 +13,11 @@
         <div id="header">
             <div class="frame">
                 <div id="top_section">
+                    {{if .AuthStatus}}{{else}}
+                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
+                            href="signup_page">зарегистрируйтесь</a>.
+                    </div>
+                    {{end}}
                 </div>
                 <div id="upper_section" class="middletext">
                     <div class="forumtitle clear">
@@ -98,7 +103,7 @@
                             {{if .Body.total_comments}}
                             <ol>
                             {{range .Body.comments}}
-                            <li><a href="/posts/{{.post.id}}">{{.comment_content}}</a></li>
+                            <li><a href="/posts/{{.post.id}}#{{.id}}">{{.comment_content}}</a></li>
                             {{end}}
                             </ol>
                             {{end}}

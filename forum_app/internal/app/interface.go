@@ -15,6 +15,7 @@ type UserUsecase interface {
 type PostUsecase interface {
 	FetchById(context.Context, int, chan entity.PostResult)
 	FetchAll(context.Context, chan entity.PostsResult)
+	FetchCategories(context.Context, chan entity.CategoriesResult)
 	FetchCategoryPosts(context.Context, int, chan entity.CatResult)
 	FetchReactions(context.Context, int, chan entity.ReactionsResult)
 	Store(context.Context, entity.Post, chan entity.Result)

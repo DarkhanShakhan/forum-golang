@@ -13,6 +13,11 @@
         <div id="header">
             <div class="frame">
                 <div id="top_section">
+                    {{if .AuthStatus}}{{else}}
+                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
+                            href="signup_page">зарегистрируйтесь</a>.
+                    </div>
+                    {{end}}
                 </div>
                 <div id="upper_section" class="middletext">
                     <div class="forumtitle clear">
@@ -29,8 +34,8 @@
                             </a>
                         </li>
                         <li id="button_search">
-                            <a class="firstlevel" href="/search_page/">
-                                <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Поиск</span>
+                            <a class="firstlevel" href="/categories">
+                                <span class="firstlevel"><img src="/templates/img/buttons/search.png" />Категории</span>
                             </a>
                         </li>   
                         <li id="button_login">
@@ -83,10 +88,11 @@
                                     <input type="text" name="title" class="input_post_title" required="required">
                                     <dt>Тема:</dt>
                                     <div class="input_post_categories">
-                                        <input name ="category" id="1" type="checkbox" value="1"> <label for="1">Category 1</label>
-                                        <input name ="category"  id="2" type="checkbox" value="2"> <label for="2">Category 2</label>
-                                        <input name ="category" id="3" type="checkbox" value="3"> <label for="3">Category 3</label>
+                                        {{range .Body}}
+                                        <input name ="category" id="{{.id}}" type="checkbox" value="{{.id}}"> <label for="{{.id}}">{{.title}}</label>
+                                       {{end}}
                                     </div>
+
                                     <dt>Содержание:</dt>
                                     <textarea name="content" class="input_post"
                                         required="required"></textarea>

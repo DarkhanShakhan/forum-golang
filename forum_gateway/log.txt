@@ -333,3 +333,9 @@ ERROR	2023/01/29 19:37:39 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/01/29 19:39:10 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:400: Internal Server Error
 ERROR	2023/01/29 19:39:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:400: Bad Request
 ERROR	2023/01/29 19:41:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:400: Bad Request
+INFO	2023/01/30 13:58:10 Listening on localhost:8082
+ERROR	2023/01/30 13:58:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/forum_service.go:355: Not Found
+ERROR	2023/01/30 13:58:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: open templates/error.html: no such file or directory
+INFO	2023/01/30 14:14:31 Listening on localhost:8082
+INFO	2023/01/30 14:21:05 Listening on localhost:8082
+ERROR	2023/01/30 14:36:55 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/response.go:12: template: index.html:136: unexpected ".1" in operand
