@@ -32,6 +32,7 @@ type AuthUsecase interface {
 	SignIn(context.Context, entity.Credentials, chan entity.SessionResult)
 	SignOut(context.Context, entity.Session, chan error)
 	Authenticate(context.Context, string, chan entity.AuthStatusResult)
+	OAuth(context.Context, entity.Credentials, chan entity.SessionResult)
 }
 
 type ForumUsecase interface {

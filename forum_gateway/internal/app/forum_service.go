@@ -464,7 +464,7 @@ func (h *Handler) CommentReactionHandler(w http.ResponseWriter, r *http.Request)
 	case err = <-errChan:
 		switch err {
 		case nil:
-			http.Redirect(w, r, fmt.Sprintf("/posts/%d", commentReaction.Post.Id), 303)
+			http.Redirect(w, r, fmt.Sprintf("/posts/%d#%d", commentReaction.Post.Id, commentReaction.Comment.Id), 303)
 		default:
 			h.errLog.Println(err)
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: err.Error()}, "templates/errors.html")

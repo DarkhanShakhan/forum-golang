@@ -20,8 +20,11 @@ func Run() {
 	mux.Handle("/sign_in", h.Authenticate(http.HandlerFunc(h.SignInHandler)))
 	mux.Handle("/sign_out", h.Authenticate(http.HandlerFunc(h.SignOutHandler)))
 
-	mux.Handle("/signin_google", h.Authenticate(http.HandlerFunc(SignInGoogleHandler)))
-	mux.HandleFunc("/google_callback", GoogleCallbackHandler)
+	mux.Handle("/signin_google", h.Authenticate(http.HandlerFunc(h.SignInGoogleHandler)))
+	mux.HandleFunc("/google_callback", h.GoogleCallbackHandler)
+
+	mux.Handle("/signin_github", h.Authenticate(http.HandlerFunc(h.SignInGithubHandler)))
+	mux.HandleFunc("/github_callback", h.GithubCallbackHandler)
 
 	// forum
 	mux.Handle("/", h.Authenticate(http.HandlerFunc(h.PostsHandler)))      // FIXME: check for "/"

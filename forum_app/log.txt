@@ -269,3 +269,85 @@ INFO	2023/01/30 15:09:08 Listening on localhost:8080
 INFO	2023/01/30 15:09:49 Listening on localhost:8080
 INFO	2023/01/30 15:13:35 Listening on localhost:8080
 INFO	2023/01/30 15:15:05 Listening on localhost:8080
+INFO	2023/02/01 01:58:51 Listening on localhost:8080
+ERROR	2023/02/01 01:58:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/app.go:59: listen tcp :8080: bind: address already in use
+INFO	2023/02/01 02:12:19 Listening on localhost:8080
+ERROR	2023/02/01 03:15:14 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:16:42 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:16:42 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:16:42 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:17:11 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:17:11 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:17:11 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:19:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/02/01 03:19:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
+ERROR	2023/02/01 03:20:01 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:20:01 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:20:01 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:20:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:20:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:20:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:22:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:22:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:22:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:23:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:23:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:23:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:25:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:25:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:25:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:26:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:26:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:26:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:28:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:28:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:28:46 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:34:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:34:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:34:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:34:34 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/02/01 03:34:34 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
+ERROR	2023/02/01 03:35:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:35:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:35:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:36:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:36:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:36:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:39:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:39:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:39:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:39:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/02/01 03:39:07 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
+ERROR	2023/02/01 03:41:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:41:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:41:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 03:57:52 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 03:57:52 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 03:57:52 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:05:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:05:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:05:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:06:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:06:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:06:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:07:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:07:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:07:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:08:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:08:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:08:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:08:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/02/01 04:08:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
+ERROR	2023/02/01 04:10:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:10:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:10:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:14:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:14:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:14:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:14:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/02/01 04:14:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
+ERROR	2023/02/01 04:17:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:58: bad request: email is not provided
+ERROR	2023/02/01 04:17:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/repository/users_repository.go:154: UNIQUE constraint failed: users.email
+ERROR	2023/02/01 04:17:29 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:162: user with a given email already exists
+ERROR	2023/02/01 04:17:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:37: user doesn't exist
+ERROR	2023/02/01 04:17:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
