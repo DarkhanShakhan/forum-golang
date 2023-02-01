@@ -314,7 +314,7 @@ func AuthCodeURLGit(state string) string {
 	buf.WriteString("https://github.com/login/oauth/authorize")
 	v := url.Values{"client_id": {""}}
 	v.Set("redirect_uri", "http://localhost:8082/github_callback")
-	v.Set("scope", "repo, user") //FIXME: problem with email
+	v.Set("scope", "user") //FIXME: problem with email
 	v.Set("state", state)
 	buf.WriteByte('?')
 	buf.WriteString(v.Encode())
@@ -344,19 +344,15 @@ func exchangeGit(code string) (Token, error) {
 }
 
 func (h *Handler) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	content, err := getUserInfoGit(r.FormValue("state"), r.FormValue("code"), "https://api.github.com/user")
+	creds, err := getGitCredentials(r.FormValue("state"), r.FormValue("code"))
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	creds := entity.Credentials{}
-	//FIXME: verify credentials
-	json.Unmarshal(content, &creds)
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	sessionChan := make(chan entity.SessionResult)
 	var sessionRes entity.SessionResult
-
 	go h.auUcase.OAuth(ctx, creds, sessionChan)
 
 	select {
@@ -370,10 +366,6 @@ func (h *Handler) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			h.errLog.Println(err)
 			switch err {
-			case entity.ErrNotFound:
-				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "User with a given email doesn't exist"}, "templates/login.html")
-			case entity.ErrInvalidPassword:
-				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Invalid password"}, "templates/login.html")
 			case entity.ErrRequestTimeout:
 				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
 			default:
@@ -396,28 +388,51 @@ func (h *Handler) GithubCallbackHandler(w http.ResponseWriter, r *http.Request) 
 	h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
 }
 
-func getUserInfoGit(state string, code string, url string) ([]byte, error) {
+func getGitCredentials(state string, code string) (entity.Credentials, error) {
 	if state != oauthStateString {
-		return nil, fmt.Errorf("invalid oauth state")
+		return entity.Credentials{}, fmt.Errorf("invalid oauth state")
 	}
 	token, err := exchangeGit(code)
 	if err != nil {
+		return entity.Credentials{}, fmt.Errorf("code exchange failed: %s", err.Error())
+	}
+	info, err := getScopeInfo(token, "https://api.github.com/user")
+	if err != nil {
+		return entity.Credentials{}, err
+	}
+	creds := entity.Credentials{}
+	err = json.Unmarshal(info, &creds)
+	if err != nil {
+		return entity.Credentials{}, err
+	}
+	if creds.Email == "" {
+		info, err = getScopeInfo(token, "https://api.github.com/user/emails") //gets email if not visible
+		tempCreds := []entity.Credentials{}
+		err = json.Unmarshal(info, &tempCreds)
+		if err != nil {
+			return entity.Credentials{}, err
+		}
+		creds.Email = tempCreds[0].Email
+	}
+	return creds, nil
+}
+
+func getScopeInfo(token Token, url string) ([]byte, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
 		return nil, fmt.Errorf("code exchange failed: %s", err.Error())
 	}
-	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", fmt.Sprintf("bearer %s", token.AccessToken))
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
 	}
 	defer response.Body.Close()
-	fmt.Println(response.StatusCode)
-	contents, err := ioutil.ReadAll(response.Body)
+	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed reading response body: %s", err.Error())
 	}
-	fmt.Println(string(contents))
-	return contents, nil
+	return body, nil
 }
 
 type Token struct {
