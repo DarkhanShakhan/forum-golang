@@ -14,8 +14,8 @@
             <div class="frame">
                 <div id="top_section">
                     {{if .AuthStatus}}{{else}}
-                    <div class="user"><br /><br />Пожалуйста, <a href="/sign_in">войдите</a> или <a
-                            href="sign_up">зарегистрируйтесь</a>.
+                    <div class="user"><br /><br />Пожалуйста, <a href="/sign-in">войдите</a> или <a
+                            href="sign-up">зарегистрируйтесь</a>.
                     </div>
                     {{end}}
                 </div>
@@ -44,7 +44,7 @@
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
-                        <form action="/sign_out" method="POST" hidden="true">
+                        <form action="/sign-out" method="POST" hidden="true">
                             <input type="submit" id="submit" hidden="true">
                         </form>
                         <li id="button_login">
@@ -56,12 +56,12 @@
                         </li>
                         {{else}}
                         <li id="button_login">
-                            <a class="firstlevel" href="/sign_in">
+                            <a class="firstlevel" href="/sign-in">
                                 <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
                             </a>
                         </li>
                         <li id="button_register">
-                            <a class="firstlevel" href="/sign_up">
+                            <a class="firstlevel" href="/sign-up">
                                 <span class="last firstlevel"><img
                                         src="/templates/img/buttons/register.png" />Регистрация</span>
                             </a>

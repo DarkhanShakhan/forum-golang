@@ -14,8 +14,8 @@
             <div class="frame">
                 <div id="top_section">
                     {{if .AuthStatus}}{{else}}
-                    <div class="user"><br /><br />Пожалуйста, <a href="/sign_in">войдите</a> или <a
-                            href="sign_up">зарегистрируйтесь</a>.
+                    <div class="user"><br /><br />Пожалуйста, <a href="/sign-in">войдите</a> или <a
+                            href="sign-up">зарегистрируйтесь</a>.
                     </div>
                     {{end}}
                 </div>
@@ -34,12 +34,12 @@
                             </a>
                         </li>
                         <li id="button_login">
-                            <a class="firstlevel" href="/sign_in">
+                            <a class="firstlevel" href="/sign-in">
                                 <span class="firstlevel"><img src="/templates/img/buttons/login.png" />Вход</span>
                             </a>
                         </li>
                         <li id="button_register">
-                            <a class="firstlevel" href="/sign_up">
+                            <a class="firstlevel" href="/sign-up">
                                 <span class="last firstlevel"><img
                                         src="/templates/img/buttons/register.png" />Регистрация</span>
                             </a>
@@ -59,11 +59,11 @@
                                 <a href="/"><span>Форум школы Алем</span></a> »
                             </li>
                             <li class="last">
-                                <a href="/sign_in"><span>Вход</span></a>
+                                <a href="/sign-in"><span>Вход</span></a>
                             </li>
                         </ul>
                     </div>
-                    <form action="/sign_in" name="frmLogin" id="frmLogin" method="POST">
+                    <form action="/sign-in" name="frmLogin" id="frmLogin" method="POST">
                         <div class="tborder login">
                             <div class="cat_bar">
                                 <h3 class="catbg">
@@ -85,15 +85,19 @@
                                 </dl>
                                 <p><input type="submit" value="Вход" class="button_submit"></p>
                             </div>
-                            <div>
-                                <a href="/signin_google">Sign in with Google</a>
-                            </div>
-                            <div>
-                                <a href="/signin_github">Sign in with Github</a>
-                            </div>
-                            <span class="lowerframe"><span></span></span>
                         </div>
                     </form>
+                </div>
+            </div>
+            <div class="auth_from_api">
+                <div class="google_auth">
+                    <h4>Войти с помощью:</h4>
+                </div>
+                <div class="google_auth">
+                    <a class=oauth href="/sign-in/google"><img src="/templates/img/google_auth_icon.jpg"
+                            alt=""></a>
+                    <a class=oauth href="/sign-in/github"><img src="/templates/img/github_auth_icon.jpg"
+                            alt=""></a>
                 </div>
             </div>
         </div>

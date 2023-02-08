@@ -24,7 +24,7 @@ func getResponse(response io.ReadCloser) (entity.Response, error) {
 	return result, err
 }
 
-func getSession(response io.ReadCloser) (entity.Session, error) { // FIXME: change to SessionRes
+func getSession(response io.ReadCloser) (entity.Session, error) {
 	temp, err := getResponse(response)
 	if err != nil {
 		return entity.Session{}, err

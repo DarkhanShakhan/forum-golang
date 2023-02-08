@@ -58,10 +58,6 @@ func (au *AuthUsecase) SignIn(ctx context.Context, credentials entity.Credential
 	}
 	session := entity.Session{UserId: user.Id, Token: token.String()}
 	if session, err = au.sessionRepo.Store(ctx, session); err != nil {
-		// if strings.Contains(err.Error(), "UNIQUE constraint failed: sessions.user_id") {
-		// 	checkExpiryTime()
-		// }
-		// FIXME: check expiry time
 		sessionRes <- entity.SessionResult{Err: err}
 		return
 	}

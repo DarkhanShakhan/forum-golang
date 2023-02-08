@@ -14,10 +14,44 @@ type Handler struct {
 	infoLog    *log.Logger
 	auUcase    AuthUsecase
 	forumUcase ForumUsecase
+	config     *Config
+	oauths     map[method]OAuth
 }
 
 func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase, forumUcase ForumUsecase) *Handler {
-	return &Handler{errLog, infoLog, auUcase, forumUcase}
+	h := Handler{
+		errLog:     errLog,
+		infoLog:    infoLog,
+		auUcase:    auUcase,
+		forumUcase: forumUcase,
+		config:     NewConfig(),
+		oauths:     map[method]OAuth{},
+	}
+	h.setOauth([]method{github, google})
+	return &h
+}
+
+func (h *Handler) setOauth(methods []method) {
+	for _, m := range methods {
+		clientId, clientSecret := h.getOAuthConfig(m)
+		temp, err := NewOAuth(clientId, clientSecret, "pseudo_random", m)
+		if err != nil {
+			h.errLog.Println(err)
+		} else {
+			h.oauths[m] = temp
+		}
+	}
+}
+
+func (h *Handler) getOAuthConfig(m method) (string, string) {
+	switch m {
+	case github:
+		return h.config.GitHub.ClientId, h.config.GitHub.ClientSecret
+	case google:
+		return h.config.Google.ClientId, h.config.Google.ClientSecret
+	default:
+		return "", ""
+	}
 }
 
 func getTimeout(ctx context.Context) (context.Context, context.CancelFunc) {

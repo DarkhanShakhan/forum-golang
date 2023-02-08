@@ -21,9 +21,11 @@ type Handler struct {
 
 const duration = 10 * time.Second
 
-// FIXME:deal with error from sqlite3
 func NewHandler(errorLog *log.Logger) *Handler {
-	db, _ := sqlite3.New()
+	db, err := sqlite3.New()
+	if err != nil {
+		errorLog.Fatalln(err)
+	}
 	authRepo := repository.NewSessionsRepository(db, errorLog)
 	aucase := usecase.NewAuthUsecase(authRepo, errorLog)
 	return &Handler{errorLog: errorLog, aucase: aucase}

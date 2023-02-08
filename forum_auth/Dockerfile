@@ -9,4 +9,5 @@ FROM alpine:3.16 AS runner
 WORKDIR /app
 LABEL authors="@Subudei, @DarkhanShakhan"
 COPY --from=build /app/main /app/main
+EXPOSE 8081
 CMD ["/app/main"]

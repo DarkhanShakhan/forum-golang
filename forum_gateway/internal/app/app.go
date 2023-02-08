@@ -16,19 +16,19 @@ func Run() {
 	forumUcase := usecase.NewForumUsecase(errLog)
 	h := NewHandler(errLog, infoLog, auUcase, forumUcase)
 	// auth
-	mux.Handle("/sign_up", h.Authenticate(http.HandlerFunc(h.SignUpHandler)))
-	mux.Handle("/sign_in", h.Authenticate(http.HandlerFunc(h.SignInHandler)))
-	mux.Handle("/sign_out", h.Authenticate(http.HandlerFunc(h.SignOutHandler)))
+	mux.Handle("/sign-up", h.Authenticate(http.HandlerFunc(h.SignUpHandler)))
+	mux.Handle("/sign-in", h.Authenticate(http.HandlerFunc(h.SignInHandler)))
+	mux.Handle("/sign-out", h.Authenticate(http.HandlerFunc(h.SignOutHandler)))
 
-	mux.Handle("/signin_google", h.Authenticate(http.HandlerFunc(h.SignInGoogleHandler)))
-	mux.HandleFunc("/google_callback", h.GoogleCallbackHandler)
+	mux.Handle("/sign-in/google", h.Authenticate(http.HandlerFunc(h.SignInOAuthHandler)))
+	mux.HandleFunc("/callback/google", h.CallBackHandler)
 
-	mux.Handle("/signin_github", h.Authenticate(http.HandlerFunc(h.SignInGithubHandler)))
-	mux.HandleFunc("/github_callback", h.GithubCallbackHandler)
+	mux.Handle("/sign-in/github", h.Authenticate(http.HandlerFunc(h.SignInOAuthHandler)))
+	mux.HandleFunc("/callback/github", h.CallBackHandler)
 
 	// forum
-	mux.Handle("/", h.Authenticate(http.HandlerFunc(h.PostsHandler)))      // FIXME: check for "/"
-	mux.Handle("/posts", h.Authenticate(http.HandlerFunc(h.PostsHandler))) // FIXME: change to "/""
+	mux.Handle("/", h.Authenticate(http.HandlerFunc(h.PostsHandler)))
+	mux.Handle("/posts", h.Authenticate(http.HandlerFunc(h.PostsHandler)))
 	mux.Handle("/posts/", h.Authenticate(http.HandlerFunc(h.PostHandler)))
 	mux.Handle("/posts/new", h.Authenticate(http.HandlerFunc(h.CreatePostHandler)))
 	mux.Handle("/comments/new", h.Authenticate(http.HandlerFunc(h.CreateCommentHandler)))
@@ -42,7 +42,6 @@ func Run() {
 	mux.Handle("/templates/css/", http.StripPrefix("/templates/css/", http.FileServer(http.Dir("templates/css"))))
 	mux.Handle("/templates/img/", http.StripPrefix("/templates/img/", http.FileServer(http.Dir("templates/img"))))
 
-	// handler := Authenticate(mux)
 	srv := &http.Server{
 		Addr:    ":8082",
 		Handler: mux,

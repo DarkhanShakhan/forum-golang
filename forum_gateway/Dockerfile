@@ -10,5 +10,6 @@ WORKDIR /app
 LABEL authors="@Subudei, @DarkhanShakhan"
 COPY --from=build /app/main /app/main
 COPY /templates /app/templates
-COPY /web /app/web
+COPY .env /app
+EXPOSE 8082
 CMD ["/app/main"]

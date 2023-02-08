@@ -126,7 +126,7 @@ func (au *AuthUsecase) SignOut(ctx context.Context, session entity.Session, errC
 	case 204:
 		errChan <- nil
 		return
-	default: // FIXME: 400??
+	default:
 		errChan <- entity.ErrInternalServer
 		return
 	}
@@ -156,7 +156,11 @@ func (au *AuthUsecase) OAuth(ctx context.Context, credentials entity.Credentials
 		sessionChan <- entity.SessionResult{Err: entity.ErrRequestTimeout}
 		return
 	case 400:
-		r, _ := getResponse(response.Body) // err checking omitted because it returns Internal Server Error anyway
+		r, err := getResponse(response.Body)
+		if err != nil {
+			sessionChan <- entity.SessionResult{Err: entity.ErrInternalServer}
+			return
+		}
 		if r.ErrorMessage == "Invalid Password" {
 			sessionChan <- entity.SessionResult{Err: entity.ErrInvalidPassword}
 			return

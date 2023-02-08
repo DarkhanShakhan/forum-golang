@@ -14,6 +14,10 @@ func (h *Handler) PostsHandler(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/errors.html")
 		return
 	}
+	if r.URL.Path != "/" && r.URL.Path != "/posts" {
+		h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "templates/errors.html")
+		return
+	}
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()
 	response := entity.Response{}
@@ -49,13 +53,13 @@ func (h *Handler) PostsHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/errors.html")
 		return
 	}
 	post_id, err := getID(r.URL.String(), "posts")
 	if err != nil {
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: err.Error()}, "web/error.html")
+		h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: err.Error()}, "templates/errors.html")
 		return
 	}
 	ctx, cancel := getTimeout(r.Context())
@@ -67,17 +71,17 @@ func (h *Handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err := ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case response = <-responseChan:
 		err := response.Err
 		switch err {
 		case entity.ErrInternalServer:
-			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
 		case entity.ErrRequestTimeout:
-			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		case entity.ErrNotFound:
-			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "web/error.html")
+			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "templates/errors.html")
 		case nil:
 			var (
 				auth interface{} = r.Context().Value("authorised")
@@ -170,7 +174,7 @@ func (h *Handler) postCreatePost(w http.ResponseWriter, r *http.Request) {
 		case entity.ErrBadRequest:
 			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "templates/errors.html")
 		case nil:
-			http.Redirect(w, r, fmt.Sprintf("/posts/%d", res.Id), 302)
+			http.Redirect(w, r, fmt.Sprintf("/posts/%d", res.Id), 303)
 		case entity.ErrRequestTimeout:
 			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		default:
@@ -182,11 +186,11 @@ func (h *Handler) postCreatePost(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Context().Value("authorised") == false {
-		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "templates/errors.html")
 		return
 	}
 	if r.Method != http.MethodPost {
-		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/errors.html")
 		return
 	}
 	r.ParseForm()
@@ -194,9 +198,9 @@ func (h *Handler) CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	if commentRes.Err != nil {
 		h.errLog.Println(commentRes.Err)
 		if commentRes.Err == entity.ErrEmptyComment {
-			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Empty comment"}, "web/error.html")
+			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Empty comment"}, "templates/errors.html")
 		} else {
-			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "web/error.html")
+			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "templates/errors.html")
 		}
 		return
 	}
@@ -210,18 +214,18 @@ func (h *Handler) CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err := ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case res = <-resChan:
 		switch res.Err {
 		case entity.ErrBadRequest:
-			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "web/error.html")
+			h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"}, "templates/errors.html")
 		case nil:
-			http.Redirect(w, r, fmt.Sprintf("/posts/%d", commentRes.Comment.Post.Id), 302)
+			http.Redirect(w, r, fmt.Sprintf("/posts/%d", commentRes.Comment.Post.Id), 303)
 		case entity.ErrRequestTimeout:
-			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		default:
-			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
 		}
 	}
 }
@@ -350,7 +354,7 @@ func (h *Handler) CategoriesHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "templates/errors.html")
 		return
 	}
 	category_id, err := getID(r.URL.String(), "categories")
@@ -368,17 +372,17 @@ func (h *Handler) CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err := ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case response = <-responseChan:
 		err := response.Err
 		switch err {
 		case entity.ErrInternalServer:
-			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/error.html")
+			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
 		case entity.ErrRequestTimeout:
-			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/error.html")
+			h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		case entity.ErrNotFound:
-			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "templates/error.html")
+			h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"}, "templates/errors.html")
 		case nil:
 			var (
 				auth interface{} = r.Context().Value("authorised")

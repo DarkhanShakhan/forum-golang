@@ -8,8 +8,8 @@ import (
 )
 
 type Credentials struct {
-	Id       int64  `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
+	Login    string `json:"login,omitempty"`
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
 }

@@ -207,8 +207,6 @@ func (f *ForumUsecase) FetchCategory(ctx context.Context, id int, responseChan c
 	}
 }
 
-//TODO: store address as variable
-
 func (f *ForumUsecase) PostReaction(ctx context.Context, reaction entity.PostReaction, errorChan chan error) {
 	response, _ := getAPIResponse(ctx, http.MethodGet, fmt.Sprintf("http://localhost:8080/post_reactions?id=%d", reaction.Post.Id), nil)
 	res := getReactions(response.Body)
@@ -259,19 +257,14 @@ func (f *ForumUsecase) CommentReaction(ctx context.Context, reaction entity.Comm
 		errorChan <- entity.ErrInternalServer
 		return
 	}
-	fmt.Println(res.Reactions)
 	for _, i := range res.Reactions {
 		if i.User.Id == reaction.Reaction.User.Id {
 			if i.Like == reaction.Reaction.Like {
-				fmt.Println("delete")
 				response, _ = getAPIResponse(ctx, http.MethodDelete, "http://localhost:8080/comment_reactions/delete", body)
 
 			} else {
-				fmt.Println("update")
 				response, err = getAPIResponse(ctx, http.MethodPut, "http://localhost:8080/comment_reactions/update", body)
 			}
-			fmt.Println("here2")
-			fmt.Println(response.StatusCode)
 			switch response.StatusCode {
 			case 408:
 				errorChan <- entity.ErrRequestTimeout
@@ -286,7 +279,6 @@ func (f *ForumUsecase) CommentReaction(ctx context.Context, reaction entity.Comm
 		}
 	}
 	response, _ = getAPIResponse(ctx, http.MethodPost, "http://localhost:8080/comment_reactions/save", body)
-	fmt.Println(response.StatusCode)
 	switch response.StatusCode {
 	case 408:
 		errorChan <- entity.ErrRequestTimeout

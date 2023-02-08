@@ -43,9 +43,11 @@ func (sr *SessionsRepository) Fetch(ctx context.Context, token string) (entity.S
 	if rows.Next() {
 		rows.Scan(&session.UserId, &session.Token, &temp)
 	}
-	session.ExpiryTime, err = time.Parse(time.Layout, temp)
-	if err != nil {
-		sr.errorLog.Println(err)
+	if session.UserId != 0 {
+		session.ExpiryTime, err = time.Parse(time.Layout, temp)
+		if err != nil {
+			sr.errorLog.Println(err)
+		}
 	}
 	if err = tx.Commit(); err != nil {
 		sr.errorLog.Println(err)

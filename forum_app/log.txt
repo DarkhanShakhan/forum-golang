@@ -377,3 +377,29 @@ ERROR	2023/02/01 15:00:39 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/02/01 15:00:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:118: user doesn't exist
 ERROR	2023/02/01 15:16:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
 ERROR	2023/02/01 15:16:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/02/08 19:07:18 Connected to the database
+INFO	2023/02/08 19:07:18 Listening on localhost:8080
+ERROR	2023/02/08 19:07:57 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:107: user doesn't exist
+ERROR	2023/02/08 19:07:57 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/app/user_service.go:75: user doesn't exist
+ERROR	2023/02/08 19:09:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:124: <nil>
+ERROR	2023/02/08 19:09:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:127: <nil>
+ERROR	2023/02/08 19:09:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:129: <nil>
+ERROR	2023/02/08 19:10:06 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:124: <nil>
+ERROR	2023/02/08 19:10:06 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:127: <nil>
+ERROR	2023/02/08 19:10:06 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:129: <nil>
+ERROR	2023/02/08 19:10:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:124: <nil>
+ERROR	2023/02/08 19:10:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:127: <nil>
+ERROR	2023/02/08 19:10:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/post/usecase/posts.go:129: <nil>
+INFO	2023/02/08 19:12:51 Connected to the database
+INFO	2023/02/08 19:12:51 Listening on localhost:8080
+ERROR	2023/02/08 19:13:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/02/08 19:20:55 Connected to the database
+INFO	2023/02/08 19:20:55 Listening on localhost:8080
+ERROR	2023/02/08 19:33:52 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/02/08 19:34:14 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/02/09 03:10:34 Connected to the database
+INFO	2023/02/09 03:10:34 Listening on localhost:8080
+ERROR	2023/02/09 03:11:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/02/09 03:11:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/02/09 03:49:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+ERROR	2023/02/09 04:06:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>

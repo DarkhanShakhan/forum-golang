@@ -121,12 +121,18 @@ func (u *PostsUsecase) fetchComments(ctx context.Context, id int, comments chan 
 	var e error
 	for i := 0; i < len(tempComments); i++ {
 		tempComments[i].User, e = u.usersRepo.FetchById(ctx, tempComments[i].User.Id)
-		u.errorLog.Println(e)
+		if e != nil {
+			u.errorLog.Println(e)
+		}
 		tempComments[i].Post.Id = id
 		tempComments[i].Likes, e = u.fetchCommentReactions(ctx, tempComments[i].Id, true)
-		u.errorLog.Println(e)
+		if e != nil {
+			u.errorLog.Println(e)
+		}
 		tempComments[i].Dislikes, e = u.fetchCommentReactions(ctx, tempComments[i].Id, false)
-		u.errorLog.Println(e)
+		if e != nil {
+			u.errorLog.Println(e)
+		}
 		tempComments[i].CountTotals()
 	}
 	comments <- tempComments

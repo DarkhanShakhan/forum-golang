@@ -771,3 +771,173 @@ ERROR	2023/02/01 15:14:47 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/02/01 15:14:47 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
 ERROR	2023/02/01 15:16:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
 ERROR	2023/02/01 15:16:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:160: session doesn't exist
+ERROR	2023/02/08 19:13:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:13:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:13:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:13:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:13:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:13:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:13:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:13:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:13:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:13:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:14:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:14:05 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:14:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:14:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:14:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:64: Invalid password
+ERROR	2023/02/08 19:15:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:15:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:15:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:15:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:15:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:15:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:16:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:16:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:33:11 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session expired
+ERROR	2023/02/08 19:33:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:33:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:33:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:33:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:33:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:33:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/08 19:33:35 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/08 19:33:35 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:18 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:25 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:25 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:35 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:35 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:36 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:36 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:15:42 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:15:42 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:17:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:17:13 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:17:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:17:15 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:17:20 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:17:20 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:36:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:36:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:36:20 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:36:20 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:36:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:36:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:36:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:36:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:39:01 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:39:01 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:39:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:39:02 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:38 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:41 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:43 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:51 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:42:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:42:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:44:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:44:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:44:50 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:44:50 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:45:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:45:45 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:45:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:45:48 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:08 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:08 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:39 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:40 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:50 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:50 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:54 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:54 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:48:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:48:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:49:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:49:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:49:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:49:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:49:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:49:24 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:49:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:49:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:49:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:49:27 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:50:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:50:30 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:50:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:50:32 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:50:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:50:33 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:50:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:50:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:03 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:03 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:04 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:16 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:16 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:20 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:20 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:51:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:51:28 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:55:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:55:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:55:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:55:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:55:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:55:58 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:55:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:55:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:57:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:57:53 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:57:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:57:56 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:57:57 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:57:57 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 03:57:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 03:57:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 04:06:08 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 04:06:08 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 04:06:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 04:06:17 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist
+ERROR	2023/02/09 04:06:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/repository/repo.go:48: parsing time "" as "01/02 03:04:05PM '06 -0700": cannot parse "" as "01"
+ERROR	2023/02/09 04:06:19 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_auth/internal/app/service.go:162: session doesn't exist

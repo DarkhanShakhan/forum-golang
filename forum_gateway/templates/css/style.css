@@ -4319,3 +4319,14 @@ span.hidelink {
 .title_shrift {
 	color: rgb(19, 18, 23);
 }
+.auth_from_api {
+	margin-top: 10px;
+}
+.auth_from_api .google_auth {
+	display: flex;
+	justify-content: center;
+}
+.oauth {
+	margin-left: 5px;
+	margin-right: 5px;
+}

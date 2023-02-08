@@ -14,8 +14,8 @@
             <div class="frame">
                 <div id="top_section">
                     {{if .AuthStatus}}{{else}}
-                    <div class="user"><br /><br />Пожалуйста, <a href="/signin_page/">войдите</a> или <a
-                            href="signup_page">зарегистрируйтесь</a>.
+                    <div class="user"><br /><br />Пожалуйста, <a href="/sign-in">войдите</a> или <a
+                            href="sign-up">зарегистрируйтесь</a>.
                     </div>
                     {{end}}
                 </div>
@@ -43,7 +43,7 @@
                                 <span class="firstlevel"><img src="/templates/img/icons/login_sm.gif" />Профиль</span>
                             </a>
                         </li>
-                        <form action="/sign_out" method="POST" hidden="true">
+                        <form action="/sign-out" method="POST" hidden="true">
                             <input type="submit" id="submit" hidden="true">
                         </form>
                         <li id="button_login">

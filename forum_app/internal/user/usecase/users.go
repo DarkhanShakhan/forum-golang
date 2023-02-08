@@ -101,7 +101,7 @@ func (u *UsersUsecase) FetchByEmail(ctx context.Context, email string, userRes c
 	if err != nil {
 		u.errorLog.Println(err)
 		userRes <- entity.UserResult{Err: err}
-		return //??
+		return
 	}
 	if user.Id == 0 {
 		u.errorLog.Println(entity.ErrUserNotFound)
@@ -137,7 +137,9 @@ func (u *UsersUsecase) fetchPostReactions(ctx context.Context, id int, like bool
 	var er error
 	for i := 0; i < len(tempPostReactions); i++ {
 		tempPostReactions[i].Post, er = u.postRepo.FetchById(ctx, tempPostReactions[i].Post.Id)
-		u.errorLog.Println(er)
+		if err != nil {
+			u.errorLog.Println(er)
+		}
 	}
 	postReactions <- tempPostReactions
 	errPostReactions <- err

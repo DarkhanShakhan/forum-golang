@@ -8,18 +8,15 @@ import (
 )
 
 type Post struct {
-	Id   int  `json:"id,omitempty"`
-	User User `json:"user,omitempty"`
-	// Date          string     `json:"date,omitempty"`
+	Id       int        `json:"id,omitempty"`
+	User     User       `json:"user,omitempty"`
 	Title    string     `json:"title,omitempty"`
 	Content  string     `json:"content,omitempty"`
 	Category []Category `json:"categories,omitempty"`
-	// Comments      []Comment  `json:"comments,omitempty"`
-	// TotalComments int        `json:"total_comments,omitempty"`
-	// Likes         []Reaction `json:"likes,omitempty"`
-	// TotalLikes    int        `json:"total_likes,omitempty"`
-	// Dislikes      []Reaction `json:"dislkes,omitempty"`
-	// TotalDislikes int        `json:"total_dislikes,omitempty"`
+}
+
+type Category struct {
+	Id int `json:"id,omitempty"`
 }
 
 type PostResult struct {

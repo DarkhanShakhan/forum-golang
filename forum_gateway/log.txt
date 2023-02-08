@@ -378,3 +378,29 @@ INFO	2023/02/01 14:34:34 Listening on localhost:8082
 INFO	2023/02/01 14:58:44 Listening on localhost:8082
 INFO	2023/02/01 15:00:05 Listening on localhost:8082
 INFO	2023/02/01 15:14:24 Listening on localhost:8082
+INFO	2023/02/08 19:03:45 Listening on localhost:8082
+ERROR	2023/02/08 19:04:12 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/oauth_service.go:191: Internal Server Error
+INFO	2023/02/08 19:06:02 Listening on localhost:8082
+ERROR	2023/02/08 19:06:22 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/oauth_service.go:192: Internal Server Error
+ERROR	2023/02/08 19:14:06 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:93: Invalid password format
+Password should contain at least one number, one uppercase letter, one lowercase letter, one symbol or punctuation and at least 8 symbols
+ERROR	2023/02/08 19:14:31 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/auth_service.go:113: Invalid password
+INFO	2023/02/08 19:33:04 Listening on localhost:8082
+INFO	2023/02/09 03:11:03 Listening on localhost:8082
+INFO	2023/02/09 03:17:09 Listening on localhost:8082
+INFO	2023/02/09 03:36:16 Listening on localhost:8082
+INFO	2023/02/09 03:38:02 Listening on localhost:8082
+INFO	2023/02/09 03:38:55 Listening on localhost:8082
+INFO	2023/02/09 03:42:34 Listening on localhost:8082
+INFO	2023/02/09 03:44:46 Listening on localhost:8082
+INFO	2023/02/09 03:45:42 Listening on localhost:8082
+INFO	2023/02/09 03:48:07 Listening on localhost:8082
+ERROR	2023/02/09 03:48:09 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/oauth_service.go:22: invalid OAuth method
+INFO	2023/02/09 03:48:38 Listening on localhost:8082
+INFO	2023/02/09 03:50:53 Listening on localhost:8082
+INFO	2023/02/09 03:55:52 Listening on localhost:8082
+INFO	2023/02/09 03:56:47 Listening on localhost:8082
+INFO	2023/02/09 03:57:50 Listening on localhost:8082
+ERROR	2023/02/09 03:57:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/oauth_service.go:63: json: cannot unmarshal string into Go struct field Credentials.id of type int64
+INFO	2023/02/09 04:06:05 Listening on localhost:8082
+INFO	2023/02/09 04:07:41 Listening on localhost:8082
