@@ -7,9 +7,6 @@ import (
 	"os"
 )
 
-// FIXME: add info logging when database open
-// TODO: middleware for inserting context deadline
-
 func Run() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile)
@@ -57,5 +54,4 @@ func Run() {
 	infoLog.Println("Listening on localhost:8080")
 	err = srv.ListenAndServe()
 	errLog.Fatal(err)
-	// TODO: graceful shutdown
 }

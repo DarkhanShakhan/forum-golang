@@ -23,9 +23,12 @@ type Handler struct {
 	ccase   CommentUsecase
 }
 
-// FIXME:deal with error from sqlite3
 func NewHandler(errLog, infoLog *log.Logger) *Handler {
-	db, _ := sqlite3.New()
+	db, err := sqlite3.New()
+	if err != nil {
+		errLog.Fatalln(err)
+	}
+	infoLog.Println("Connected to the database")
 	usersRepo := ur.NewUsersRepository(db, errLog)
 	postsRepo := pr.NewPostsRepository(db, errLog)
 	pReactionsRepo := pr.NewPostReactionsRepository(db, errLog)

@@ -10,8 +10,6 @@ type UsersRepository interface {
 	FetchAll(context.Context) ([]entity.User, error)
 	FetchByEmail(context.Context, string) (entity.User, error)
 	Store(context.Context, entity.User) (int64, error)
-	// Update(entity.User) error
-	// DeleteById(int) error
 }
 
 type PostsRepository interface {

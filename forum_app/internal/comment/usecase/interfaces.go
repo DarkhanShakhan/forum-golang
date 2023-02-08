@@ -8,8 +8,6 @@ import (
 type CommentsRepository interface {
 	FetchById(context.Context, int) (entity.Comment, error)
 	Store(context.Context, entity.Comment) (int64, error)
-	// Update(entity.Comment) error
-	// DeleteById(int) error
 }
 
 type CommentReactionsRepository interface {

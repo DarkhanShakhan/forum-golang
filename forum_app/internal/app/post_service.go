@@ -119,7 +119,6 @@ func (h *Handler) CategoryPostsHandler(w http.ResponseWriter, r *http.Request) {
 				h.APIResponse(w, http.StatusNotFound, entity.Response{ErrorMessage: "Not Found"})
 				return
 			}
-			// FIXME:check for existing category
 			h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"})
 			return
 		}
@@ -214,7 +213,6 @@ func (h *Handler) StorePostReactionHandler(w http.ResponseWriter, r *http.Reques
 	h.APIResponse(w, http.StatusNoContent, entity.Response{})
 }
 
-// TODO: fetch post reactions
 func (h *Handler) PostReactionsHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := getTimeout(r.Context())
 	defer cancel()

@@ -75,7 +75,6 @@ func (rr *PostReactionsRepository) StoreReaction(ctx context.Context, postReacti
 	return nil
 }
 
-//FIXME: check if reactions exists
 func (rr *PostReactionsRepository) UpdateReaction(ctx context.Context, postReaction entity.PostReaction) error {
 	tx, err := rr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
@@ -119,7 +118,6 @@ func (rr *PostReactionsRepository) DeleteReaction(ctx context.Context, postReact
 		return err
 	}
 	defer tx.Rollback()
-	//FIXME: how to validate existence of data
 	stmt, err := tx.PrepareContext(ctx, `DELETE FROM post_reactions WHERE post_id = ? AND user_id = ? AND like = ?;`)
 	if err != nil {
 		rr.errorLog.Println(err)

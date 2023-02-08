@@ -136,7 +136,7 @@ func (u *UsersUsecase) fetchPostReactions(ctx context.Context, id int, like bool
 	tempPostReactions, err := u.postReactionsRepo.FetchByUserId(ctx, id, like)
 	var er error
 	for i := 0; i < len(tempPostReactions); i++ {
-		tempPostReactions[i].Post, er = u.postRepo.FetchById(ctx, tempPostReactions[i].Post.Id) //FIXME: deal with error
+		tempPostReactions[i].Post, er = u.postRepo.FetchById(ctx, tempPostReactions[i].Post.Id)
 		u.errorLog.Println(er)
 	}
 	postReactions <- tempPostReactions

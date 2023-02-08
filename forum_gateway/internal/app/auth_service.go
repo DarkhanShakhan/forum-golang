@@ -15,8 +15,7 @@ var oauthStateString = "pseudo-random"
 // SIGN UP
 func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Context().Value("authorised") == true {
-
-		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "web/error.html")
+		h.APIResponse(w, http.StatusForbidden, entity.Response{ErrorMessage: "Forbidden"}, "templates/errors.html")
 		return
 	}
 	switch r.Method {
@@ -25,7 +24,7 @@ func (h *Handler) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.postSignUp(w, r)
 	default:
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad request"}, "web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid Method"}, "templates/errors.html")
 	}
 }
 
@@ -57,18 +56,18 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 				h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "user with a given email already exists"}, "templates/registration.html")
 				return
 			case entity.ErrRequestTimeout:
-				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.go")
+				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 			default:
-				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/errog.go")
+				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/error.html")
 			}
 		}
 	case <-ctx.Done():
 		err = ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	}
-	http.Redirect(w, r, "/sign_in", http.StatusFound)
+	http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
 }
 
 // SIGN IN
@@ -83,7 +82,7 @@ func (h *Handler) SignInHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.postSignIn(w, r)
 	default:
-		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad request"}, "web/error.html")
+		h.APIResponse(w, http.StatusMethodNotAllowed, entity.Response{ErrorMessage: "Invalid method"}, "web/error.html")
 	}
 }
 
@@ -93,7 +92,6 @@ func (h *Handler) getSignIn(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-
 	credentials := entity.GetCredentials(r)
 	ok, message := credentials.ValidateSignIn()
 	if !ok {
@@ -113,7 +111,7 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		err := ctx.Err()
 		h.errLog.Println(err)
-		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	case sessionRes = <-sessionChan:
 		err := sessionRes.Err
@@ -126,9 +124,9 @@ func (h *Handler) postSignIn(w http.ResponseWriter, r *http.Request) {
 			case entity.ErrInvalidPassword:
 				h.APIResponse(w, http.StatusUnauthorized, entity.Response{ErrorMessage: "Invalid password"}, "templates/login.html")
 			case entity.ErrRequestTimeout:
-				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "web/error.html")
+				h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 			default:
-				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "web/error.html")
+				h.APIResponse(w, http.StatusInternalServerError, entity.Response{ErrorMessage: "Internal Server Error"}, "templates/errors.html")
 			}
 			return
 		}
@@ -314,7 +312,7 @@ func AuthCodeURLGit(state string) string {
 	buf.WriteString("https://github.com/login/oauth/authorize")
 	v := url.Values{"client_id": {""}}
 	v.Set("redirect_uri", "http://localhost:8082/github_callback")
-	v.Set("scope", "user") //FIXME: problem with email
+	v.Set("scope", "user")
 	v.Set("state", state)
 	buf.WriteByte('?')
 	buf.WriteString(v.Encode())

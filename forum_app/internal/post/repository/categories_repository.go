@@ -106,37 +106,3 @@ func (cr *CategoriesRepository) FetchByPostId(ctx context.Context, id int) ([]en
 	}
 	return categories, nil
 }
-
-// func (cr *CategoriesRepository) Store(ctx context.Context, post entity.Post) error {
-// 	tx, err := cr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
-// 	if err != nil {
-// 		cr.errorLog.Println(err)
-// 		return err
-// 	}
-// 	defer tx.Rollback()
-// 	stmt, err := tx.PrepareContext(ctx, "INSERT INTO post_categories(post_id, category_id) VALUES(?, ?);")
-// 	if err != nil {
-// 		cr.errorLog.Println(err)
-// 		return err
-// 	}
-// 	defer stmt.Close()
-// 	for _, category := range post.Category {
-// 		res, err := stmt.ExecContext(ctx, post.Id, category.Id)
-// 		if err != nil {
-// 			cr.errorLog.Println(err)
-// 			return err
-// 		}
-// 		if rAffected, err := res.RowsAffected(); rAffected > 1 || err != nil {
-// 			if err != nil {
-// 				cr.errorLog.Println(err)
-// 				return err
-// 			}
-// 			return errors.New(`more than one row has been affected`)
-// 		}
-// 	}
-// 	if err = tx.Commit(); err != nil {
-// 		cr.errorLog.Println(err)
-// 		return err
-// 	}
-// 	return nil
-// }

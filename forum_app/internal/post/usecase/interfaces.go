@@ -10,8 +10,6 @@ type PostsRepository interface {
 	FetchByCategoryId(context.Context, int) ([]entity.Post, error)
 	FetchAll(context.Context) ([]entity.Post, error)
 	Store(context.Context, entity.Post) (int64, error)
-	// Update(entity.Post) error
-	// Delete(int) error
 }
 
 type PostReactionsRepository interface {

@@ -63,10 +63,14 @@ func New() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.Exec(`INSERT INTO categories(title) VALUES("golang")`)
-	db.Exec(`INSERT INTO categories(title) VALUES("python")`)
-	db.Exec(`INSERT INTO categories(title) VALUES("rust")`)
-	// FIXME: add categories
+	stmt, err := db.Prepare(`INSERT INTO categories(title) VALUES(?)`)
+	defer stmt.Close()
+	if err != nil {
+		return nil, err
+	}
+	for _, c := range []string{"golang", "python", "rust", "c", "php", "java", "js"} {
+		stmt.Exec(c)
+	}
 	postCategories := `
 	CREATE TABLE IF NOT EXISTS post_categories (
 		post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,

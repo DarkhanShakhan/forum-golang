@@ -118,11 +118,15 @@ func (u *PostsUsecase) fetchUser(ctx context.Context, id int, user chan entity.U
 
 func (u *PostsUsecase) fetchComments(ctx context.Context, id int, comments chan []entity.Comment, errComments chan error) {
 	tempComments, err := u.commentsRepo.FetchByPostId(ctx, id)
+	var e error
 	for i := 0; i < len(tempComments); i++ {
-		tempComments[i].User, _ = u.usersRepo.FetchById(ctx, tempComments[i].User.Id)
+		tempComments[i].User, e = u.usersRepo.FetchById(ctx, tempComments[i].User.Id)
+		u.errorLog.Println(e)
 		tempComments[i].Post.Id = id
-		tempComments[i].Likes, _ = u.fetchCommentReactions(ctx, tempComments[i].Id, true) //FIXME: deal with errors
-		tempComments[i].Dislikes, _ = u.fetchCommentReactions(ctx, tempComments[i].Id, false)
+		tempComments[i].Likes, e = u.fetchCommentReactions(ctx, tempComments[i].Id, true)
+		u.errorLog.Println(e)
+		tempComments[i].Dislikes, e = u.fetchCommentReactions(ctx, tempComments[i].Id, false)
+		u.errorLog.Println(e)
 		tempComments[i].CountTotals()
 	}
 	comments <- tempComments

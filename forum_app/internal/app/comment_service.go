@@ -6,6 +6,7 @@ import (
 	"forum_app/internal/entity"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func (h *Handler) StoreCommentHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +48,9 @@ func (h *Handler) StoreCommentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func validateCommentData(comment entity.Comment) bool {
-	// FIXME:check for empty comment
+	if strings.TrimSpace(comment.Content) == "" {
+		return false
+	}
 	return comment.Content != "" && comment.Post.Id != 0 && comment.User.Id != 0
 }
 
@@ -65,7 +68,6 @@ func (h *Handler) StoreCommentReactionHandler(w http.ResponseWriter, r *http.Req
 	}
 	var comment_reaction entity.CommentReaction
 	err := json.NewDecoder(r.Body).Decode(&comment_reaction)
-	// FIXME:validate data
 	if err != nil || !validateCommentReactionData(comment_reaction) {
 		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{})
