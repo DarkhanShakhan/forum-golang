@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"forum_app/internal/entity"
 	"log"
 	"time"
@@ -76,7 +75,6 @@ func (crr *CommentReactionsRepository) StoreReaction(ctx context.Context, commen
 }
 
 func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
-	fmt.Println(commentReaction)
 	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		crr.errorLog.Println(err)
@@ -114,7 +112,6 @@ func (crr *CommentReactionsRepository) UpdateReaction(ctx context.Context, comme
 }
 
 func (crr *CommentReactionsRepository) DeleteReaction(ctx context.Context, commentReaction entity.CommentReaction) error {
-	fmt.Println(commentReaction)
 	tx, err := crr.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		crr.errorLog.Println(err)

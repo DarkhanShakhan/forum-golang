@@ -62,7 +62,7 @@ func (h *Handler) postSignUp(w http.ResponseWriter, r *http.Request) {
 		h.APIResponse(w, http.StatusRequestTimeout, entity.Response{ErrorMessage: "Request Timeout"}, "templates/errors.html")
 		return
 	}
-	http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
+	http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 }
 
 // SIGN IN

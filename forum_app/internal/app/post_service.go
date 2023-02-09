@@ -270,7 +270,6 @@ func (h *Handler) UpdatePostReactionHandler(w http.ResponseWriter, r *http.Reque
 	var post_reaction entity.PostReaction
 	err := json.NewDecoder(r.Body).Decode(&post_reaction)
 	if err != nil || !validatePostReactionData(post_reaction) {
-		fmt.Println(err)
 		h.errLog.Println("bad request")
 		h.APIResponse(w, http.StatusBadRequest, entity.Response{ErrorMessage: "Bad Request"})
 		return
