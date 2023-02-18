@@ -6,7 +6,9 @@ import (
 	"net/http"
 )
 
-func (h *Handler) Authenticate(next http.Handler) http.Handler {
+type Middleware func(http.HandlerFunc) http.HandlerFunc
+
+func (h *Handler) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookier, err := r.Cookie("token")
 		if err != nil || cookier.Value == "" {
@@ -45,4 +47,26 @@ func (h *Handler) Authenticate(next http.Handler) http.Handler {
 			return
 		}
 	})
+}
+
+func (h *Handler) RateLimit(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		limiter := h.rateLimiter.GetLimiter(r.RemoteAddr)
+		if !limiter.Allow() {
+			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (h *Handler) MultipleMiddleware(hf http.HandlerFunc) http.HandlerFunc {
+	if len(h.middlewares) < 1 {
+		return hf
+	}
+	wrapped := hf
+	for i := len(h.middlewares) - 1; i >= 0; i-- {
+		wrapped = h.middlewares[i](wrapped)
+	}
+	return wrapped
 }

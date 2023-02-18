@@ -17,6 +17,7 @@ type Handler struct {
 	config      *Config
 	oauths      map[method]OAuth
 	rateLimiter *IPRateLimiter
+	middlewares []Middleware
 }
 
 func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase, forumUcase ForumUsecase) *Handler {
@@ -30,6 +31,7 @@ func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase, forumUcase For
 		rateLimiter: NewIPRateLimiter(1, 5),
 	}
 	h.setOauth([]method{github, google})
+	h.middlewares = []Middleware{h.RateLimit, h.Authenticate}
 	return &h
 }
 

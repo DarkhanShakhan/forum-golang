@@ -403,3 +403,5 @@ ERROR	2023/02/09 03:11:43 /home/darkhan/alem-projects/forum_golang/forum-golang/
 ERROR	2023/02/09 03:11:49 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
 ERROR	2023/02/09 03:49:21 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
 ERROR	2023/02/09 04:06:23 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_app/internal/user/usecase/users.go:140: <nil>
+INFO	2023/02/19 03:52:46 Connected to the database
+INFO	2023/02/19 03:52:46 Listening on localhost:8080

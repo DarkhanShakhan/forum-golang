@@ -1,7 +1,6 @@
 package app
 
 import (
-	"net/http"
 	"sync"
 
 	"golang.org/x/time/rate"
@@ -51,16 +50,4 @@ func (i *IPRateLimiter) GetLimiter(ip string) Limiter {
 	}
 	i.mu.Unlock()
 	return limiter
-}
-
-func (h *Handler) LimitMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		limiter := h.rateLimiter.GetLimiter(r.RemoteAddr)
-		if !limiter.Allow() {
-			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
 }

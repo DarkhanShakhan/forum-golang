@@ -404,3 +404,5 @@ INFO	2023/02/09 03:57:50 Listening on localhost:8082
 ERROR	2023/02/09 03:57:59 /home/darkhan/alem-projects/forum_golang/forum-golang/forum_gateway/internal/app/oauth_service.go:63: json: cannot unmarshal string into Go struct field Credentials.id of type int64
 INFO	2023/02/09 04:06:05 Listening on localhost:8082
 INFO	2023/02/09 04:07:41 Listening on localhost:8082
+INFO	2023/02/19 03:48:05 Listening on localhost:8082
+INFO	2023/02/19 03:51:47 Listening on localhost:8082
