@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"forum_gateway/internal/entity"
+	"forum_gateway/internal/usecase"
 	"log"
 	"time"
 )
@@ -16,7 +17,7 @@ type Handler struct {
 	forumUcase  ForumUsecase
 	config      *Config
 	oauths      map[method]OAuth
-	rateLimiter *IPRateLimiter
+	rateLimiter *usecase.IPRateLimiter
 	middlewares []Middleware
 }
 
@@ -28,7 +29,7 @@ func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase, forumUcase For
 		forumUcase:  forumUcase,
 		config:      NewConfig(),
 		oauths:      map[method]OAuth{},
-		rateLimiter: NewIPRateLimiter(1, 5),
+		rateLimiter: usecase.NewIPRateLimiter(1, 5),
 	}
 	h.setOauth([]method{github, google})
 	h.middlewares = []Middleware{h.RateLimit, h.Authenticate}
