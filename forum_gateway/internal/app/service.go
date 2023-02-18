@@ -10,22 +10,24 @@ import (
 const duration = 10 * time.Second
 
 type Handler struct {
-	errLog     *log.Logger
-	infoLog    *log.Logger
-	auUcase    AuthUsecase
-	forumUcase ForumUsecase
-	config     *Config
-	oauths     map[method]OAuth
+	errLog      *log.Logger
+	infoLog     *log.Logger
+	auUcase     AuthUsecase
+	forumUcase  ForumUsecase
+	config      *Config
+	oauths      map[method]OAuth
+	rateLimiter *IPRateLimiter
 }
 
 func NewHandler(errLog, infoLog *log.Logger, auUcase AuthUsecase, forumUcase ForumUsecase) *Handler {
 	h := Handler{
-		errLog:     errLog,
-		infoLog:    infoLog,
-		auUcase:    auUcase,
-		forumUcase: forumUcase,
-		config:     NewConfig(),
-		oauths:     map[method]OAuth{},
+		errLog:      errLog,
+		infoLog:     infoLog,
+		auUcase:     auUcase,
+		forumUcase:  forumUcase,
+		config:      NewConfig(),
+		oauths:      map[method]OAuth{},
+		rateLimiter: NewIPRateLimiter(1, 5),
 	}
 	h.setOauth([]method{github, google})
 	return &h

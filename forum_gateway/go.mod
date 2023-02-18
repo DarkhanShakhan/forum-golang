@@ -2,4 +2,4 @@ module forum_gateway
 
 go 1.18
 
-require github.com/joho/godotenv v1.5.1
+require golang.org/x/time v0.3.0
