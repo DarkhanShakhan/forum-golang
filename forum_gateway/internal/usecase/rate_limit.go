@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"sync"
 
 	"golang.org/x/time/rate"
@@ -43,6 +44,7 @@ func (i *IPRateLimiter) AddIP(ip string) Limiter {
 
 func (i *IPRateLimiter) GetLimiter(ip string) Limiter {
 	i.mu.Lock()
+	fmt.Println(ip)
 	limiter, exists := i.ips[ip]
 	if !exists {
 		i.mu.Unlock()

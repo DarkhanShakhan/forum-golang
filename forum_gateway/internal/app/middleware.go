@@ -4,6 +4,7 @@ import (
 	"context"
 	"forum_gateway/internal/entity"
 	"net/http"
+	"strings"
 )
 
 type Middleware func(http.HandlerFunc) http.HandlerFunc
@@ -51,13 +52,18 @@ func (h *Handler) Authenticate(next http.HandlerFunc) http.HandlerFunc {
 
 func (h *Handler) RateLimit(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		limiter := h.rateLimiter.GetLimiter(r.RemoteAddr)
+		limiter := h.rateLimiter.GetLimiter(getIp(r.RemoteAddr))
 		if !limiter.Allow() {
 			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
 			return
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+func getIp(address string) string {
+	res := strings.Split(address, ":")
+	return res[0]
 }
 
 func (h *Handler) MultipleMiddleware(hf http.HandlerFunc) http.HandlerFunc {
