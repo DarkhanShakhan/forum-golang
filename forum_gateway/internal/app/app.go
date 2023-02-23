@@ -47,7 +47,7 @@ func Run() {
 		Handler: mux,
 	}
 	infoLog.Println("Listening on localhost:8082")
-	err := srv.ListenAndServe()
+	err := srv.ListenAndServeTLS("crt/localhost/localhost.crt", "crt/localhost/localhost.decrypted.key")
 	log.Fatal(err)
 }
 
